@@ -2,6 +2,16 @@
 #include <stdlib.h>
 #include "parade.h"
 
+void testes();
+
 int main () {
+    testes();
+
     return 0;
+}
+
+void testes() {
+    Baralho *baralho = criarBaralho();
+    enfiarCartasNoBaralho(baralho);
+    imprimirBaralho(baralho);
 }
