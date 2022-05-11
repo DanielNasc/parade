@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "parade.h"
 
 typedef struct carta {
     int numero;
     char naipe;
     struct carta *prox;
+    struct carta *ant;
 } Carta;
 
 typedef struct baralho {
@@ -19,6 +21,7 @@ Carta *criarCarta(int numero, char naipe) {
     if (novaCarta != NULL) {
         novaCarta->numero = numero;
         novaCarta->naipe = naipe;
+        novaCarta->prox = novaCarta-> ant = NULL;
     }
 
     return novaCarta;
@@ -42,6 +45,8 @@ bool inserir(Baralho *baralho, Carta *novaCarta) {
     ) return false;
 
     novaCarta->prox = baralho->topo;
+    if (baralho->topo != NULL)
+        baralho->topo->ant = novaCarta;
     baralho->topo = novaCarta;
 
     return true;
@@ -66,7 +71,22 @@ bool enfiarCartasNoBaralho(Baralho *baralho) {
     return true;
 }
 
-bool embaralhar(Baralho *);
+bool jogarNoMeio(Baralho *baralho, int indice) {
+    if (baralho == NULL || indoce)
+}
+
+bool embaralhar(Baralho *baralho) {
+    if (baralho == NULL) 
+            return false;
+
+    srand( (unsigned) time(NULL));
+    
+    for (int i = 0; i < QTD_LOOPS_EMBARALHAR; i++) {
+        printf("%d\n", random() % QTD_MAX_CARTAS);
+    }
+
+    return true;
+}
 
 void imprimirBaralho(Baralho *baralho) {
     if (baralho == NULL) 

@@ -14,4 +14,5 @@ void testes() {
     Baralho *baralho = criarBaralho();
     enfiarCartasNoBaralho(baralho);
     imprimirBaralho(baralho);
+    embaralhar(baralho);
 }
