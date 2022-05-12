@@ -21,10 +21,11 @@ Carta *criarCarta(int numero, char naipe) {
     if (novaCarta != NULL) {
         novaCarta->numero = numero;
         novaCarta->naipe = naipe;
-        novaCarta->prox = novaCarta-> ant = NULL;
+        novaCarta->prox = novaCarta->ant = NULL;
     }
 
     return novaCarta;
+    
 }
 
 Baralho *criarBaralho() {
@@ -49,6 +50,8 @@ bool inserir(Baralho *baralho, Carta *novaCarta) {
         baralho->topo->ant = novaCarta;
     baralho->topo = novaCarta;
 
+    baralho->quantidade++;
+
     return true;
 }
 
@@ -72,7 +75,36 @@ bool enfiarCartasNoBaralho(Baralho *baralho) {
 }
 
 bool jogarNoMeio(Baralho *baralho, int indice) {
-    if (baralho == NULL || indoce)
+    if (baralho == NULL 
+        || indice > baralho->quantidade - 1 
+        || indice < 0 
+    )
+        return false;
+
+    Carta *aux = baralho->topo,
+          *aux_topo = aux;
+
+    for (int i = 0; i < indice; i++) {
+        aux = aux->prox;
+    }
+
+    baralho->topo = aux_topo->prox;
+    baralho->topo->ant = NULL;
+
+    if (indice == baralho->quantidade - 1) {
+        aux->prox = aux_topo;
+        aux_topo->ant = aux;
+        aux_topo->prox = NULL;
+        return true;
+    }
+    
+    aux_topo->ant = aux;
+    aux_topo->prox = aux->prox;
+
+    aux->prox->ant = aux_topo;
+    aux->prox = aux_topo;
+
+    return true;
 }
 
 bool embaralhar(Baralho *baralho) {
@@ -82,7 +114,9 @@ bool embaralhar(Baralho *baralho) {
     srand( (unsigned) time(NULL));
     
     for (int i = 0; i < QTD_LOOPS_EMBARALHAR; i++) {
-        printf("%d\n", random() % QTD_MAX_CARTAS);
+        int novoIndice = (random() % (QTD_MAX_CARTAS - 1)) + 1;
+
+        jogarNoMeio(baralho, novoIndice);
     }
 
     return true;
@@ -97,7 +131,6 @@ void imprimirBaralho(Baralho *baralho) {
     printf("[Imprimindo Baralho]\n");
     while (aux != NULL) {
         printf("Naipe: %c | numero: %i\n", aux->naipe, aux->numero);
-        printf("\t|\n\tV\n");
         aux = aux->prox;
     }
     printf("NULL\n");

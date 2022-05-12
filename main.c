@@ -15,4 +15,5 @@ void testes() {
     enfiarCartasNoBaralho(baralho);
     imprimirBaralho(baralho);
     embaralhar(baralho);
+    imprimirBaralho(baralho);
 }
