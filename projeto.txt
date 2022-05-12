@@ -19,11 +19,11 @@ Estruturas que deverão ser criadas usando TAD:
 	-> int quantidade(Lista *)
 	-> int somaValores(Lista *) // Soma os valores das cartas de uma lista
 - Pilha Dinâmica
-	-> Pilha * criar()
-	-> int inserir(Pilha *, struct carta)
-	-> int remover(Pilha *, struct carta *) // Já remove e acessa
-	-> void embaralhar(Pilha *)
-	-> int tamanho(Pilha *)
+	-> Pilha * criar() - KILLED
+	-> int inserir(Pilha *, struct carta) - KILLED
+	-> int remover(Pilha *, struct carta *) - KILLED // Já remove e acessa
+	-> void embaralhar(Pilha *) - KILLED
+	-> int tamanho(Pilha *) - KILLED
 Essas são as funções mínimas do TAD para o projeto funcionar. Todas deverão ser implementadas.
 
 -=-=-=-=-=-=-=-=-=-=-

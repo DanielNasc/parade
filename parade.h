@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <inttypes.h>
 
 typedef struct carta Carta;
 typedef struct baralho Baralho;
@@ -11,9 +12,16 @@ typedef struct baralho Baralho;
 Carta *criarCarta(int, char);
 Baralho *criarBaralho();
 
+// BARALHO =======================================
+
 bool inserir(Baralho *, Carta *);
 bool enfiarCartasNoBaralho(Baralho *);
 bool embaralhar(Baralho *);
 bool jogarNoMeio(Baralho *, int);
 
+uint8_t tamanhoBaralho(Baralho *);
+
 void imprimirBaralho(Baralho *);
+
+// MAO ===========================================
+Carta *removerTopo(Baralho *);

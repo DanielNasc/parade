@@ -16,4 +16,6 @@ void testes() {
     imprimirBaralho(baralho);
     embaralhar(baralho);
     imprimirBaralho(baralho);
+    removerTopo(baralho);
+    imprimirBaralho(baralho);
 }

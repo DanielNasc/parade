@@ -11,7 +11,7 @@ typedef struct carta {
 } Carta;
 
 typedef struct baralho {
-    int quantidade;
+    uint8_t quantidade;
     Carta *topo;
 } Baralho;
 
@@ -61,7 +61,6 @@ bool enfiarCartasNoBaralho(Baralho *baralho) {
 
     for (int naipe = 0; naipe < QTD_NAIPES; naipe++) {
         for (int numero = 0; numero <= MAIOR_NUMERO_CARTA; numero++) {
-
             Carta *novaCarta = criarCarta(numero, naipe + 65);
             if (novaCarta == NULL) 
                 return false;
@@ -136,4 +135,23 @@ void imprimirBaralho(Baralho *baralho) {
     printf("NULL\n");
     printf("Quantidade de cartas: %d\n", baralho->quantidade);
     printf("[Fim do Baralho]\n");
+}
+
+uint8_t tamanhoBaralho(Baralho *baralho) {
+    if (baralho == NULL)
+        return 0;
+
+    return baralho->quantidade;
+}
+
+Carta *removerTopo(Baralho *baralho) {
+    if (baralho == NULL || baralho->topo == NULL)
+        return NULL;
+
+    Carta *topoAntigo = baralho->topo;
+    baralho->topo = topoAntigo->prox;
+    baralho->topo->ant = NULL;
+    topoAntigo->prox = NULL;
+
+    return topoAntigo;
 }
