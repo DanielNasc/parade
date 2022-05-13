@@ -61,7 +61,8 @@ bool enfiarCartasNoBaralho(Baralho *baralho) {
 
     for (int naipe = 0; naipe < QTD_NAIPES; naipe++) {
         for (int numero = 0; numero <= MAIOR_NUMERO_CARTA; numero++) {
-            Carta *novaCarta = criarCarta(numero, naipe + 65);
+            Carta *novaCarta = criarCarta(numero, naipe + 'A');
+            
             if (novaCarta == NULL) 
                 return false;
 
@@ -150,7 +151,10 @@ Carta *removerTopo(Baralho *baralho) {
 
     Carta *topoAntigo = baralho->topo;
     baralho->topo = topoAntigo->prox;
-    baralho->topo->ant = NULL;
+    
+    if (baralho->topo != NULL)
+        baralho->topo->ant = NULL;
+        
     topoAntigo->prox = NULL;
 
     return topoAntigo;
