@@ -13,9 +13,16 @@ int main () {
 void testes() {
     Baralho *baralho = criarBaralho();
     enfiarCartasNoBaralho(baralho);
-    imprimirBaralho(baralho);
+    // imprimirBaralho(baralho);
     embaralhar(baralho);
     imprimirBaralho(baralho);
-    removerTopo(baralho);
+    // removerTopo(baralho);
+    // imprimirBaralho(baralho);
+
+    ListaCarta *mao = criarMao();
+
+    preencherMaoInicioJogo(mao, baralho);
+    imprimirMao(mao);
+
     imprimirBaralho(baralho);
 }

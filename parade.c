@@ -6,14 +6,27 @@
 typedef struct carta {
     int numero;
     char naipe;
-    struct carta *prox;
-    struct carta *ant;
+    struct carta *prox, *ant;
 } Carta;
 
 typedef struct baralho {
     uint8_t quantidade;
     Carta *topo;
 } Baralho;
+
+typedef struct listaCarta {
+    int quantidade;
+    Carta *primeira, *ultima;
+} ListaCarta;
+
+typedef struct colecao {
+    char naipe;
+    ListaCarta *lista;
+} Colecao;
+
+typedef struct galeria {
+    Colecao *colecao[QTD_NAIPES];
+} Galeria;
 
 Carta *criarCarta(int numero, char naipe) {
     Carta *novaCarta = (Carta *) malloc(sizeof(Carta));
@@ -25,8 +38,9 @@ Carta *criarCarta(int numero, char naipe) {
     }
 
     return novaCarta;
-    
 }
+
+// ======================= FUNÇÕES BARALHO =======================
 
 Baralho *criarBaralho() {
     Baralho *baralho = (Baralho *) malloc(sizeof(Baralho));
@@ -138,6 +152,7 @@ void imprimirBaralho(Baralho *baralho) {
     printf("[Fim do Baralho]\n");
 }
 
+
 uint8_t tamanhoBaralho(Baralho *baralho) {
     if (baralho == NULL)
         return 0;
@@ -157,5 +172,94 @@ Carta *removerTopo(Baralho *baralho) {
         
     topoAntigo->prox = NULL;
 
+    baralho->quantidade--;
+    
     return topoAntigo;
+}
+
+// ======================= FUNÇÕES MÃO =======================
+
+ListaCarta *criarLista() {
+    ListaCarta *novaLista = (ListaCarta *) malloc(sizeof(ListaCarta));
+    
+    if (novaLista != NULL) {
+        novaLista->quantidade = 0;
+        novaLista->primeira = novaLista->ultima = NULL;
+    }
+
+    return novaLista;
+}
+
+bool inserirNaMao(ListaCarta *mao, Baralho *baralho) {
+    if (mao == NULL || baralho == NULL)
+        return false;
+
+    Carta *novaCarta = removerTopo(baralho);
+
+    if (novaCarta != NULL) {
+        novaCarta->prox = mao->primeira;
+
+        if (mao->primeira != NULL)
+            mao->primeira->ant = novaCarta;
+
+        mao->primeira = novaCarta;
+
+        if (mao->quantidade == 0) 
+            mao->ultima = novaCarta;
+            
+        mao->quantidade++;
+    }
+
+    return true;
+}
+
+bool preencherMaoInicioJogo(ListaCarta *mao, Baralho *baralho) {
+    if (mao == NULL)
+        return false;
+
+    for (int i = 0; i < QTD_LOOPS_PREENCHER_MAO; i++)
+        if (!inserirNaMao(mao, baralho))
+            return false;
+
+    return true;
+}
+
+void imprimirMao(ListaCarta *mao) {
+    if (mao == NULL)
+        return;
+
+    printf("MAO:");
+
+    Carta *aux = mao->primeira;
+
+    while (aux != NULL) {
+        printf(" [ %c %d ]", aux->naipe, aux->numero);
+        aux = aux->prox;
+    }
+
+    printf("\n");
+}
+
+Colecao *criarColecao(char naipe) {
+    Colecao *novaColecao = (Colecao *)malloc(sizeof(Colecao));
+
+    if (novaColecao != NULL) {
+        novaColecao->naipe = naipe;
+        novaColecao->lista = criarLista();
+    }
+    return novaColecao;
+}
+
+Galeria *criarGaleria() {
+    return (Galeria *)malloc(sizeof(Galeria));
+}
+bool inicializarGaleria(Galeria *galeria) {
+    if (galeria == NULL)
+        return false;
+
+    for (int i = 0; i < QTD_NAIPES; i++) {
+        galeria->colecao[i] = criarColecao(i + 'A');
+    }
+
+    return true;
 }
