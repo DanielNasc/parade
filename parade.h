@@ -32,12 +32,28 @@ void imprimirBaralho(Baralho *);
 
 Carta *removerTopo(Baralho *); 
 
-// MAO ===========================================
+// LISTA ===========================================
 
-bool inserirNaMao(ListaCarta *, Baralho *);
-bool preencherMaoInicioJogo(ListaCarta *, Baralho *);
+bool inserirInicio(ListaCarta *, Carta *);
+bool inicializarMao(ListaCarta *, Baralho *);
+bool removerQualquerCartaValida(ListaCarta *, Galeria *, Carta *);
+bool removerPorNaipe(ListaCarta *, Carta *);
+bool removerPorNumero(ListaCarta *, Carta *);
 
-void imprimirMao(ListaCarta *mao);
+Carta *primeiraCartaAposBloqueio(ListaCarta *, int);
+Carta *removerIndice(ListaCarta *, int);
+
+int quantidadeCartasLista(ListaCarta *);
+
+void imprimirLista(ListaCarta *);
 
 // COLECAO =======================================
 bool inicializarGaleria(Galeria *);
+bool inserirColecao(Colecao *, Carta *);
+bool inserirNaGaleria(Galeria *, Carta *);
+
+void imprimirGaleria(Galeria *);
+
+// MESA =======================================
+bool inserirFim(ListaCarta *, Carta *);
+bool inicializarMesa(ListaCarta *, Baralho *);

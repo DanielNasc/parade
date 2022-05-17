@@ -177,7 +177,7 @@ Carta *removerTopo(Baralho *baralho) {
     return topoAntigo;
 }
 
-// ======================= FUNÇÕES MÃO =======================
+// ======================= FUNÇÕES LISTA =======================
 
 ListaCarta *criarLista() {
     ListaCarta *novaLista = (ListaCarta *) malloc(sizeof(ListaCarta));
@@ -190,55 +190,184 @@ ListaCarta *criarLista() {
     return novaLista;
 }
 
-bool inserirNaMao(ListaCarta *mao, Baralho *baralho) {
-    if (mao == NULL || baralho == NULL)
+bool inserirInicio(ListaCarta *lista, Carta *novaCarta) {
+    if (lista == NULL || novaCarta == NULL)
         return false;
 
-    Carta *novaCarta = removerTopo(baralho);
+    novaCarta->prox = lista->primeira;
 
-    if (novaCarta != NULL) {
-        novaCarta->prox = mao->primeira;
+    if (lista->primeira != NULL)
+        lista->primeira->ant = novaCarta;
 
-        if (mao->primeira != NULL)
-            mao->primeira->ant = novaCarta;
+    lista->primeira = novaCarta;
 
-        mao->primeira = novaCarta;
-
-        if (mao->quantidade == 0) 
-            mao->ultima = novaCarta;
-            
-        mao->quantidade++;
-    }
+    if (lista->quantidade == 0) 
+        lista->ultima = novaCarta;
+        
+    lista->quantidade++;
 
     return true;
 }
 
-bool preencherMaoInicioJogo(ListaCarta *mao, Baralho *baralho) {
+bool inserirFim(ListaCarta *lista, Carta *novaCarta) {
+    if (lista == NULL || novaCarta == NULL)
+        return false;
+    
+    if (lista->quantidade == 0)
+        lista->primeira = lista->ultima = novaCarta;
+    else {
+        lista->ultima->prox = novaCarta;
+        novaCarta->ant = lista->ultima;
+        lista->ultima = novaCarta;
+    }
+
+    lista->quantidade++;
+    return true;
+}
+
+
+bool inicializarMao(ListaCarta *mao, Baralho *baralho) {
     if (mao == NULL)
         return false;
 
     for (int i = 0; i < QTD_LOOPS_PREENCHER_MAO; i++)
-        if (!inserirNaMao(mao, baralho))
+        if (!inserirInicio(mao, removerTopo(baralho)))
             return false;
 
     return true;
 }
 
-void imprimirMao(ListaCarta *mao) {
-    if (mao == NULL)
+
+bool inicializarMesa(ListaCarta *mesa, Baralho *baralho) {
+    if (mesa == NULL || baralho == NULL || baralho->quantidade == 0)
+        return false;
+
+    for (int i = 0; i < QTD_LOOPS_PREENCHER_MAO; i++)
+        if(!inserirFim(mesa, removerTopo(baralho)))
+            return false;
+
+    return true;   
+}
+
+int quantidadeCartasLista(ListaCarta *lista) {
+    return lista != NULL ? lista->quantidade : 0;
+}
+
+Carta *removerIndice(ListaCarta *lista, int indice) {
+    if (lista == NULL 
+        || indice < 0 
+        || indice > lista->quantidade - 1);
+
+    Carta *aux;
+
+
+    aux = lista->ultima;
+
+    for (int i = 0; i != indice; i++) 
+        aux = aux->ant;
+    
+
+    if (aux->ant != NULL)
+        aux->ant->prox = aux->prox;
+    else
+        lista->primeira = aux->prox; // ta no começo
+        
+    if (aux->prox != NULL)
+        aux->prox->ant = aux->ant;
+    else 
+        lista->ultima = aux->ant; // ta no fim
+    
+    // printf("NAIPE %d | N %d");
+    lista->quantidade--;
+
+    aux->prox = aux->ant = NULL;
+    return aux;
+}
+
+Carta *primeiraCartaAposBloqueio(ListaCarta *mesa, int indicesBloqueados) {
+    if (mesa == NULL 
+        || indicesBloqueados < 0 
+        || indicesBloqueados >= mesa->quantidade - 1)
+        return NULL;
+    
+    Carta *aux = mesa->ultima;
+
+    for (int i = 0; i < indicesBloqueados; i++)
+        aux = aux->ant;
+
+    
+    return aux->ant;
+}
+
+// bool removerPorNaipe(ListaCarta *mesa, Carta *carta) {
+//     if (mesa == NULL || carta == NULL)
+//         return false;
+
+//     Carta *aux = primeiraCartaAposBloqueio(mesa, carta->numero);
+
+//     while (aux != NULL) {
+        
+
+//         aux = aux->ant;
+//     }
+
+//     return true;
+// }
+
+// bool removerPorNumero(ListaCarta *lista, Carta *carta) {
+//     return true;
+// }
+
+// Itera a lista de cartas da mesa, comaprando o naipe (==) e o numero (<=) com a carta dada
+bool removerQualquerCartaValida(ListaCarta *mesa, 
+                                Galeria *galeria, 
+                                Carta *carta)
+{
+    if (mesa == NULL || galeria == NULL || carta == NULL)
+        return false;
+
+    Carta *aux = primeiraCartaAposBloqueio(mesa, carta->numero);
+    if (aux == NULL)
+        return true; // bloqueou tudo
+
+
+    for (int indice = carta->numero; aux != NULL; indice++) {
+        printf("naipe carta: %c naipe aux: %c | numero carta: %d numero aux: %d\n",
+             carta->naipe, aux->naipe, carta->numero, aux->numero);
+
+        
+        if (aux->numero <= carta->numero || aux->naipe == carta->naipe) {
+            printf("OOOO: naipe carta: %c naipe aux: %c | numero carta: %d numero aux: %d\n",
+             aux->naipe, carta->naipe, aux->numero, carta->numero);
+
+            Carta *cartaRemovida = removerIndice(mesa, indice);
+            inserirNaGaleria(galeria, cartaRemovida);
+            indice--;
+        }
+        
+        aux = aux->ant;
+    }
+
+    return true;
+}
+
+void imprimirLista(ListaCarta *lista) {
+    if (lista == NULL)
         return;
 
-    printf("MAO:");
+    printf("Lista de Cartas:");
 
-    Carta *aux = mao->primeira;
+    Carta *aux = lista->primeira;
 
     while (aux != NULL) {
         printf(" [ %c %d ]", aux->naipe, aux->numero);
         aux = aux->prox;
     }
 
-    printf("\n");
+    printf(" | Quantidade: %d\n", lista->quantidade);
 }
+
+// ============ FUNÇÕES COLEÇÃO | GALERIA ======================
 
 Colecao *criarColecao(char naipe) {
     Colecao *novaColecao = (Colecao *)malloc(sizeof(Colecao));
@@ -248,6 +377,13 @@ Colecao *criarColecao(char naipe) {
         novaColecao->lista = criarLista();
     }
     return novaColecao;
+}
+
+bool inserirColecao(Colecao *colecao, Carta *novaCarta) {
+    if (colecao == NULL) 
+        return false;
+
+    return inserirFim(colecao->lista, novaCarta);
 }
 
 Galeria *criarGaleria() {
@@ -262,4 +398,27 @@ bool inicializarGaleria(Galeria *galeria) {
     }
 
     return true;
+}
+
+bool inserirNaGaleria(Galeria *galeria, Carta *novaCarta) {
+    if (galeria == NULL 
+        || novaCarta == NULL
+        || novaCarta->naipe < 0 + 'A'
+        || novaCarta->naipe > 'F')
+        return false;
+
+    return inserirColecao(galeria->colecao[novaCarta->naipe - 'A'], novaCarta);
+}
+
+void imprimirGaleria(Galeria *galeria) {
+    if (galeria == NULL)
+        return;
+
+    printf("Imprimindo galeria:\n");
+
+    for (int i = 0; i < QTD_NAIPES; i++) {
+        Colecao *current = galeria->colecao[i];
+        printf("COLECAO DE NAIPE %c : ", current->naipe);
+        imprimirLista(current->lista);
+    }
 }
