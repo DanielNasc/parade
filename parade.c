@@ -258,14 +258,15 @@ Carta *removerIndice(ListaCarta *lista, int indice) {
         || indice < 0 
         || indice > lista->quantidade - 1);
 
-    Carta *aux;
+    Carta *aux = lista->ultima;
 
-
-    aux = lista->ultima;
 
     for (int i = 0; i != indice; i++) 
         aux = aux->ant;
-    
+
+    // printf("Indice p remover: %i\n", indice);
+    // if (aux)
+    //     printf("Naipe RM: %c | N RM: %d\n", aux->naipe, aux->numero);
 
     if (aux->ant != NULL)
         aux->ant->prox = aux->prox;
@@ -284,19 +285,19 @@ Carta *removerIndice(ListaCarta *lista, int indice) {
     return aux;
 }
 
-Carta *primeiraCartaAposBloqueio(ListaCarta *mesa, int indicesBloqueados) {
+Carta *primeiraCartaAposBloqueio(ListaCarta *mesa, int quantidadeBloqueados) {
     if (mesa == NULL 
-        || indicesBloqueados < 0 
-        || indicesBloqueados >= mesa->quantidade - 1)
+        || quantidadeBloqueados < 0 
+        || quantidadeBloqueados >= mesa->quantidade - 1)
         return NULL;
     
-    Carta *aux = mesa->ultima;
+    Carta *aux = mesa->ultima; // indice 0
 
-    for (int i = 0; i < indicesBloqueados; i++)
+    for (int i = quantidadeBloqueados; i > 0; i--)
         aux = aux->ant;
+    printf("Carta onde bloqueio parou: %c | %d", aux->naipe, aux->numero);
 
-    
-    return aux->ant;
+    return aux;
 }
 
 // bool removerPorNaipe(ListaCarta *mesa, Carta *carta) {
@@ -330,23 +331,19 @@ bool removerQualquerCartaValida(ListaCarta *mesa,
     if (aux == NULL)
         return true; // bloqueou tudo
 
-
+    printf("\n\n\nINDICES: ");
     for (int indice = carta->numero; aux != NULL; indice++) {
-        printf("naipe carta: %c naipe aux: %c | numero carta: %d numero aux: %d\n",
-             carta->naipe, aux->naipe, carta->numero, aux->numero);
-
-        
         if (aux->numero <= carta->numero || aux->naipe == carta->naipe) {
-            printf("OOOO: naipe carta: %c naipe aux: %c | numero carta: %d numero aux: %d\n",
-             aux->naipe, carta->naipe, aux->numero, carta->numero);
-
             Carta *cartaRemovida = removerIndice(mesa, indice);
             inserirNaGaleria(galeria, cartaRemovida);
             indice--;
         }
         
+        printf(" %i ", indice);
         aux = aux->ant;
     }
+
+    printf("\n");
 
     return true;
 }
