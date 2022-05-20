@@ -256,46 +256,53 @@ int quantidadeCartasLista(ListaCarta *lista) {
 Carta *removerIndice(ListaCarta *lista, int indice) {
     if (lista == NULL 
         || indice < 0 
-        || indice > lista->quantidade - 1);
+        || indice > lista->quantidade)
+        return NULL;
 
     Carta *aux = lista->ultima;
 
-
-    for (int i = 0; i != indice; i++) 
+    printf("[Buscanado indice %d]\n", indice);
+    printf("...\n");
+    for (int i = 0; i < indice; i++) { 
         aux = aux->ant;
+    }
 
-    // printf("Indice p remover: %i\n", indice);
-    // if (aux)
-    //     printf("Naipe RM: %c | N RM: %d\n", aux->naipe, aux->numero);
+    printf("[Removendo carta]\n");
+    printf("Naipe: %c | numero: %i\n", aux->naipe, aux->numero);
 
     if (aux->ant != NULL)
         aux->ant->prox = aux->prox;
-    else
-        lista->primeira = aux->prox; // ta no começo
-        
+    else    // se o anterior for NULL, então o aux é a primeira carta
+        lista->primeira = aux->prox;
+
     if (aux->prox != NULL)
         aux->prox->ant = aux->ant;
-    else 
-        lista->ultima = aux->ant; // ta no fim
-    
-    // printf("NAIPE %d | N %d");
+    else    // se o proximo for NULL, então o aux é a ultima carta
+        lista->ultima = aux->ant;
+
     lista->quantidade--;
 
-    aux->prox = aux->ant = NULL;
+    aux->ant = aux->prox = NULL;
+
     return aux;
 }
 
 Carta *primeiraCartaAposBloqueio(ListaCarta *mesa, int quantidadeBloqueados) {
     if (mesa == NULL 
         || quantidadeBloqueados < 0 
-        || quantidadeBloqueados >= mesa->quantidade - 1)
+        || quantidadeBloqueados >= mesa->quantidade)
         return NULL;
     
     Carta *aux = mesa->ultima; // indice 0
 
-    for (int i = quantidadeBloqueados; i > 0; i--)
+    // printf("\n[Checando cartas para bloqueio]\n");
+    for (int i = 0; i < quantidadeBloqueados; i++) {
+        // printf("Naipe: %c | numero: %i\n", aux->naipe, aux->numero);
         aux = aux->ant;
-    printf("Carta onde bloqueio parou: %c | %d", aux->naipe, aux->numero);
+    }
+
+    // printf("[Primeira carta apos bloqueio]\n");
+    // printf("Naipe: %c | numero: %i\n\n", aux->naipe, aux->numero);
 
     return aux;
 }
@@ -328,22 +335,30 @@ bool removerQualquerCartaValida(ListaCarta *mesa,
         return false;
 
     Carta *aux = primeiraCartaAposBloqueio(mesa, carta->numero);
+    
     if (aux == NULL)
         return true; // bloqueou tudo
 
-    printf("\n\n\nINDICES: ");
-    for (int indice = carta->numero; aux != NULL; indice++) {
-        if (aux->numero <= carta->numero || aux->naipe == carta->naipe) {
-            Carta *cartaRemovida = removerIndice(mesa, indice);
-            inserirNaGaleria(galeria, cartaRemovida);
-            indice--;
+    /*
+        Retirar todas as cartas que possuem o mesmo naipe ou têm o número igual ou inferior ao da carta dada
+        e que não estão bloqueadas
+        e as inserir na lista de cartas da galeria
+    */
+
+   printf("Loop iniciando\n");
+   for (int indice = carta->numero; aux != NULL ; indice++) {
+       printf("Carta: %c | %i | indice: %i\n", aux->naipe, aux->numero, indice);
+        if (aux->naipe == carta->naipe || aux->numero <= carta->numero) {
+            printf("Removendo carta %c%d com indice %i\n", aux->naipe, aux->numero, indice);
+            aux = aux->ant;
+            Carta *removida = removerIndice(mesa, indice);
+            inserirNaGaleria(galeria, removida);
+            indice--;   
+            continue;
         }
-        
-        printf(" %i ", indice);
         aux = aux->ant;
     }
-
-    printf("\n");
+    printf("Loop terminado\n");
 
     return true;
 }

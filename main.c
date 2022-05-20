@@ -39,11 +39,16 @@ void testes() {
     inserirFim(mao, removerTopo(baralho));
     printf("MAO DEPOIS =========\n");
     imprimirLista(mao);
+
+    // preencher mesas com varias cartas para teste
+    for (int i = 0; i < 5; i++)
+        inserirFim(mesa, removerTopo(baralho));
+
     printf("MESA ANTES ========\n");
     imprimirLista(mesa);
     removerQualquerCartaValida(mesa, galeria, random);
-    printf("MESA DEPOIS =======\n");
-    imprimirLista(mesa);
+    // printf("MESA DEPOIS =======\n");
+    // imprimirLista(mesa);
     printf("GALERIA ===========\n");
     imprimirGaleria(galeria);
     printf("MESA DEPOIS DEPOIS =======\n");
