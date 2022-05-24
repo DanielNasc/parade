@@ -15,10 +15,10 @@ Segundo Roberto, essas são as funções mínimas do TAD para o projeto funciona
 ## Lista Dinâmica
 - [x] Lista * criar()
 - [x] int inserirInicio(Lista *, struct carta)
-- [ ] int removerQualquer(Lista *, struct carta) // Remove exatamente o cara passado
+- [x] int removerQualquer(Lista *, struct carta) // Remove exatamente o cara passado
 - [x] int acessarIndice(Lista *, int) // Acessa indice específico 
 - [x] int quantidade(Lista *)
-- [ ] int somaValores(Lista *) // Soma os valores das cartas de uma lista
+- [x] int somaValores(Lista *) // Soma os valores das cartas de uma lista
 
 ## Estruturas necessárias
 

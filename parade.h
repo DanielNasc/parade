@@ -51,6 +51,7 @@ void imprimirLista(ListaCarta *);
 bool inicializarGaleria(Galeria *);
 bool inserirColecao(Colecao *, Carta *);
 bool inserirNaGaleria(Galeria *, Carta *);
+int somaValoresColecao(Colecao *);
 
 void imprimirGaleria(Galeria *);
 

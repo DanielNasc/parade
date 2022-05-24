@@ -21,6 +21,7 @@ typedef struct listaCarta {
 
 typedef struct colecao {
     char naipe;
+    int somatorioPontos;
     ListaCarta *lista;
 } Colecao;
 
@@ -307,25 +308,6 @@ Carta *primeiraCartaAposBloqueio(ListaCarta *mesa, int quantidadeBloqueados) {
     return aux;
 }
 
-// bool removerPorNaipe(ListaCarta *mesa, Carta *carta) {
-//     if (mesa == NULL || carta == NULL)
-//         return false;
-
-//     Carta *aux = primeiraCartaAposBloqueio(mesa, carta->numero);
-
-//     while (aux != NULL) {
-        
-
-//         aux = aux->ant;
-//     }
-
-//     return true;
-// }
-
-// bool removerPorNumero(ListaCarta *lista, Carta *carta) {
-//     return true;
-// }
-
 // Itera a lista de cartas da mesa, comaprando o naipe (==) e o numero (<=) com a carta dada
 bool removerQualquerCartaValida(ListaCarta *mesa, 
                                 Galeria *galeria, 
@@ -386,6 +368,7 @@ Colecao *criarColecao(char naipe) {
 
     if (novaColecao != NULL) {
         novaColecao->naipe = naipe;
+        novaColecao->somatorioPontos = 0;
         novaColecao->lista = criarLista();
     }
     return novaColecao;
@@ -395,12 +378,21 @@ bool inserirColecao(Colecao *colecao, Carta *novaCarta) {
     if (colecao == NULL) 
         return false;
 
+    colecao->somatorioPontos += novaCarta->numero;
     return inserirFim(colecao->lista, novaCarta);
+}
+
+int somaValoresColecao(Colecao *colecao) {
+    if (colecao == NULL)
+        return 0;
+
+    return colecao->somatorioPontos;
 }
 
 Galeria *criarGaleria() {
     return (Galeria *)malloc(sizeof(Galeria));
 }
+
 bool inicializarGaleria(Galeria *galeria) {
     if (galeria == NULL)
         return false;
@@ -432,5 +424,6 @@ void imprimirGaleria(Galeria *galeria) {
         Colecao *current = galeria->colecao[i];
         printf("COLECAO DE NAIPE %c : ", current->naipe);
         imprimirLista(current->lista);
+        printf("\nSomatorio: %d\n", current->somatorioPontos);
     }
 }

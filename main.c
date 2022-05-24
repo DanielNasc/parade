@@ -41,7 +41,7 @@ void testes() {
     imprimirLista(mao);
 
     // preencher mesas com varias cartas para teste
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 30; i++)
         inserirFim(mesa, removerTopo(baralho));
 
     printf("MESA ANTES ========\n");
