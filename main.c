@@ -19,10 +19,8 @@ void testes() {
     // removerTopo(baralho);
     // imprimirBaralho(baralho);
 
-    ListaCarta *mao = criarLista(),
-               *mesa = criarLista();
+    ListaCarta *mesa = criarLista();
 
-    inicializarMao(mao, baralho);
     inicializarMesa(mesa, baralho);
 
     // printf("MAO: ==============\n");
@@ -30,28 +28,51 @@ void testes() {
     // printf("MESA: ==============\n");
     // imprimirLista(mesa);
 
-    Galeria *galeria = criarGaleria();
-    inicializarGaleria(galeria);
+    // Galeria *galeria = criarGaleria();
+    // inicializarGaleria(galeria);
 
-    printf("MAO ANTES =========\n");
-    imprimirLista(mao);
-    Carta *random = removerIndice(mao, 0);
-    inserirFim(mao, removerTopo(baralho));
-    printf("MAO DEPOIS =========\n");
-    imprimirLista(mao);
+    // printf("MAO ANTES =========\n");
+    // imprimirLista(mao);
+    // Carta *random = removerIndice(mao, 0);
+    // inserirFim(mao, removerTopo(baralho));
+    // printf("MAO DEPOIS =========\n");
+    // imprimirLista(mao);
 
     // preencher mesas com varias cartas para teste
     for (int i = 0; i < 30; i++)
         inserirFim(mesa, removerTopo(baralho));
 
+    // printf("MESA ANTES ========\n");
+    // imprimirLista(mesa);
+    // removerQualquerCartaValida(mesa, galeria, random);
+    // // printf("MESA DEPOIS =======\n");
+    // // imprimirLista(mesa);
+    // printf("GALERIA ===========\n");
+    // imprimirGaleria(galeria);
+    // printf("MESA DEPOIS DEPOIS =======\n");
+    // inserirFim(mesa, random);
+    // imprimirLista(mesa);
+
+    Jogador *jogador = criarJogador();
+    Computador *computador = criarComputador();
+
+    inicializarMao(jogador, baralho);
+
     printf("MESA ANTES ========\n");
     imprimirLista(mesa);
-    removerQualquerCartaValida(mesa, galeria, random);
-    // printf("MESA DEPOIS =======\n");
-    // imprimirLista(mesa);
-    printf("GALERIA ===========\n");
-    imprimirGaleria(galeria);
-    printf("MESA DEPOIS DEPOIS =======\n");
-    inserirFim(mesa, random);
+
+    jogadaPlayer(jogador, mesa);
+
+    printf("MESA DEPOIS =======\n");
     imprimirLista(mesa);
+
+    imprimirGaleriaJogador(jogador);
+
+    printf("JOGADA DO COMPUTADOR ===========\n");
+    jogadaComputador(computador, baralho, mesa);
+
+    printf("MESA DEPOIS DEPOIS =======\n");
+    imprimirLista(mesa);
+
+    imprimirGaleriaComputador(computador);
 }

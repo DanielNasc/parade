@@ -29,6 +29,15 @@ typedef struct galeria {
     Colecao *colecao[QTD_NAIPES];
 } Galeria;
 
+typedef struct jogador {
+    ListaCarta *mao;
+    Galeria *galeria;
+} Jogador;
+
+typedef struct computador {
+    Galeria *galeria;
+} Computador;
+
 Carta *criarCarta(int numero, char naipe) {
     Carta *novaCarta = (Carta *) malloc(sizeof(Carta));
 
@@ -227,12 +236,12 @@ bool inserirFim(ListaCarta *lista, Carta *novaCarta) {
 }
 
 
-bool inicializarMao(ListaCarta *mao, Baralho *baralho) {
-    if (mao == NULL)
+bool inicializarMao(Jogador *jogador, Baralho *baralho) {
+    if (jogador == NULL || baralho == NULL)
         return false;
 
     for (int i = 0; i < QTD_LOOPS_PREENCHER_MAO; i++)
-        if (!inserirInicio(mao, removerTopo(baralho)))
+        if (!inserirInicio(jogador->mao, removerTopo(baralho)))
             return false;
 
     return true;
@@ -262,14 +271,14 @@ Carta *removerIndice(ListaCarta *lista, int indice) {
 
     Carta *aux = lista->ultima;
 
-    printf("[Buscanado indice %d]\n", indice);
-    printf("...\n");
+    // printf("[Buscanado indice %d]\n", indice);
+    // printf("...\n");
     for (int i = 0; i < indice; i++) { 
         aux = aux->ant;
     }
 
-    printf("[Removendo carta]\n");
-    printf("Naipe: %c | numero: %i\n", aux->naipe, aux->numero);
+    // printf("[Removendo carta]\n");
+    // printf("Naipe: %c | numero: %i\n", aux->naipe, aux->numero);
 
     if (aux->ant != NULL)
         aux->ant->prox = aux->prox;
@@ -327,11 +336,11 @@ bool removerQualquerCartaValida(ListaCarta *mesa,
         e as inserir na lista de cartas da galeria
     */
 
-   printf("Loop iniciando\n");
+//    printf("Loop iniciando\n");
    for (int indice = carta->numero; aux != NULL ; indice++) {
-       printf("Carta: %c | %i | indice: %i\n", aux->naipe, aux->numero, indice);
+    //    printf("Carta: %c | %i | indice: %i\n", aux->naipe, aux->numero, indice);
         if (aux->naipe == carta->naipe || aux->numero <= carta->numero) {
-            printf("Removendo carta %c%d com indice %i\n", aux->naipe, aux->numero, indice);
+            // printf("Removendo carta %c%d com indice %i\n", aux->naipe, aux->numero, indice);
             aux = aux->ant;
             Carta *removida = removerIndice(mesa, indice);
             inserirNaGaleria(galeria, removida);
@@ -340,7 +349,7 @@ bool removerQualquerCartaValida(ListaCarta *mesa,
         }
         aux = aux->ant;
     }
-    printf("Loop terminado\n");
+    // printf("Loop terminado\n");
 
     return true;
 }
@@ -426,4 +435,89 @@ void imprimirGaleria(Galeria *galeria) {
         imprimirLista(current->lista);
         printf("\nSomatorio: %d\n", current->somatorioPontos);
     }
+}
+
+// JOGAR ======================================
+Jogador *criarJogador() {
+    Jogador *jogador = (Jogador *)malloc(sizeof(Jogador));
+
+    if (jogador != NULL) {
+        jogador->mao = criarLista();
+        jogador->galeria = criarGaleria();
+
+        if (jogador->mao == NULL || jogador->galeria == NULL) {
+            free(jogador->mao);
+            free(jogador->galeria);
+            free(jogador);
+            return NULL;
+        }
+
+        inicializarGaleria(jogador->galeria);
+    }
+
+    return jogador;
+}
+
+Computador *criarComputador() {
+    Computador *computador = (Computador *)malloc(sizeof(Computador));
+
+    if (computador != NULL) {
+        computador->galeria = criarGaleria();
+
+        if (computador->galeria == NULL) {
+            free(computador->galeria);
+            free(computador);
+            return NULL;
+        }
+
+        inicializarGaleria(computador->galeria);
+    }
+
+    return computador;
+}
+
+void jogadaPlayer(Jogador *jogador, ListaCarta *mesa) {
+    int indiceEscolhido;
+
+    // REMOVER DEPOIS P COLOCAR AS DE LUMA ============================
+
+    printf("Escolha uma carta para jogar:\n");
+    imprimirLista(jogador->mao);
+    
+    do {
+        scanf("%d", &indiceEscolhido);
+        if (indiceEscolhido < 0 || indiceEscolhido >= jogador->mao->quantidade)
+            printf("Escolha invalida!\n");
+    } while (indiceEscolhido < 0 || indiceEscolhido >= jogador->mao->quantidade);
+
+    // ================================================================
+
+    Carta *cartaEscolhida = removerIndice(jogador->mao, indiceEscolhido);
+    printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
+    removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
+    inserirFim(mesa, cartaEscolhida);
+}
+
+void imprimirGaleriaJogador(Jogador *jogador) {
+    if (jogador == NULL)
+        return;
+
+    imprimirGaleria(jogador->galeria);
+}
+
+
+void jogadaComputador(Computador *computador, Baralho *baralho, ListaCarta *mesa) {
+    // o computador não tem mão, então ele tira a carta do topo do baralho e joga
+
+    Carta *cartaEscolhida = removerTopo(baralho);
+    printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
+    removerQualquerCartaValida(mesa, computador->galeria, cartaEscolhida);
+    inserirFim(mesa, cartaEscolhida);
+}
+
+void imprimirGaleriaComputador(Computador *computador) {
+    if (computador == NULL)
+        return;
+
+    imprimirGaleria(computador->galeria);
 }

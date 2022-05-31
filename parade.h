@@ -6,6 +6,8 @@ typedef struct baralho Baralho;
 typedef struct listaCarta ListaCarta;
 typedef struct colecao Colecao;
 typedef struct galeria Galeria;
+typedef struct jogador Jogador;
+typedef struct computador Computador;
 
 #define QTD_MAX_CARTAS 66
 #define QTD_NAIPES 6
@@ -18,6 +20,8 @@ Baralho *criarBaralho();
 ListaCarta *criarLista();
 Colecao *criarColecao(char);
 Galeria *criarGaleria();
+Jogador *criarJogador();
+Computador *criarComputador();
 
 // BARALHO =======================================
 
@@ -35,10 +39,8 @@ Carta *removerTopo(Baralho *);
 // LISTA ===========================================
 
 bool inserirInicio(ListaCarta *, Carta *);
-bool inicializarMao(ListaCarta *, Baralho *);
+bool inicializarMao(Jogador *, Baralho *);
 bool removerQualquerCartaValida(ListaCarta *, Galeria *, Carta *);
-bool removerPorNaipe(ListaCarta *, Carta *);
-bool removerPorNumero(ListaCarta *, Carta *);
 
 Carta *primeiraCartaAposBloqueio(ListaCarta *, int);
 Carta *removerIndice(ListaCarta *, int);
@@ -58,3 +60,9 @@ void imprimirGaleria(Galeria *);
 // MESA =======================================
 bool inserirFim(ListaCarta *, Carta *);
 bool inicializarMesa(ListaCarta *, Baralho *);
+
+// JOGAR ======================================
+void jogadaPlayer(Jogador *, ListaCarta *);
+void jogadaComputador(Computador *, Baralho *, ListaCarta *);
+void imprimirGaleriaJogador(Jogador *);
+void imprimirGaleriaComputador(Computador *);
