@@ -9,6 +9,18 @@ typedef struct galeria Galeria;
 typedef struct jogador Jogador;
 typedef struct computador Computador;
 
+typedef enum ganhador {
+    NINGUEM,
+    JOGADOR,
+    COMPUTADOR
+} Ganhador;
+
+typedef enum tipoVitoria {
+    NAO_FINALIZADA,
+    NORMAL,
+    PERFEITA,
+} TipoVitoria;
+
 #define QTD_MAX_CARTAS 66
 #define QTD_NAIPES 6
 #define MAIOR_NUMERO_CARTA 10

@@ -187,6 +187,13 @@ Carta *removerTopo(Baralho *baralho) {
     return topoAntigo;
 }
 
+bool baralhoVazio(Baralho *baralho) {
+    if (baralho == NULL)
+        return true;
+
+    return baralho->quantidade == 0;
+}
+
 // ======================= FUNÇÕES LISTA =======================
 
 ListaCarta *criarLista() {
@@ -437,6 +444,18 @@ void imprimirGaleria(Galeria *galeria) {
     }
 }
 
+bool galeriaVazia(Galeria *galeria) {
+    if (galeria == NULL)
+        return true;
+
+    for (int i = 0; i < QTD_NAIPES; i++) {
+        if (galeria->colecao[i]->lista->quantidade > 0)
+            return false;
+    }
+
+    return true;
+}
+
 // JOGAR ======================================
 Jogador *criarJogador() {
     Jogador *jogador = (Jogador *)malloc(sizeof(Jogador));
@@ -520,4 +539,104 @@ void imprimirGaleriaComputador(Computador *computador) {
         return;
 
     imprimirGaleria(computador->galeria);
+}
+
+
+// FUNCOES VITORIA OU DERROTA ========================================================
+
+bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *galeria) {
+    if (galeria == NULL)
+        return false;
+
+    for (int i = 0; i < QTD_NAIPES; i++) {
+        if (galeria->colecao[i]->lista->quantidade < 1)
+            return false;
+    }
+
+    return true;
+}
+
+/*
+    Acabar o baralho e o jogador ter 4 cartas
+    -> Se sua galeria tiver 0 pontos, ele vence
+    -> Além disso, se ele tiver duas cartas com numero 0, ele vence perfeitamente
+*/
+
+TipoVitoria checarVitoriaJogador(Jogador *jogador) {
+    if (
+        jogador == NULL
+        || jogador->mao == NULL
+        || jogador->mao->quantidade != 4
+        || !galeriaVazia(jogador->galeria)
+    )
+        return NAO_FINALIZADA;
+
+    uint8_t quantidadeZeros = 0;
+    Carta *aux = jogador->mao->primeira;
+
+    while (aux != NULL) {
+        if (aux->numero == 0)
+            quantidadeZeros++;
+        if (quantidadeZeros == 2)
+            return PERFEITA;
+        aux = aux->prox;
+    }
+
+    return NORMAL;
+}
+
+
+// Pedir para o jogador escolher duas cartas da mao e coloca-las na galeria
+
+void colocarDuasCartasGaleria(Jogador *jogador) {
+    int indiceEscolhido;
+
+    // REMOVER DEPOIS P COLOCAR AS DE LUMA ============================
+
+    printf("Escolha uma carta para jogar:\n");
+    imprimirLista(jogador->mao);
+    
+    do {
+        scanf("%d", &indiceEscolhido);
+        if (indiceEscolhido < 0 || indiceEscolhido >= jogador->mao->quantidade)
+            printf("Escolha invalida!\n");
+    } while (indiceEscolhido < 0 || indiceEscolhido >= jogador->mao->quantidade);
+
+    // ================================================================
+
+    Carta *cartaEscolhida = removerIndice(jogador->mao, indiceEscolhido);
+    printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
+    inserirNaGaleria(jogador->galeria, cartaEscolhida);
+
+    // REMOVER DEPOIS P COLOCAR AS DE LUMA ============================
+
+    printf("Escolha outra carta para jogar:\n");
+    imprimirLista(jogador->mao);
+    
+    do {
+        scanf("%d", &indiceEscolhido);
+        if (indiceEscolhido < 0 || indiceEscolhido >= jogador->mao->quantidade)
+            printf("Escolha invalida!\n");
+    } while (indiceEscolhido < 0 || indiceEscolhido >= jogador->mao->quantidade);
+
+    // ================================================================
+
+    cartaEscolhida = removerIndice(jogador->mao, indiceEscolhido);
+    printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
+    inserirNaGaleria(jogador->galeria, cartaEscolhida);
+}
+
+int compararPontuacoes(Jogador *jogador, Computador *computador) {
+    if (jogador == NULL || computador == NULL)
+        return 0;
+
+    int pontuacaoJogador = 0;
+
+    for (int i = 0; i < QTD_NAIPES; i++) {
+        pontuacaoJogador += jogador->galeria->colecao[i]->lista->quantidade > computador->galeria->colecao[i]->lista->quantidade ?
+                            jogador->galeria->colecao[i]->lista->quantidade :
+                            jogador->galeria->colecao[i]->somatorioPontos;
+    }
+
+    return pontuacaoJogador;
 }
