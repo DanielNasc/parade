@@ -39,8 +39,8 @@ void testes() {
     // imprimirLista(mao);
 
     // preencher mesas com varias cartas para teste
-    for (int i = 0; i < 30; i++)
-        inserirFim(mesa, removerTopo(baralho));
+            // for (int i = 0; i < 30; i++)
+            //     inserirFim(mesa, removerTopo(baralho));
 
     // printf("MESA ANTES ========\n");
     // imprimirLista(mesa);
@@ -58,21 +58,46 @@ void testes() {
 
     inicializarMao(jogador, baralho);
 
-    printf("MESA ANTES ========\n");
-    imprimirLista(mesa);
+    // jogadaPlayer(jogador, mesa);
 
-    jogadaPlayer(jogador, mesa);
+    // printf("MESA DEPOIS =======\n");
+    // imprimirLista(mesa);
 
-    printf("MESA DEPOIS =======\n");
-    imprimirLista(mesa);
+    // imprimirGaleriaJogador(jogador);
 
-    imprimirGaleriaJogador(jogador);
+    // printf("JOGADA DO COMPUTADOR ===========\n");
+    // jogadaComputador(computador, baralho, mesa);
 
-    printf("JOGADA DO COMPUTADOR ===========\n");
-    jogadaComputador(computador, baralho, mesa);
+    // printf("MESA DEPOIS DEPOIS =======\n");
+    // imprimirLista(mesa);
 
-    printf("MESA DEPOIS DEPOIS =======\n");
-    imprimirLista(mesa);
+    // imprimirGaleriaComputador(computador);
 
-    imprimirGaleriaComputador(computador);
+    // fluxo de jogo    
+
+    while (1) {
+        printf("MESA ANTES ========\n");
+        imprimirLista(mesa);
+
+        printf("Tamanho do baralho: %i\n", tamanhoBaralho(baralho));
+        jogadaPlayer(jogador, mesa, baralho);
+
+        if (fimDeJogo(jogador, computador, baralho, mesa))
+            break;
+
+        printf("MESA DEPOIS PLAYER =======\n");
+        imprimirLista(mesa);
+
+        jogadaComputador(computador, baralho, mesa);
+        
+        if (fimDeJogo(jogador, computador, baralho, mesa))
+            break;
+
+        printf("MESA DEPOIS COMPUTADOR =======\n");
+        imprimirLista(mesa);
+
+        printf("Galeria do jogador =========\n");
+        imprimirGaleriaJogador(jogador);
+
+    }
 }

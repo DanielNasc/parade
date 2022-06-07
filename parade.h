@@ -16,7 +16,7 @@ typedef enum ganhador {
 } Ganhador;
 
 typedef enum tipoVitoria {
-    NAO_FINALIZADA,
+    NENHUMA,
     NORMAL,
     PERFEITA,
 } TipoVitoria;
@@ -74,7 +74,14 @@ bool inserirFim(ListaCarta *, Carta *);
 bool inicializarMesa(ListaCarta *, Baralho *);
 
 // JOGAR ======================================
-void jogadaPlayer(Jogador *, ListaCarta *);
+void jogadaPlayer(Jogador *, ListaCarta *, Baralho *);
 void jogadaComputador(Computador *, Baralho *, ListaCarta *);
 void imprimirGaleriaJogador(Jogador *);
 void imprimirGaleriaComputador(Computador *);
+
+// FIM DE JOGO ================================
+bool fimDeJogo(Jogador *, Computador *, Baralho *, ListaCarta *);
+int compararPontuacoes(Jogador *, Computador *);
+void colocarDuasCartasGaleria(Jogador *);
+TipoVitoria checarVitoriaJogador(Jogador *);
+bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *);

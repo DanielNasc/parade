@@ -495,7 +495,7 @@ Computador *criarComputador() {
     return computador;
 }
 
-void jogadaPlayer(Jogador *jogador, ListaCarta *mesa) {
+void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho) {
     int indiceEscolhido;
 
     // REMOVER DEPOIS P COLOCAR AS DE LUMA ============================
@@ -515,6 +515,7 @@ void jogadaPlayer(Jogador *jogador, ListaCarta *mesa) {
     printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
     removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
     inserirFim(mesa, cartaEscolhida);
+    inserirInicio(jogador->mao, removerTopo(baralho));
 }
 
 void imprimirGaleriaJogador(Jogador *jogador) {
@@ -549,7 +550,7 @@ bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *galeria) {
         return false;
 
     for (int i = 0; i < QTD_NAIPES; i++) {
-        if (galeria->colecao[i]->lista->quantidade < 1)
+        if (galeria->colecao[i]->lista->quantidade == 0)
             return false;
     }
 
@@ -569,7 +570,7 @@ TipoVitoria checarVitoriaJogador(Jogador *jogador) {
         || jogador->mao->quantidade != 4
         || !galeriaVazia(jogador->galeria)
     )
-        return NAO_FINALIZADA;
+        return NENHUMA;
 
     uint8_t quantidadeZeros = 0;
     Carta *aux = jogador->mao->primeira;
@@ -633,10 +634,72 @@ int compararPontuacoes(Jogador *jogador, Computador *computador) {
     int pontuacaoJogador = 0;
 
     for (int i = 0; i < QTD_NAIPES; i++) {
-        pontuacaoJogador += jogador->galeria->colecao[i]->lista->quantidade > computador->galeria->colecao[i]->lista->quantidade ?
+        pontuacaoJogador += jogador->galeria->colecao[i]->lista->quantidade >= computador->galeria->colecao[i]->lista->quantidade ?
                             jogador->galeria->colecao[i]->lista->quantidade :
                             jogador->galeria->colecao[i]->somatorioPontos;
     }
 
     return pontuacaoJogador;
+}
+
+bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, ListaCarta *mesa) {
+    if (jogador == NULL || computador == NULL || baralho == NULL)
+        return false;
+
+    if (checarSeJogadorTemUmaCartaDeCadaCor(jogador->galeria)) {
+        printf("JOGADOR PERDEU!\n");
+        printf("Motivo: Tem pelo menos uma carta de cada cor\n");
+        imprimirGaleriaJogador(jogador);
+        return true;
+    }
+
+    if (baralho->quantidade != 0)   
+        return false;
+
+    // ultima jogada
+    // REMOVER DEPOIS P COLOCAR AS DE LUMA ============================
+    printf("O baralho tem 0 cartas, faça a sua última jogada e depois escolha 2 para colocar na sua galeria\n");
+    int indiceEscolhido;
+
+
+    printf("Escolha uma carta para jogar:\n");
+    imprimirLista(jogador->mao);
+    
+    do {
+        scanf("%d", &indiceEscolhido);
+        if (indiceEscolhido < 0 || indiceEscolhido >= jogador->mao->quantidade)
+            printf("Escolha invalida!\n");
+    } while (indiceEscolhido < 0 || indiceEscolhido >= jogador->mao->quantidade);
+
+    // ================================================================
+    Carta *cartaEscolhida = removerIndice(jogador->mao, indiceEscolhido);
+    printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
+    removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
+    inserirFim(mesa, cartaEscolhida);
+
+
+    TipoVitoria vitoria = checarVitoriaJogador(jogador);
+
+    if (vitoria == PERFEITA) {
+        printf("JOGADOR VENCEU PERFEITAMENTE!\n");
+        printf("Motivo: Está com as coleções vazias e tem pelo menos duas cartas com numero 0 na mão\n");
+        imprimirLista(jogador->mao);
+        imprimirGaleriaJogador(jogador);
+        return true;
+    } else if (vitoria == NORMAL) { 
+        printf("JOGADOR VENCEU!\n");
+        printf("Motivo: Está com as coleções vazias e tem 4 cartas na mão\n");
+        imprimirLista(jogador->mao);
+        imprimirGaleriaJogador(jogador);
+        return true;
+    }
+
+    colocarDuasCartasGaleria(jogador);
+    printf("A partida acabou, sua pontuação é de %d\n", compararPontuacoes(jogador, computador));
+
+     printf("SUA GALERIA==\n");
+    imprimirGaleriaJogador(jogador);
+
+    printf("GALERIA PC\n");
+    imprimirGaleriaComputador(computador);
 }
