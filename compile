@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# all c files in the current directory
+files=$(ls *.c)
+
+for file in $files; do
+    echo "Compiling $file"
+
+    fileWithoutExtension=${file%.*}
+    gcc -c $file -o $fileWithoutExtension.o
+done
+
+compiledFiles=$(ls *.o)
+
+echo "Linking"
+gcc -o main $compiledFiles
+
+echo "Done"
+echo "Removing .o files"
+rm *.o

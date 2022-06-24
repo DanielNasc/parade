@@ -1,16 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "parade.h"
+
+#include "carta.h"
+#include "jogo.h"
+#include "lista.h"
+#include "pilha.h"
 
 void testes();
 
-int main () {
+int main()
+{
     testes();
 
     return 0;
 }
 
-void testes() {
+void testes()
+{
     Baralho *baralho = criarBaralho();
     enfiarCartasNoBaralho(baralho);
     // imprimirBaralho(baralho);
@@ -39,8 +45,8 @@ void testes() {
     // imprimirLista(mao);
 
     // preencher mesas com varias cartas para teste
-            // for (int i = 0; i < 30; i++)
-            //     inserirFim(mesa, removerTopo(baralho));
+    // for (int i = 0; i < 30; i++)
+    //     inserirFim(mesa, removerTopo(baralho));
 
     // printf("MESA ANTES ========\n");
     // imprimirLista(mesa);
@@ -73,9 +79,10 @@ void testes() {
 
     // imprimirGaleriaComputador(computador);
 
-    // fluxo de jogo    
+    // fluxo de jogo
 
-    while (1) {
+    while (1)
+    {
         printf("MESA ANTES ========\n");
         imprimirLista(mesa);
 
@@ -89,7 +96,7 @@ void testes() {
         imprimirLista(mesa);
 
         jogadaComputador(computador, baralho, mesa);
-        
+
         if (fimDeJogo(jogador, computador, baralho, mesa))
             break;
 
@@ -98,6 +105,5 @@ void testes() {
 
         printf("Galeria do jogador =========\n");
         imprimirGaleriaJogador(jogador);
-
     }
 }
