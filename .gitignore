@@ -6,3 +6,4 @@
 !.gitignore
 !*.png
 !compile
+!*.ps1
