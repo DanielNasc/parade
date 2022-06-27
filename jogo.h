@@ -33,4 +33,7 @@ void colocarDuasCartasGaleria(Jogador *);
 TipoVitoria checarVitoriaJogador(Jogador *);
 bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *);
 
+void imprimirMaoJogador(Jogador *);
+void imprimirGaleriaJogador(Jogador *);
+
 #endif // JOGO_H

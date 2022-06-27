@@ -196,28 +196,6 @@ bool embaralhar(Baralho *baralho)
     return true;
 }
 
-// VAI SER REMOVIDA =======================================================
-
-void imprimirBaralho(Baralho *baralho)
-{
-    if (baralho == NULL)
-        return;
-
-    Carta *aux = baralho->topo;
-
-    printf("[Imprimindo Baralho]\n");
-    while (aux != NULL)
-    {
-        printf("Naipe: %c | numero: %i\n", aux->naipe, aux->numero);
-        aux = aux->prox;
-    }
-    printf("NULL\n");
-    printf("Quantidade de cartas: %d\n", baralho->quantidade);
-    printf("[Fim do Baralho]\n");
-}
-
-// ==========================================================================
-
 /*
  * Função: tamanhoBaralho
  * Parametros: baralho - Baralho a ser analisado.

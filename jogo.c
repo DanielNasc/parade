@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "jogo.h"
+#include "interface.h"
 
 typedef struct jogador
 {
@@ -135,42 +136,26 @@ Computador *criarComputador()
  */
 void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
 {
-    int indiceEscolhido;
-
-    // REMOVER DEPOIS P COLOCAR AS DE LUMA ============================
-
-    printf("Escolha uma carta para jogar:\n");
-    imprimirLista(jogador->mao);
-
-    do
-    {
-        scanf("%d", &indiceEscolhido);
-        if (indiceEscolhido < 0 || indiceEscolhido >= quantidadeCartasLista(jogador->mao))
-            printf("Escolha invalida!\n");
-    } while (indiceEscolhido < 0 || indiceEscolhido >= quantidadeCartasLista(jogador->mao));
-
-    // ================================================================
-
-    // Pega a carta que o jogador através do índice escolhido.
-    Carta *cartaEscolhida = removerIndice(jogador->mao, indiceEscolhido);
-    printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
-
-    // Remove todas as cartas válidas da mesa e as insere na galeria do jogador.
+    int quantidadeAnterior = quantidadeCartasLista(mesa);
+    Carta *cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 4));
+    imprimirCartaEscolhida(cartaEscolhida, 0);
     removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
 
-    // Coloca a carta na mesa.
+    if (quantidadeAnterior != quantidadeCartasLista(mesa))
+    {
+        linhaCol(72, 3);
+        Sleep(1000);
+        imprimirGaleria(jogador->galeria);
+        box(2, 5, 29, 90);
+    }
+
     inserirFim(mesa, cartaEscolhida);
-
-    // Jogador pega a carta do topo do baralho.
     inserirInicio(jogador->mao, removerTopo(baralho));
-}
 
-void imprimirGaleriaJogador(Jogador *jogador)
-{
-    if (jogador == NULL)
-        return;
-
-    imprimirGaleria(jogador->galeria);
+    imprimirBaralho(baralho);
+    imprimirMao(jogador->mao);
+    imprimirControles();
+    imprimirMesa(mesa);
 }
 
 /*
@@ -184,23 +169,20 @@ void imprimirGaleriaJogador(Jogador *jogador)
  */
 void jogadaComputador(Computador *computador, Baralho *baralho, ListaCarta *mesa)
 {
-    // o computador não tem mão, então ele tira a carta do topo do baralho e joga
+    /// o computador não tem mão, então ele tira a carta do topo do baralho e joga
+    int quantidadeAnterior = quantidadeCartasLista(mesa), pensando = (rand() % 3000) + 500;
     Carta *cartaEscolhida = removerTopo(baralho);
-    printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
-
-    // Remove todas as cartas válidas da mesa e as insere na galeria do computador.
+    Sleep(pensando);
+    imprimirCartaEscolhida(cartaEscolhida, 26);
     removerQualquerCartaValida(mesa, computador->galeria, cartaEscolhida);
-
-    // Coloca a carta na mesa.
+    if (quantidadeAnterior != quantidadeCartasLista(mesa))
+    {
+        box(2, 5, 29, 90);
+    }
     inserirFim(mesa, cartaEscolhida);
-}
 
-void imprimirGaleriaComputador(Computador *computador)
-{
-    if (computador == NULL)
-        return;
-
-    imprimirGaleria(computador->galeria);
+    imprimirBaralho(baralho);
+    imprimirMesa(mesa);
 }
 
 // FUNCOES VITORIA OU DERROTA ========================================================
@@ -273,31 +255,16 @@ TipoVitoria checarVitoriaJogador(Jogador *jogador)
  */
 void colocarDuasCartasGaleria(Jogador *jogador)
 {
-    int indiceEscolhido;
-
-    // Pede duas vezes para o jogador escolher uma carta.
+    Carta *cartaEscolhida;
     for (int i = 0; i < 2; i++)
     {
-        // REMOVER DEPOIS P COLOCAR AS DE LUMA ============================
-
-        printf("Escolha uma carta para jogar:\n");
-        imprimirLista(jogador->mao);
-
-        do
-        {
-            scanf("%d", &indiceEscolhido);
-            if (indiceEscolhido < 0 || indiceEscolhido >= quantidadeCartasLista(jogador->mao))
-                printf("Escolha invalida!\n");
-        } while (indiceEscolhido < 0 || indiceEscolhido >= quantidadeCartasLista(jogador->mao));
-
-        // ================================================================
-
-        // Retira a carta escolhida da mão.
-        Carta *cartaEscolhida = removerIndice(jogador->mao, indiceEscolhido);
-        printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
-
-        // Insere a carta na galeria.
+        cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 3 - i));
         inserirNaGaleria(jogador->galeria, cartaEscolhida);
+        linhaCol(72, 3);
+        Sleep(1000);
+        imprimirGaleria(jogador->galeria);
+        imprimirMao(jogador->mao);
+        imprimirControles();
     }
 }
 
@@ -347,76 +314,43 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
     if (jogador == NULL || computador == NULL || baralho == NULL)
         return false;
 
-    // Se o jogador tiver pelo menos uma carta de cada cor, ele perde.
     if (checarSeJogadorTemUmaCartaDeCadaCor(jogador->galeria))
     {
-        printf("JOGADOR PERDEU!\n");
-        printf("Motivo: Tem pelo menos uma carta de cada cor\n");
-        imprimirGaleriaJogador(jogador);
+        derrota();
         return true;
     }
 
-    // Se o baralho não estiver vazio, o jogo continua.
     if (tamanhoBaralho(baralho) != 0)
         return false;
 
     // ultima jogada
-    // REMOVER DEPOIS P COLOCAR AS DE LUMA ============================
-    printf("O baralho tem 0 cartas, faça a sua última jogada e depois escolha 2 para colocar na sua galeria\n");
-    int indiceEscolhido;
-
-    printf("Escolha uma carta para jogar:\n");
-    imprimirLista(jogador->mao);
-
-    do
-    {
-        scanf("%d", &indiceEscolhido);
-        if (indiceEscolhido < 0 || indiceEscolhido >= quantidadeCartasLista(jogador->mao))
-            printf("Escolha invalida!\n");
-    } while (indiceEscolhido < 0 || indiceEscolhido >= quantidadeCartasLista(jogador->mao));
-
-    // ================================================================
-
-    // Retira a carta escolhida da mão.
-    Carta *cartaEscolhida = removerIndice(jogador->mao, indiceEscolhido);
-    printf("Carta selecionada: %c %d\n", cartaEscolhida->naipe, cartaEscolhida->numero);
-
-    // Remove todas as cartas válidas da mesa e as insere na galeria do jogador.
+    int quantidadeAnterior = quantidadeCartasLista(mesa);
+    Carta *cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 4));
     removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
-
-    // Insere a carta que o jogador escoheu no fim da mesa.
     inserirFim(mesa, cartaEscolhida);
 
-    // Checa se o jogaor venceu a partida, e o tipo de vitória.
-    TipoVitoria vitoria = checarVitoriaJogador(jogador);
-
-    if (vitoria == PERFEITA)
+    if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
-        printf("JOGADOR VENCEU PERFEITAMENTE!\n");
-        printf("Motivo: Está com as coleções vazias e tem pelo menos duas cartas com numero 0 na mão\n");
-        imprimirLista(jogador->mao);
-        imprimirGaleriaJogador(jogador);
-        return true;
+        linhaCol(72, 3);
+        Sleep(1000);
+        imprimirGaleria(jogador->galeria);
+        box(2, 5, 29, 90);
     }
-    else if (vitoria == NORMAL)
-    {
-        printf("JOGADOR VENCEU!\n");
-        printf("Motivo: Está com as coleções vazias e tem 4 cartas na mão\n");
-        imprimirLista(jogador->mao);
-        imprimirGaleriaJogador(jogador);
-        return true;
-    }
+    imprimirMao(jogador->mao);
+    imprimirControles();
+    imprimirMesa(mesa);
 
-    // Se o jogador não venceu, pede-se para que ele retire duas cartas de sua mão e
-    // coloque-as na sua galeria
-    colocarDuasCartasGaleria(jogador);
+    chamarPlacar(computador, jogador, checarVitoriaJogador(jogador));
 
-    // Após isso, apenas se imprime a sua pontuação final.
-    printf("A partida acabou, sua pontuação é de %d\n", compararPontuacoes(jogador, computador));
+    return true;
+}
 
-    printf("SUA GALERIA==\n");
-    imprimirGaleriaJogador(jogador);
+void imprimirMaoJogador(Jogador *jogador)
+{
+    imprimirMao(jogador->mao);
+}
 
-    printf("GALERIA PC\n");
-    imprimirGaleriaComputador(computador);
+void imprimirGaleriaJogador(Jogador *jogador)
+{
+    imprimirGaleria(jogador->galeria);
 }

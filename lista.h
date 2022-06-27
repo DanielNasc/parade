@@ -18,12 +18,11 @@ bool inserirInicio(ListaCarta *, Carta *);
 bool removerQualquerCartaValida(ListaCarta *, Galeria *, Carta *);
 
 Carta *primeiraCarta(ListaCarta *);
+Carta *ultimaCarta(ListaCarta *);
 Carta *primeiraCartaAposBloqueio(ListaCarta *, int);
 Carta *removerIndice(ListaCarta *, int);
 
 int quantidadeCartasLista(ListaCarta *);
-
-void imprimirLista(ListaCarta *);
 
 // COLECAO =======================================
 bool inicializarGaleria(Galeria *);

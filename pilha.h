@@ -18,8 +18,6 @@ bool jogarNoMeio(Baralho *, int);
 
 uint8_t tamanhoBaralho(Baralho *);
 
-void imprimirBaralho(Baralho *);
-
 Carta *removerTopo(Baralho *);
 
 #endif // PILHA_H

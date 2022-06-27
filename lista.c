@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "lista.h"
+#include "interface.h"
 
 typedef struct listaCarta
 {
@@ -83,6 +84,11 @@ bool inserirInicio(ListaCarta *lista, Carta *novaCarta)
 Carta *primeiraCarta(ListaCarta *lista)
 {
     return lista != NULL ? lista->primeira : NULL;
+}
+
+Carta *ultimaCarta(ListaCarta *lista)
+{
+    return lista != NULL ? lista->ultima : NULL;
 }
 
 /*
@@ -268,25 +274,6 @@ bool removerQualquerCartaValida(ListaCarta *mesa,
     return true;
 }
 
-// VAI SER REMOVIDA ==========================================================
-void imprimirLista(ListaCarta *lista)
-{
-    if (lista == NULL)
-        return;
-
-    printf("Lista de Cartas:");
-
-    Carta *aux = lista->primeira;
-
-    while (aux != NULL)
-    {
-        printf(" [ %c %d ]", aux->naipe, aux->numero);
-        aux = aux->prox;
-    }
-
-    printf(" | Quantidade: %d\n", lista->quantidade);
-}
-
 // ============ FUNÇÕES COLEÇÃO | GALERIA ======================
 
 /*
@@ -394,23 +381,64 @@ bool inserirNaGaleria(Galeria *galeria, Carta *novaCarta)
     return inserirColecao(galeria->colecao[novaCarta->naipe - 'A'], novaCarta);
 }
 
-// VAI SER REMOVIDA ==========================================================
+// comentada
 void imprimirGaleria(Galeria *galeria)
 {
+    /* Função de Interface
+    Imprime toda a galeria/coleção do jogador
+    */
+
     if (galeria == NULL)
         return;
 
-    printf("Imprimindo galeria:\n");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
 
-    for (int i = 0; i < QTD_NAIPES; i++)
+    /* Salvar estado atual */
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+
+    int lin = 0, col = 0;
+    // delay de meio segundo
+    Sleep(500);
+
+    // for para imprimir as cartas da coleção
+    for (int naipe = 0; naipe < 6; naipe++)
     {
-        Colecao *current = galeria->colecao[i];
-        printf("COLECAO DE NAIPE %c : ", current->naipe);
-        imprimirLista(current->lista);
-        printf("\nSomatorio: %d\n", current->somatorioPontos);
+        // auxiliar recebe a primeira carta da lista do naipe
+        Carta *aux = galeria->colecao[naipe]->lista->primeira;
+
+        while (aux)
+        {
+            // muda a cor do sistema para a cor da carta
+            corDaCarta(aux);
+            // box exterior da carta
+            box(45 + lin, 12 + col, 48 + lin, 16 + col); // linha = 3, coluna = 4
+            // box interior da carta
+            box(46 + lin, 13 + col, 47 + lin, 15 + col);
+            linhaCol(46 + lin, 14 + col);
+            printf("%c", aux->naipe); // imprime número e naipe
+            linhaCol(47 + lin, 14 + col);
+            if (aux->numero != 10)
+                printf("0%d", aux->numero);
+            else
+                printf("%d", aux->numero);
+            SetConsoleTextAttribute(hConsole, saved_attributes);
+            // auxiliar aponta para a próxima carta da lista
+            aux = aux->prox;
+            // incrementa 8 no inteiro das colunas
+            col += 8;
+        }
+        // incrementa 4 no inteiro das linhas após imprimir todas as cartas da lista do naipe
+        lin += 4;
+        // as colunas zeram
+        col = 0;
     }
+    // delay de 1 segundo
+    Sleep(1000);
+    linhaCol(1, 1);
 }
-// ===========================================================================
 
 /*
  * Função: galeriaVazia
