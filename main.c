@@ -1,16 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 
 #include "carta.h"
 #include "jogo.h"
 #include "lista.h"
 #include "pilha.h"
+#include "interface.h"
 
 void testes();
 
 int main()
 {
-    testes();
+    // imprimeCaixa(1, 1, 80, 25);
+    // corTurno(true);
+    menu(500);
+    // testes();
+    getch();
 
     return 0;
 }

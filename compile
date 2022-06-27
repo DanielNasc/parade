@@ -13,7 +13,7 @@ done
 compiledFiles=$(ls *.o)
 
 echo "Linking"
-gcc -o main $compiledFiles
+gcc -o parade $compiledFiles
 
 echo "Done"
 echo "Removing .o files"
