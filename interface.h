@@ -73,7 +73,7 @@ void textColor(int, int);
 int question();
 
 // FUNÇÕES MUDANÇA DE COR ==================================
-void corDaVez(int, int);
+void corDaVez(int);
 int corDaCarta(Carta *);
 
 // INTERFACE ==================================

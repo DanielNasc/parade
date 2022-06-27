@@ -264,9 +264,9 @@ int indicadorDeCarta(int indice)
     {
     case 0:
         linhaCol(38, 12);
-        printf("%c%c%c%c", 200, 205, 205, 188);
+        printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
         linhaCol(39, 13);
-        printf("%c%c", 177, 177);
+        printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
         linhaCol(38, 27);
         printf("    ");
         linhaCol(39, 28);
@@ -279,9 +279,9 @@ int indicadorDeCarta(int indice)
         linhaCol(39, 13);
         printf("  ");
         linhaCol(38, 27);
-        printf("%c%c%c%c", 200, 205, 205, 188);
+        printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
         linhaCol(39, 28);
-        printf("%c%c", 177, 177);
+        printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
         linhaCol(38, 42);
         printf("    ");
         linhaCol(39, 43);
@@ -294,9 +294,9 @@ int indicadorDeCarta(int indice)
         linhaCol(39, 28);
         printf("  ");
         linhaCol(38, 42);
-        printf("%c%c%c%c", 200, 205, 205, 188);
+        printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
         linhaCol(39, 43);
-        printf("%c%c", 177, 177);
+        printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
         linhaCol(38, 57);
         printf("    ");
         linhaCol(39, 58);
@@ -309,9 +309,9 @@ int indicadorDeCarta(int indice)
         linhaCol(39, 43);
         printf("  ");
         linhaCol(38, 57);
-        printf("%c%c%c%c", 200, 205, 205, 188);
+        printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
         linhaCol(39, 58);
-        printf("%c%c", 177, 177);
+        printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
         linhaCol(38, 72);
         printf("    ");
         linhaCol(39, 73);
@@ -324,9 +324,9 @@ int indicadorDeCarta(int indice)
         linhaCol(39, 58);
         printf("  ");
         linhaCol(38, 72);
-        printf("%c%c%c%c", 200, 205, 205, 188);
+        printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
         linhaCol(39, 73);
-        printf("%c%c", 177, 177);
+        printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
         linhaCol(42, 1);
         return 1;
     }
@@ -1072,7 +1072,7 @@ int escolhaMenu(int indice)
         {
             tecla = getch();
             fflush(stdin);
-        } while (tecla != 27 && tecla != 13 && tecla != 72 && tecla != 80); // alterna o indicador
+        } while (tecla != ESC && tecla != ENTER && tecla != ARROW_CIMA && tecla != ARROW_BAIXO); // alterna o indicador
 
         // Se a tecla precionada for o "Esc (27)", chama a função "question" que imprime na tela uma caixa de texto perguntando se o jogador quer sair do jogo.
         if (tecla == 27)
@@ -1086,18 +1086,18 @@ int escolhaMenu(int indice)
                 return -1;
         }
         // Se a tecla pressionada for a seta para baixo e o inteiro indice for 0, ele incrementa.
-        if (tecla == 80 && indice < 1)
+        if (tecla == ARROW_BAIXO && indice < 1)
         {
             indice++;
         }
         // Se a tecla pressionada for a seta para cima e o indice for 1, ele decrementa.
-        if (tecla == 72 && indice > 0)
+        if (tecla == ARROW_CIMA && indice > 0)
         {
             indice--;
         }
         // chama a função indicador para imprimir novamente o indicador de opção
         indicador(indice);
-    } while (tecla != 13);
+    } while (tecla != ENTER);
     // retorna o indice e volta à cor padrão
     SetConsoleTextAttribute(hConsole, saved_attributes);
     return indice;
@@ -1711,7 +1711,7 @@ void derrota()
 }
 
 // comentada
-void corDaVez(int computador, int jogador)
+void corDaVez(int vezJogador)
 {
 
     /* Função de Interface:
@@ -1730,11 +1730,8 @@ void corDaVez(int computador, int jogador)
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
     saved_attributes = consoleInfo.wAttributes;
 
-    // Coloquei um switch com [0 = jogador da vez] e [1 = jogador em espera]
-    // Primeiramente o computador:
-    switch (computador)
+    if (vezJogador)
     {
-    case 0:
         // define o texto na cor PRETA e o fundo na cor VERMELHA!
         textColor(BLACK, _RED);
         // a funcao linhaCol leva o cursor para as coordenadas (15,96) e imprime na tela o printf
@@ -1744,35 +1741,7 @@ void corDaVez(int computador, int jogador)
         SetConsoleTextAttribute(hConsole, saved_attributes);
         // aqui coloquei o curso nessa coordenada apenas por perfeição estética
         linhaCol(42, 1);
-        break;
-    case 1:
-        // define o texto na cor PRETA e o fundo na cor VERDE!
-        textColor(BLACK, _GREEN);
-        // a funcao linhaCol leva o cursor para as coordenadas (15,96) e imprime na tela o printf
-        linhaCol(15, 96);
-        printf("    COMPUTADOR    ");
-        // essa função retorna ao estado salvo anteriormente, que seria o texto na cor BRANCA e o fundo PRETO
-        SetConsoleTextAttribute(hConsole, saved_attributes);
-        // aqui coloquei o curso nessa coordenada apenas por perfeição estética
-        linhaCol(42, 1);
-        break;
-    }
 
-    // Os passos são os mesmos para o Jogador:
-    switch (jogador)
-    {
-    case 0:
-        // define o texto na cor PRETA e o fundo na cor VERMELHA!
-        textColor(BLACK, _RED);
-        // a funcao linhaCol leva o cursor para as coordenadas (42,95) e imprime na tela o printf
-        linhaCol(42, 95);
-        printf("      JOGADOR      ");
-        // essa função retorna ao estado salvo anteriormente, que seria o texto na cor BRANCA e o fundo PRETO
-        SetConsoleTextAttribute(hConsole, saved_attributes);
-        // aqui coloquei o curso nessa coordenada apenas por perfeição estética
-        linhaCol(42, 1);
-        break;
-    case 1:
         // define o texto na cor PRETA e o fundo na cor VERDE!
         textColor(BLACK, _GREEN);
         // a funcao linhaCol leva o cursor para as coordenadas (42,95) e imprime na tela o printf
@@ -1782,7 +1751,28 @@ void corDaVez(int computador, int jogador)
         SetConsoleTextAttribute(hConsole, saved_attributes);
         // aqui coloquei o curso nessa coordenada apenas por perfeição estética
         linhaCol(42, 1);
-        break;
+    }
+    else
+    {
+        // define o texto na cor PRETA e o fundo na cor VERDE!
+        textColor(BLACK, _GREEN);
+        // a funcao linhaCol leva o cursor para as coordenadas (15,96) e imprime na tela o printf
+        linhaCol(15, 96);
+        printf("    COMPUTADOR    ");
+        // essa função retorna ao estado salvo anteriormente, que seria o texto na cor BRANCA e o fundo PRETO
+        SetConsoleTextAttribute(hConsole, saved_attributes);
+        // aqui coloquei o curso nessa coordenada apenas por perfeição estética
+        linhaCol(42, 1);
+
+        // define o texto na cor PRETA e o fundo na cor VERMELHA!
+        textColor(BLACK, _RED);
+        // a funcao linhaCol leva o cursor para as coordenadas (42,95) e imprime na tela o printf
+        linhaCol(42, 95);
+        printf("      JOGADOR      ");
+        // essa função retorna ao estado salvo anteriormente, que seria o texto na cor BRANCA e o fundo PRETO
+        SetConsoleTextAttribute(hConsole, saved_attributes);
+        // aqui coloquei o curso nessa coordenada apenas por perfeição estética
+        linhaCol(42, 1);
     }
 }
 

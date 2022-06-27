@@ -384,12 +384,12 @@ void partida()
 
     while (1)
     {
-        corDaVez(1, 0);
+        corDaVez(1);
         jogadaPlayer(jogador, mesa, baralho);
 
         if (fimDeJogo(jogador, computador, baralho, mesa))
             break;
-        corDaVez(0, 1);
+        corDaVez(0);
         jogadaComputador(computador, baralho, mesa);
 
         if (fimDeJogo(jogador, computador, baralho, mesa))
