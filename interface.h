@@ -64,7 +64,7 @@ void imprimirJogador();
 void imprimirComputer();
 void imprimirCartaEscolhida(Carta *, int);
 void imprimirNaipesColecao();
-void imprimirControles();
+void imprimirControles(int, int);
 
 // FUNÇÕES BASE ==================================
 void linhaCol(int, int);
@@ -80,7 +80,9 @@ int corDaCarta(Carta *);
 void menu(int);
 void carregando();
 void chamarJogo(int);
-void manual();
+void manual(int);
+void telas(int);
+void escolhaTela(int);
 int indicadorDeCarta(int);
 int indicador(int);
 int escolhaCarta(ListaCarta *, int);

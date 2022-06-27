@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <locale.h>
 
 #include "carta.h"
 #include "jogo.h"
@@ -8,56 +9,11 @@
 #include "pilha.h"
 #include "interface.h"
 
-void testes();
-
 int main()
 {
     menu(500);
     chamarJogo(escolhaMenu(0));
     return 0;
-}
-
-void testes()
-{
-
-    Baralho *baralho = criarBaralho();
-    enfiarCartasNoBaralho(baralho);
-    embaralhar(baralho);
-
-    ListaCarta *mesa = criarLista();
-
-    inicializarMesa(mesa, baralho);
-
-    Jogador *jogador = criarJogador();
-    Computador *computador = criarComputador();
-
-    inicializarMao(jogador, baralho);
-
-    // IMPRESSÕES //
-
-    imprimirBaralho(baralho);
-    imprimirMesa(mesa);
-    imprimirMaoJogador(jogador);
-    imprimirControles();
-    imprimirJogador();
-    imprimirComputer();
-    imprimirNaipesColecao();
-    imprimirGaleriaJogador(jogador);
-
-    while (1)
-    {
-        corDaVez(1, 0);
-        jogadaPlayer(jogador, mesa, baralho);
-        fflush(stdin);
-
-        if (fimDeJogo(jogador, computador, baralho, mesa))
-            break;
-        corDaVez(0, 1);
-        jogadaComputador(computador, baralho, mesa);
-
-        if (fimDeJogo(jogador, computador, baralho, mesa))
-            break;
-    }
 }
 
 // void testes()

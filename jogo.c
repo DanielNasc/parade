@@ -154,7 +154,8 @@ void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
 
     imprimirBaralho(baralho);
     imprimirMao(jogador->mao);
-    imprimirControles();
+
+    imprimirControles(41, 30);
     imprimirMesa(mesa);
 }
 
@@ -264,7 +265,7 @@ void colocarDuasCartasGaleria(Jogador *jogador)
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
         imprimirMao(jogador->mao);
-        imprimirControles();
+        imprimirControles(41, 30);
     }
 }
 
@@ -337,7 +338,7 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
         box(2, 5, 29, 90);
     }
     imprimirMao(jogador->mao);
-    imprimirControles();
+    imprimirControles(41, 30);
     imprimirMesa(mesa);
 
     chamarPlacar(computador, jogador, checarVitoriaJogador(jogador));
@@ -353,4 +354,45 @@ void imprimirMaoJogador(Jogador *jogador)
 void imprimirGaleriaJogador(Jogador *jogador)
 {
     imprimirGaleria(jogador->galeria);
+}
+
+void partida()
+{
+    Baralho *baralho = criarBaralho();
+    enfiarCartasNoBaralho(baralho);
+    embaralhar(baralho);
+
+    ListaCarta *mesa = criarLista();
+
+    inicializarMesa(mesa, baralho);
+
+    Jogador *jogador = criarJogador();
+    Computador *computador = criarComputador();
+
+    inicializarMao(jogador, baralho);
+
+    // IMPRESSÕES //
+
+    imprimirBaralho(baralho);
+    imprimirMesa(mesa);
+    imprimirMaoJogador(jogador);
+    imprimirControles(41, 30);
+    imprimirJogador();
+    imprimirComputer();
+    imprimirNaipesColecao();
+    imprimirGaleriaJogador(jogador);
+
+    while (1)
+    {
+        corDaVez(1, 0);
+        jogadaPlayer(jogador, mesa, baralho);
+
+        if (fimDeJogo(jogador, computador, baralho, mesa))
+            break;
+        corDaVez(0, 1);
+        jogadaComputador(computador, baralho, mesa);
+
+        if (fimDeJogo(jogador, computador, baralho, mesa))
+            break;
+    }
 }

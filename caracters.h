@@ -14,4 +14,31 @@ typedef enum caracteres
     CANTO_INF_DIREITO = 188,
 
     TEXTURA = 178,
+    TEXTURA_BARALHO = 177,
+
+    SETA_ESQUERDA = 17,
+    SETA_DIREITA = 16,
+
+    A_COM_TIL = 131,
+    A_COM_ACENTO = 160,
+    E_COM_ACENTO = 130,
+    E_COM_TIL = 136,
+    I_COM_ACENTO = 161,
+    O_COM_TIL = 147,
+    O_COM_ACENTO = 162,
+    U_COM_ACENTO = 163,
+
+    CEDILHA = 135,
+    CEDILHA_MAIUSCULA = 128,
+
+    SETAS_DUPLAS = 175
 } Caracteres;
+
+typedef enum teclas
+{
+    ESC = 27,
+    ENTER = 13,
+
+    ARROW_ESQUERDA = 75,
+    ARROW_DIREITA = 77,
+} TECLAS;

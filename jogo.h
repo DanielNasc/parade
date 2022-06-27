@@ -36,4 +36,6 @@ bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *);
 void imprimirMaoJogador(Jogador *);
 void imprimirGaleriaJogador(Jogador *);
 
+void partida();
+
 #endif // JOGO_H
