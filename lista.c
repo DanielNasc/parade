@@ -414,12 +414,12 @@ void imprimirGaleria(Galeria *galeria)
             // muda a cor do sistema para a cor da carta
             corDaCarta(aux);
             // box exterior da carta
-            box(45 + lin, 12 + col, 48 + lin, 16 + col); // linha = 3, coluna = 4
+            box(45 + lin, 32 + col, 48 + lin, 36 + col); // linha = 3, coluna = 4
             // box interior da carta
-            box(46 + lin, 13 + col, 47 + lin, 15 + col);
-            linhaCol(46 + lin, 14 + col);
+            box(46 + lin, 33 + col, 47 + lin, 35 + col);
+            linhaCol(46 + lin, 34 + col);
             printf("%c", aux->naipe); // imprime número e naipe
-            linhaCol(47 + lin, 14 + col);
+            linhaCol(47 + lin, 34 + col);
             if (aux->numero != 10)
                 printf("0%d", aux->numero);
             else

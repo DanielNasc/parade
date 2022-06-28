@@ -143,10 +143,10 @@ void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
 
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
-        linhaCol(72, 3);
+        linhaCol(72, 23);
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
-        box(2, 5, 29, 90);
+        box(2, 25, 29, 110);
     }
 
     inserirFim(mesa, cartaEscolhida);
@@ -155,7 +155,7 @@ void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
     imprimirBaralho(baralho);
     imprimirMao(jogador->mao);
 
-    imprimirControles(41, 30);
+    imprimirControles(41, 50);
     imprimirMesa(mesa);
 }
 
@@ -178,7 +178,7 @@ void jogadaComputador(Computador *computador, Baralho *baralho, ListaCarta *mesa
     removerQualquerCartaValida(mesa, computador->galeria, cartaEscolhida);
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
-        box(2, 5, 29, 90);
+        box(2, 25, 29, 110);
     }
     inserirFim(mesa, cartaEscolhida);
 
@@ -261,11 +261,11 @@ void colocarDuasCartasGaleria(Jogador *jogador)
     {
         cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 3 - i));
         inserirNaGaleria(jogador->galeria, cartaEscolhida);
-        linhaCol(72, 3);
+        linhaCol(72, 23);
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
         imprimirMao(jogador->mao);
-        imprimirControles(41, 30);
+        imprimirControles(41, 50);
     }
 }
 
@@ -332,13 +332,13 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
 
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
-        linhaCol(72, 3);
+        linhaCol(72, 23);
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
-        box(2, 5, 29, 90);
+        box(2, 25, 29, 110);
     }
     imprimirMao(jogador->mao);
-    imprimirControles(41, 30);
+    imprimirControles(41, 50);
     imprimirMesa(mesa);
 
     chamarPlacar(computador, jogador, checarVitoriaJogador(jogador));
@@ -376,7 +376,7 @@ void partida()
     imprimirBaralho(baralho);
     imprimirMesa(mesa);
     imprimirMaoJogador(jogador);
-    imprimirControles(41, 30);
+    imprimirControles(41, 50);
     imprimirJogador();
     imprimirComputer();
     imprimirNaipesColecao();
