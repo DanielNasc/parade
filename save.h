@@ -5,16 +5,19 @@
 
 #ifndef SAVE_H
 #define SAVE_H
+#include "jogo.h"
 
 typedef struct score Score;
+typedef char *string;
 
 #define ARQ_SCORE "score.bin"
-#define MAX_SCORE 15
+#define QTD_LIDERES 15
 
-Score *criarScore(int);
+void inicializarArquivosVetores();
+Score criarScore(int, string, TipoVitoria);
 Score *allScores();
 
-void saveScore(int);
+void saveScore(int, string, TipoVitoria);
 
 void scoreTest();
 
