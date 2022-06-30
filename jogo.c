@@ -293,8 +293,9 @@ int compararPontuacoes(Jogador *jogador, Computador *computador)
         int quantidadeJogador = quantidadeCartasColecaoPorIndice(jogador->galeria, i);
 
         // Realiza as devidas comparações e soma os pontos de acordo com o resultado.
-        pontuacaoJogador += quantidadeJogador >= quantidadeCartasColecaoPorIndice(computador->galeria, i) ? quantidadeJogador
-                                                                                                          : somaValoresColecao(jogador->galeria, i);
+        pontuacaoJogador += quantidadeJogador >= quantidadeCartasColecaoPorIndice(computador->galeria, i)
+                                ? quantidadeJogador
+                                : somaValoresColecao(jogador->galeria, i);
     }
 
     return pontuacaoJogador;
