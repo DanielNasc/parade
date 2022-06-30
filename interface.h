@@ -66,8 +66,15 @@ void imprimirComputer();
 void imprimirCartaEscolhida(Carta *, int);
 void imprimirNaipesColecao();
 void imprimirControles(int, int);
+void imprimirUltimaCarta();
+void imprimirDuasCartas();
+void imprimirGanhoDePontos(int, int);
+void imprimirBoxMesa();
+void imprimirGaleriaContagemDePontos(char *, int, Galeria *, WORD);
 
 // FUNÇÕES BASE ==================================
+WORD pegarAtributos();
+void resetarAtributos(WORD);
 void linhaCol(int, int);
 void box(int, int, int, int);
 void textColor(int, int);
@@ -75,7 +82,7 @@ int question();
 
 // FUNÇÕES MUDANÇA DE COR ==================================
 void corDaVez(int);
-int corDaCarta(Carta *);
+int corDaCarta(char);
 
 // INTERFACE ==================================
 void aviso();

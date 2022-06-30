@@ -21,6 +21,7 @@ Carta *primeiraCarta(ListaCarta *);
 Carta *ultimaCarta(ListaCarta *);
 Carta *primeiraCartaAposBloqueio(ListaCarta *, int);
 Carta *removerIndice(ListaCarta *, int);
+Carta *primeiraCartaColecaoI(Galeria *, int);
 
 int quantidadeCartasLista(ListaCarta *);
 
@@ -34,9 +35,12 @@ bool galeriaVazia(Galeria *);
 void imprimirGaleria(Galeria *);
 
 int quantidadeCartasColecao(Colecao *);
-int somaValoresColecao(Galeria *galeria, int i);
+int somaValoresColecao(Galeria *, int i);
 
 int quantidadeCartasColecaoPorIndice(Galeria *, int);
+
+void imprimirContagemPontos(Galeria *);
+void imprimirGaleriaComputador(Galeria *);
 
 // MESA =======================================
 bool inserirFim(ListaCarta *, Carta *);

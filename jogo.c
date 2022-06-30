@@ -146,7 +146,7 @@ void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
         linhaCol(72, 23);
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
-        box(2, 25, 29, 110);
+        imprimirBoxMesa();
     }
 
     inserirFim(mesa, cartaEscolhida);
@@ -178,7 +178,7 @@ void jogadaComputador(Computador *computador, Baralho *baralho, ListaCarta *mesa
     removerQualquerCartaValida(mesa, computador->galeria, cartaEscolhida);
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
-        box(2, 25, 29, 110);
+        imprimirBoxMesa();
     }
     inserirFim(mesa, cartaEscolhida);
 
@@ -257,6 +257,7 @@ TipoVitoria checarVitoriaJogador(Jogador *jogador)
 void colocarDuasCartasGaleria(Jogador *jogador)
 {
     Carta *cartaEscolhida;
+    imprimirDuasCartas();
     for (int i = 0; i < 2; i++)
     {
         cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 3 - i));
@@ -282,12 +283,18 @@ void colocarDuasCartasGaleria(Jogador *jogador)
  */
 int compararPontuacoes(Jogador *jogador, Computador *computador)
 {
+    WORD saved_attributes = pegarAtributos();
+
     if (jogador == NULL || computador == NULL)
         return 0;
 
-    int pontuacaoJogador = 0;
+    int pontuacaoJogador = 0, pontuacaoAnterior = 0;
+    system("cls");
+    chamarContagem(jogador);
+    chamarGaleriaComputador(computador);
 
     // Percorre todas as coleções.
+    textColor(YELLOW, _BLACK);
     for (int i = 0; i < QTD_NAIPES; i++)
     {
         int quantidadeJogador = quantidadeCartasColecaoPorIndice(jogador->galeria, i);
@@ -296,8 +303,14 @@ int compararPontuacoes(Jogador *jogador, Computador *computador)
         pontuacaoJogador += quantidadeJogador >= quantidadeCartasColecaoPorIndice(computador->galeria, i)
                                 ? quantidadeJogador
                                 : somaValoresColecao(jogador->galeria, i);
+
+        imprimirGanhoDePontos(i, pontuacaoJogador - pontuacaoAnterior);
+        pontuacaoAnterior = pontuacaoJogador;
     }
 
+    resetarAtributos(saved_attributes);
+    imprimirGanhoDePontos(6, pontuacaoJogador);
+    resetarAtributos(saved_attributes);
     return pontuacaoJogador;
 }
 
@@ -326,18 +339,20 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
         return false;
 
     // ultima jogada
+
+    imprimirUltimaCarta();
     int quantidadeAnterior = quantidadeCartasLista(mesa);
     Carta *cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 4));
     removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
-    inserirFim(mesa, cartaEscolhida);
 
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
         linhaCol(72, 23);
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
-        box(2, 25, 29, 110);
+        imprimirBoxMesa(); // reseta a mesa
     }
+    inserirFim(mesa, cartaEscolhida);
     imprimirMao(jogador->mao);
     imprimirControles(41, 50);
     imprimirMesa(mesa);
@@ -357,8 +372,19 @@ void imprimirGaleriaJogador(Jogador *jogador)
     imprimirGaleria(jogador->galeria);
 }
 
+void chamarContagem(Jogador *jogador)
+{
+    imprimirContagemPontos(jogador->galeria);
+}
+
+void chamarGaleriaComputador(Computador *computador)
+{
+    imprimirGaleriaComputador(computador->galeria);
+}
+
 void partida()
 {
+
     Baralho *baralho = criarBaralho();
     enfiarCartasNoBaralho(baralho);
     embaralhar(baralho);

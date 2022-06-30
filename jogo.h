@@ -24,7 +24,8 @@ bool inicializarMesa(ListaCarta *, Baralho *);
 void jogadaPlayer(Jogador *, ListaCarta *, Baralho *);
 void jogadaComputador(Computador *, Baralho *, ListaCarta *);
 void imprimirGaleriaJogador(Jogador *);
-void imprimirGaleriaComputador(Computador *);
+void chamarContagem(Jogador *);
+void chamarGaleriaComputador(Computador *);
 
 // FIM DE JOGO ================================
 bool fimDeJogo(Jogador *, Computador *, Baralho *, ListaCarta *);

@@ -6,6 +6,22 @@
 #include "interface.h"
 #include "caracters.h"
 
+WORD pegarAtributos()
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+
+    /* Salvar estado atual */
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    return consoleInfo.wAttributes;
+}
+
+void resetarAtributos(WORD atributos)
+{
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), atributos);
+}
+
 // Função que muda a cor do sistema
 void textColor(int letras, int fundo)
 {
@@ -156,7 +172,7 @@ void imprimirMao(ListaCarta *mao)
             return;
         }
         // muda a cor do sistema para a cor da carta
-        corDaCarta(aux);
+        corDaCarta(aux->naipe);
         // box exterior da carta
         box(30, 29 + col, 37, 38 + col);
         // box interior da carta
@@ -215,32 +231,29 @@ int escolhaCarta(ListaCarta *mao, int indice)
 }
 
 // comentada
-int corDaCarta(Carta *carta)
+int corDaCarta(char naipe)
 {
     // Função que modifica a cor do sistema conforme o naipe da carta passada como parâmetro
-    if (carta == NULL)
-        return 0;
-
-    switch (carta->naipe)
+    switch (naipe)
     {
     case 'A':
         textColor(RED, _BLACK);
-        return 1;
+        break;
     case 'B':
         textColor(BLUE, _BLACK);
-        return 1;
+        break;
     case 'C':
         textColor(LIGHTMAGENTA, _BLACK);
-        return 1;
+        break;
     case 'D':
         textColor(BROWN, _BLACK);
-        return 1;
+        break;
     case 'E':
         textColor(LIGHTCYAN, _BLACK);
-        return 1;
+        break;
     case 'F':
         textColor(GREEN, _BLACK);
-        return 1;
+        break;
     }
 }
 
@@ -289,6 +302,10 @@ int indicadorDeCarta(int indice)
         linhaCol(42, 1);
         return 1;
     case 2:
+        linhaCol(38, 32);
+        printf("    ");
+        linhaCol(39, 33);
+        printf("  ");
         linhaCol(38, 47);
         printf("    ");
         linhaCol(39, 48);
@@ -304,6 +321,14 @@ int indicadorDeCarta(int indice)
         linhaCol(42, 1);
         return 1;
     case 3:
+        linhaCol(38, 32);
+        printf("    ");
+        linhaCol(39, 33);
+        printf("  ");
+        linhaCol(38, 47);
+        printf("    ");
+        linhaCol(39, 48);
+        printf("  ");
         linhaCol(38, 62);
         printf("    ");
         linhaCol(39, 63);
@@ -522,7 +547,7 @@ void imprimirMesa(ListaCarta *mesa)
                 col += 80;
         }
         // a cor do sistema muda para a cor da carta
-        corDaCarta(aux);
+        corDaCarta(aux->naipe);
         // box exterior da carta
         box(4 + lin, 27 + col, 9 + lin, 34 + col);
         // box interior da carta
@@ -569,33 +594,14 @@ void imprimirNaipesColecao()
     int lin = 0;
 
     // Muda a cor do sistema conforme o naipe
-    for (int naipe = 0; naipe < 6; naipe++)
+    for (int naipe = 'A'; naipe < 'A' + QTD_NAIPES; naipe++)
     {
-        switch (naipe)
-        {
-        case 0:
-            textColor(RED, _BLACK);
-            break;
-        case 1:
-            textColor(BLUE, _BLACK);
-            break;
-        case 2:
-            textColor(LIGHTMAGENTA, _BLACK);
-            break;
-        case 3:
-            textColor(BROWN, _BLACK);
-            break;
-        case 4:
-            textColor(LIGHTCYAN, _BLACK);
-            break;
-        case 5:
-            textColor(GREEN, _BLACK);
-            break;
-        }
+        corDaCarta(naipe);
+
         // box exterior da caixinha
         box(46 + lin, 23, 48 + lin, 28);
         linhaCol(47 + lin, 25);
-        printf("%c %c", 'A' + naipe, SETA_DIREITA);
+        printf("%c %c", naipe, SETA_DIREITA);
         SetConsoleTextAttribute(hConsole, saved_attributes);
         lin += 4;
     }
@@ -736,7 +742,7 @@ void imprimirCartaEscolhida(Carta *cartaEscolhida, int lin)
 
     linhaCol(29 - lin, 140);
     printf("| CARTA ESCOLHIDA |");
-    corDaCarta(cartaEscolhida);
+    corDaCarta(cartaEscolhida->naipe);
     // box exterior da carta
     box(30 - lin, 147, 33 - lin, 151); // linha = 3, coluna = 4
     // box interiro da carta
@@ -784,9 +790,9 @@ void menu(int tempo)
     saved_attributes = consoleInfo.wAttributes;
 
     // Box exterior
-    box(2, 25, 41, 138);
+    box(2, 25, 42, 138);
 
-    // Box interior superior
+    // Box interior superiorww
     textColor(BLACK, _MAGENTA);
     box(3, 27, 14, 136);
     SetConsoleTextAttribute(hConsole, saved_attributes);
@@ -1028,17 +1034,19 @@ void menu(int tempo)
     linhaCol(27, 77);
     printf("Iniciar o Jogo");
     linhaCol(30, 77);
+    printf("Ranking");
+    linhaCol(33, 77);
     printf("Manual do Jogo");
 
     textColor(MAGENTA, _BLACK);
     linhaCol(39, 28);
-    printf("[ESC] - Sair?");
+    printf("[ESC] - Sair? | [ENTER] - Confirmar");
     linhaCol(38, 121);
     printf("[ALT + ENTER]");
     linhaCol(39, 119);
     printf("Janela/Tela cheia");
     SetConsoleTextAttribute(hConsole, saved_attributes);
-    linhaCol(1, 1);
+    linhaCol(42, 1);
 }
 
 // comentada
@@ -1057,7 +1065,7 @@ int indicador(int indice)
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
     saved_attributes = consoleInfo.wAttributes;
 
-    if (indice < 0 || indice > 2)
+    if (indice < 0 || indice > 3)
         return 0;
 
     // Se o índice for 0, o indicador é imprimido nas coordenadas dadas na função "linhaCol". O mesmo para índice = 1;
@@ -1082,6 +1090,14 @@ int indicador(int indice)
         printf("  ");
         linhaCol(42, 1);
         return 1;
+    case 2:
+        linhaCol(27, 74);
+        printf("  ");
+        linhaCol(30, 74);
+        printf("  ");
+        linhaCol(33, 74);
+        printf("%c%c", SETAS_DUPLAS, SETAS_DUPLAS);
+        linhaCol(42, 1);
     }
     SetConsoleTextAttribute(hConsole, saved_attributes);
 }
@@ -1127,7 +1143,7 @@ int escolhaMenu(int indice)
                 return -1;
         }
         // Se a tecla pressionada for a seta para baixo e o inteiro indice for 0, ele incrementa.
-        if (tecla == ARROW_BAIXO && indice < 1)
+        if (tecla == ARROW_BAIXO && indice < 2)
         {
             indice++;
         }
@@ -1165,12 +1181,22 @@ void chamarJogo(int indice)
         // aqui, usei a função box 4 vezes para imprimir as caixas das respectivas divisões do jogo:
         box(2, 25, 42, 138);  // box exterior
         box(29, 25, 42, 138); // box da mão
-        box(2, 25, 29, 110);  // box da mesa
+        imprimirBoxMesa();    // box da mesa
         box(43, 25, 69, 138); // box da coleçao
 
         partida();
         break;
     case 1:
+        // limpa a tela
+        system("cls");
+        box(2, 25, 42, 138);
+        Sleep(3000);
+        // chama a função menu, para imprimir o menu do jogo
+        menu(0);
+        // uso da recursividade!
+        chamarJogo(escolhaMenu(0));
+        break;
+    case 2:
         // limpa a tela e imprime as instruções
         system("cls");
         manual(0);
@@ -1236,14 +1262,22 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
     if (jogador == NULL || computador == NULL)
         return 0;
 
+    int pontos = 0, tecla = 0;
     // criei um switch para chamarmos as funções de acordo com o inteiro dado como parâmetro
     switch (tipoVitoria)
     {
     case 0:
         // chama a função para colocar as últimas duas cartas da mão do jogador em sua coleção
         colocarDuasCartasGaleria(jogador);
+        pontos = compararPontuacoes(jogador, computador);
+        linhaCol(1, 1);
+        do
+        {
+            tecla = getch();
+        } while (tecla != 13);
+        system("cls");
         // chama a função de interface para imprimir a tela de vitoria por pontuação
-        vitoriaPontuacao(compararPontuacoes(jogador, computador));
+        vitoriaPontuacao(pontos);
         break;
     case 1:
         // chama a função de interface para imprimir a tela de vitoria normal, por colecao vazia
@@ -2159,4 +2193,100 @@ void aviso()
         tecla = getch();
         fflush(stdin);
     } while (tecla != ENTER);
+}
+
+void imprimirUltimaCarta()
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+
+    /* Salvar estado atual */
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+
+    textColor(RED, _BLACK);
+    linhaCol(29, 140);
+    printf("| JOGUE NA MESA SUA |");
+    linhaCol(30, 142);
+    printf("| ULTIMA CARTA! |");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+}
+
+void imprimirDuasCartas()
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+
+    /* Salvar estado atual */
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+
+    textColor(RED, _BLACK);
+    linhaCol(29, 140);
+    printf("| SELECIONE DUAS CARTAS |");
+    linhaCol(30, 142);
+    printf(" | PARA A GALERIA! |");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+}
+
+void imprimirGanhoDePontos(int i, int pontos)
+{
+    Sleep(1000);
+    if (i == 6)
+    {
+        linhaCol(76, 113);
+        printf("TOTAL: ");
+        textColor(YELLOW, _BLACK);
+        printf("%d", pontos);
+        return;
+    }
+
+    linhaCol(11 + i * 12, 117);
+    printf("+%d", pontos);
+}
+
+void imprimirBoxMesa()
+{
+    box(2, 25, 29, 110);
+}
+
+void imprimirGaleriaContagemDePontos(char *nome, int inicio, Galeria *galeria, WORD saved_attributes)
+{
+    int lin = 0, col = 0;
+    for (int naipe = 0; naipe < QTD_NAIPES; naipe++)
+    {
+        // auxiliar recebe a primeira carta da lista do naipe
+        Carta *aux = primeiraCartaColecaoI(galeria, naipe);
+        textColor(LIGHTMAGENTA, _BLACK);
+        linhaCol((inicio - 1) + lin, 32 + col);
+        printf("%s", nome);
+        resetarAtributos(saved_attributes);
+        while (aux)
+        {
+            // muda a cor do sistema para a cor da carta
+            corDaCarta(aux->naipe);
+            // box exterior da carta
+            box(inicio + lin, 32 + col, (inicio + 3) + lin, 36 + col); // linha = 3, coluna = 4
+            // box interior da carta
+            box((inicio + 1) + lin, 33 + col, (inicio + 2) + lin, 35 + col);
+            linhaCol((inicio + 1) + lin, 34 + col);
+            printf("%c", aux->naipe); // imprime número e naipe
+            linhaCol((inicio + 2) + lin, 34 + col);
+            if (aux->numero != 10)
+                printf("0%d", aux->numero);
+            else
+                printf("%d", aux->numero);
+            resetarAtributos(saved_attributes);
+            // auxiliar aponta para a próxima carta da lista
+            aux = aux->prox;
+            // incrementa 8 no inteiro das colunas
+            col += 8;
+        }
+        // incrementa 4 no inteiro das linhas após imprimir todas as cartas da lista do naipe
+        lin += 12;
+        // as colunas zeram
+        col = 0;
+    }
 }

@@ -391,14 +391,7 @@ void imprimirGaleria(Galeria *galeria)
     if (galeria == NULL)
         return;
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
+    WORD saved_attributes = pegarAtributos();
     int lin = 0, col = 0;
     // delay de meio segundo
     Sleep(500);
@@ -412,7 +405,7 @@ void imprimirGaleria(Galeria *galeria)
         while (aux)
         {
             // muda a cor do sistema para a cor da carta
-            corDaCarta(aux);
+            corDaCarta(aux->naipe);
             // box exterior da carta
             box(45 + lin, 32 + col, 48 + lin, 36 + col); // linha = 3, coluna = 4
             // box interior da carta
@@ -424,7 +417,7 @@ void imprimirGaleria(Galeria *galeria)
                 printf("0%d", aux->numero);
             else
                 printf("%d", aux->numero);
-            SetConsoleTextAttribute(hConsole, saved_attributes);
+            resetarAtributos(saved_attributes);
             // auxiliar aponta para a próxima carta da lista
             aux = aux->prox;
             // incrementa 8 no inteiro das colunas
@@ -471,4 +464,57 @@ int quantidadeCartasColecao(Colecao *colecao)
 int quantidadeCartasColecaoPorIndice(Galeria *galeria, int indice)
 {
     return galeria == NULL ? 0 : quantidadeCartasColecao(galeria->colecao[indice]);
+}
+
+void imprimirContagemPontos(Galeria *galeria)
+{
+    WORD saved_attributes = pegarAtributos();
+
+    int lin = 0, col = 0;
+    // delay de meio segundo
+    Sleep(300);
+
+    // box exterior
+    box(2, 25, 78, 138);
+
+    // box exterior da plaquinha com o nome "GALERIA"
+    box(1, 26, 3, 48);
+    textColor(BLACK, _WHITE);
+    linhaCol(2, 26);
+    printf("   CALCULANDO PONTOS   ");
+    resetarAtributos(saved_attributes);
+
+    linhaCol(79, 69);
+    printf("[ENTER] - Continuar");
+
+    // Muda a cor do sistema conforme o naipe
+    for (int naipe = 'A'; naipe < 'A' + QTD_NAIPES; naipe++)
+    {
+        corDaCarta(naipe);
+        // box exterior da caixinha
+        box(10 + lin, 23, 12 + lin, 28);
+        linhaCol(11 + lin, 25);
+        printf("%c %c", naipe, 16);
+        lin += 11;
+    }
+    resetarAtributos(saved_attributes);
+    lin = 0;
+
+    imprimirGaleriaContagemDePontos("JOGADOR", 7, galeria, saved_attributes);
+
+    linhaCol(1, 1);
+}
+
+void imprimirGaleriaComputador(Galeria *galeria)
+{
+    WORD saved_attributes = pegarAtributos();
+
+    imprimirGaleriaContagemDePontos("COMPUTADOR", 12, galeria, saved_attributes);
+    // delay de 1 segundo
+    linhaCol(1, 1);
+}
+
+Carta *primeiraCartaColecaoI(Galeria *galeria, int indice)
+{
+    return galeria == NULL ? NULL : primeiraCarta(galeria->colecao[indice]->lista);
 }
