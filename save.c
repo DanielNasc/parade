@@ -9,7 +9,7 @@ typedef struct score
     int score;
     int id;
     int data; // data em que o score foi salvo
-    char nome[10];
+    char nome[TAMANHO_NOME];
     TipoVitoria vitoria;
 } Score;
 
@@ -37,7 +37,7 @@ void inicializarArquivosVetores()
     free(scores);
 }
 
-Score criarScore(int pontos, string nome, TipoVitoria vitoria)
+Score criarScore(int pontos, char *nome, TipoVitoria vitoria)
 {
     Score score;
     score.score = pontos;
@@ -67,6 +67,12 @@ Score *allScores()
     return scores;
 }
 
+void converterTime(time_t time, char *data)
+{
+    struct tm *tm = localtime(&time);
+    strftime(data, TAMANHO_DATA * sizeof(char), "%d/%m/%Y %H:%M:%S", tm);
+}
+
 void inserirOrdenado(Score *scores, Score score)
 {
     // procurar o lugar onde o score deve ser inserido
@@ -90,7 +96,7 @@ void inserirOrdenado(Score *scores, Score score)
     scores[indice] = score;
 }
 
-void saveScore(int pontos, string nome, TipoVitoria vitoria)
+void saveScore(int pontos, char *nome, TipoVitoria vitoria)
 {
     Score score = criarScore(pontos, nome, vitoria);
     Score *scores = allScores();
@@ -145,6 +151,9 @@ void scoreTest()
         printf("nome: %s\n", scores[i].nome);
         printf("id: %d\n", scores[i].id);
         printf("data: %d\n", scores[i].data);
+        char data[TAMANHO_DATA];
+        converterTime((time_t)scores[i].data, data);
+        printf("data formatada: %s\n", data);
         printf("vitoria: %d\n", scores[i].vitoria);
         printf("========\n");
     }

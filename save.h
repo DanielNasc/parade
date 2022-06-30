@@ -8,16 +8,17 @@
 #include "jogo.h"
 
 typedef struct score Score;
-typedef char *string;
 
 #define ARQ_SCORE "score.bin"
 #define QTD_LIDERES 15
+#define TAMANHO_NOME 10
+#define TAMANHO_DATA 20
 
 void inicializarArquivosVetores();
-Score criarScore(int, string, TipoVitoria);
+Score criarScore(int, char *, TipoVitoria);
 Score *allScores();
 
-void saveScore(int, string, TipoVitoria);
+void saveScore(int, char *, TipoVitoria);
 
 void scoreTest();
 
