@@ -635,7 +635,7 @@ void imprimirJogador()
     saved_attributes = consoleInfo.wAttributes;
 
     // Combinei as funções "linhaCol+printf+textColor" para imprimir um coelhinho
-    textColor(LIGHTGRAY, _BLACK);
+    textColor(LIGHTMAGENTA, _BLACK);
     linhaCol(30, 123);
     printf("/|      __");
     linhaCol(31, 122);
@@ -658,6 +658,7 @@ void imprimirJogador()
     printf("/|  -'     l"); //-7
     linhaCol(40, 116);
     printf("/            \\"); //-9
+    SetConsoleTextAttribute(hConsole, saved_attributes);
     box(41, 115, 43, 133);
     // box da plaquinha com o nome "JOGADOR".
     linhaCol(42, 115);
@@ -1028,6 +1029,15 @@ void menu(int tempo)
     printf("Iniciar o Jogo");
     linhaCol(30, 77);
     printf("Manual do Jogo");
+
+    textColor(MAGENTA, _BLACK);
+    linhaCol(39, 28);
+    printf("[ESC] - Sair?");
+    linhaCol(38, 121);
+    printf("[ALT + ENTER]");
+    linhaCol(39, 119);
+    printf("Janela/Tela cheia");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
     linhaCol(1, 1);
 }
 
@@ -2104,4 +2114,49 @@ void escolhaTela(int indice)
     system("cls");
     menu(0);
     chamarJogo(escolhaMenu(0));
+}
+
+void aviso()
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+
+    /* Salvar estado atual */
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+
+    box(12, 60, 28, 107);
+    textColor(LIGHTMAGENTA, _BLACK);
+    linhaCol(14, 81);
+    printf("AVISO!");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+    linhaCol(16, 67);
+    printf("Antes de iniciar o jogo, verifique");
+    linhaCol(17, 69);
+    printf("a resolução do seu terminal.");
+    linhaCol(19, 68);
+    textColor(RED, _BLACK);
+    printf("LARGURA MÍNIMA RECOMENDADA: 160");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+    linhaCol(21, 65);
+    printf("Caso as suas configurações de largura");
+    linhaCol(22, 67);
+    printf("não estejam compatíveis, seu jogo");
+    linhaCol(23, 70);
+    printf("pode não rodar perfeitamente.");
+    linhaCol(24, 75);
+    textColor(LIGHTMAGENTA, _BLACK);
+    printf("Obrigada e bom jogo!");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+    linhaCol(26, 75);
+    printf("[ENTER] - Continuar");
+
+    int tecla;
+
+    do
+    {
+        tecla = getch();
+        fflush(stdin);
+    } while (tecla != ENTER);
 }

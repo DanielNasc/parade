@@ -11,6 +11,7 @@
 #include <locale.h>
 
 #include "pilha.h"
+#include "jogo.h"
 
 // ======================= IMPRESSÃO =======================
 
@@ -77,6 +78,7 @@ void corDaVez(int);
 int corDaCarta(Carta *);
 
 // INTERFACE ==================================
+void aviso();
 void menu(int);
 void carregando();
 void chamarJogo(int);
@@ -89,6 +91,7 @@ int escolhaCarta(ListaCarta *, int);
 int escolhaMenu();
 
 // FIM DE JOGO ================================
+int chamarPlacar(Computador *, Jogador *, int);
 void vitoriaPontuacao(int);
 void vitoriaNormal();
 void vitoriaPerfeita();
