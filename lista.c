@@ -518,3 +518,42 @@ Carta *primeiraCartaColecaoI(Galeria *galeria, int indice)
 {
     return galeria == NULL ? NULL : primeiraCarta(galeria->colecao[indice]->lista);
 }
+
+// FUNÇÕES FREE
+
+void liberarLista(ListaCarta *lista)
+{
+    if (lista == NULL)
+        return;
+
+    Carta *aux = lista->primeira;
+    while (aux)
+    {
+        Carta *aux2 = aux->prox;
+        free(aux);
+        aux = aux2;
+    }
+
+    free(lista);
+}
+
+void liberarColecao(Colecao *colecao)
+{
+    if (colecao == NULL)
+        return;
+
+    liberarLista(colecao->lista);
+    free(colecao);
+}
+
+void liberarGaleria(Galeria *galeria)
+{
+    if (galeria == NULL)
+        return;
+
+    for (int i = 0; i < QTD_NAIPES; i++)
+    {
+        liberarColecao(galeria->colecao[i]);
+    }
+    free(galeria);
+}

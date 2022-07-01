@@ -10,7 +10,7 @@
 
 #define ARQ_SCORE "score.bin"
 #define QTD_LIDERES 15
-#define TAMANHO_NOME 10
+#define TAMANHO_NOME 11 // 10 caracteres + '\0'
 #define TAMANHO_DATA 20
 
 typedef struct score

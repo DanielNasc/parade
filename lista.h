@@ -45,4 +45,9 @@ void imprimirGaleriaComputador(Galeria *);
 // MESA =======================================
 bool inserirFim(ListaCarta *, Carta *);
 
+// FREE ===========================================
+void liberarLista(ListaCarta *);
+void liberarColecao(Colecao *);
+void liberarGaleria(Galeria *);
+
 #endif // LISTA_H
