@@ -88,6 +88,11 @@ void inserirOrdenado(Score *scores, Score score)
     scores[indice] = score;
 }
 
+bool checarSeScoreEValido(Score score)
+{
+    return score.score != -1;
+}
+
 void saveScore(int pontos, char *nome, TipoVitoria vitoria)
 {
     Score score = criarScore(pontos, nome, vitoria);

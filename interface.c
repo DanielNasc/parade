@@ -1229,14 +1229,17 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
         } while (tecla != 13);
         system("cls");
         // chama a função de interface para imprimir a tela de vitoria por pontuação
+        saveScore(pontos, "Jogador", tipoVitoria);
         vitoriaPontuacao(pontos);
         break;
     case 1:
         // chama a função de interface para imprimir a tela de vitoria normal, por colecao vazia
+        saveScore(100, "Jogador", tipoVitoria);
         vitoriaNormal();
         break;
     case 2:
         // chama a função de interface para imprimir a tela de vitoria perfeita
+        saveScore(150, "Jogador", tipoVitoria);
         vitoriaPerfeita();
         break;
     }
@@ -2353,6 +2356,10 @@ void ranking(Score *scores)
     int lin = 0;
     for (int i = 0; i < 15; i++)
     {
+        if (!checarSeScoreEValido(scores[i]))
+        {
+            break;
+        }
         box(14 + lin, 49, 16 + lin, 114);
         textColor(LIGHTRED, _BLACK);
         linhaCol(15 + lin, 51);
@@ -2361,6 +2368,7 @@ void ranking(Score *scores)
         SetConsoleTextAttribute(hConsole, saved_attributes);
         lin += 3;
     }
+    linhaCol(1, 1);
     do
     {
         tecla = getch();

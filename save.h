@@ -5,6 +5,7 @@
 
 #ifndef SAVE_H
 #define SAVE_H
+#include <stdbool.h>
 #include "jogo.h"
 
 #define ARQ_SCORE "score.bin"
@@ -30,5 +31,7 @@ void saveScore(int, char *, TipoVitoria);
 void scoreTest();
 void converterTime(time_t, char *);
 void imprimirScore(Score, int);
+
+bool checarSeScoreEValido(Score);
 
 #endif // SAVE_H
