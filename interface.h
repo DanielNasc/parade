@@ -103,6 +103,7 @@ int escolhaMenu();
 
 // FIM DE JOGO ================================
 int chamarPlacar(Computador *, Jogador *, int);
+void nomeDoSave();
 void vitoriaPontuacao(int);
 void vitoriaNormal();
 void vitoriaPerfeita();

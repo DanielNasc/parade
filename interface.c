@@ -168,21 +168,21 @@ void imprimirMao(ListaCarta *mao)
         if (aux == NULL)
         {
             // box representando carta vazia
-            box(35, 29 + col, 42, 38 + col);
+            box(35, 33 + col, 42, 42 + col);
             return;
         }
         // muda a cor do sistema para a cor da carta
         corDaCarta(aux->naipe);
         // box exterior da carta
-        box(35, 29 + col, 42, 38 + col);
+        box(35, 33 + col, 42, 42 + col);
         // box interior da carta
-        box(36, 30 + col, 41, 37 + col);
+        box(36, 34 + col, 41, 41 + col);
         // imprime o número e o naipe
-        linhaCol(36, 30 + col);
+        linhaCol(36, 34 + col);
         printf("%c", aux->naipe);
-        linhaCol(41, 37 + col);
+        linhaCol(41, 41 + col);
         printf("%c", aux->naipe);
-        linhaCol(38, 33 + col);
+        linhaCol(38, 37 + col);
         if (aux->numero != 10)
             printf("0%d", aux->numero);
         else
@@ -288,93 +288,93 @@ int indicadorDeCarta(int indice)
     switch (indice)
     {
     case 0:
-        linhaCol(43, 32);
+        linhaCol(43, 36);
         printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
-        linhaCol(44, 33);
+        linhaCol(44, 37);
         printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
-        linhaCol(43, 47);
+        linhaCol(43, 51);
         printf("    ");
-        linhaCol(44, 48);
+        linhaCol(44, 52);
         printf("  ");
         linhaCol(42, 1);
         return 1;
     case 1:
-        linhaCol(43, 32);
+        linhaCol(43, 36);
         printf("    ");
-        linhaCol(44, 33);
+        linhaCol(44, 37);
         printf("  ");
-        linhaCol(43, 47);
+        linhaCol(43, 51);
         printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
-        linhaCol(44, 48);
+        linhaCol(44, 52);
         printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
-        linhaCol(43, 62);
+        linhaCol(43, 66);
         printf("    ");
-        linhaCol(44, 63);
+        linhaCol(44, 67);
         printf("  ");
         linhaCol(42, 1);
         return 1;
     case 2:
-        linhaCol(43, 32);
+        linhaCol(43, 36);
         printf("    ");
-        linhaCol(44, 33);
+        linhaCol(44, 37);
         printf("  ");
-        linhaCol(43, 47);
+        linhaCol(43, 51);
         printf("    ");
-        linhaCol(44, 48);
+        linhaCol(44, 52);
         printf("  ");
-        linhaCol(43, 62);
+        linhaCol(43, 66);
         printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
-        linhaCol(44, 63);
+        linhaCol(44, 67);
         printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
-        linhaCol(43, 77);
+        linhaCol(43, 81);
         printf("    ");
-        linhaCol(44, 78);
+        linhaCol(44, 82);
         printf("  ");
         linhaCol(42, 1);
         return 1;
     case 3:
-        linhaCol(43, 32);
+        linhaCol(43, 36);
         printf("    ");
-        linhaCol(44, 33);
+        linhaCol(44, 37);
         printf("  ");
-        linhaCol(43, 47);
+        linhaCol(43, 51);
         printf("    ");
-        linhaCol(44, 48);
+        linhaCol(44, 52);
         printf("  ");
-        linhaCol(43, 62);
+        linhaCol(43, 66);
         printf("    ");
-        linhaCol(44, 63);
+        linhaCol(44, 67);
         printf("  ");
-        linhaCol(43, 77);
+        linhaCol(43, 81);
         printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
-        linhaCol(44, 78);
+        linhaCol(44, 82);
         printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
-        linhaCol(43, 92);
+        linhaCol(43, 96);
         printf("    ");
-        linhaCol(44, 93);
+        linhaCol(44, 97);
         printf("  ");
         linhaCol(42, 1);
         return 1;
     case 4:
-        linhaCol(43, 32);
+        linhaCol(43, 36);
         printf("    ");
-        linhaCol(44, 33);
+        linhaCol(44, 37);
         printf("  ");
-        linhaCol(43, 47);
+        linhaCol(43, 51);
         printf("    ");
-        linhaCol(44, 48);
+        linhaCol(44, 52);
         printf("  ");
-        linhaCol(43, 62);
+        linhaCol(43, 66);
         printf("    ");
-        linhaCol(44, 63);
+        linhaCol(44, 67);
         printf("  ");
-        linhaCol(43, 77);
+        linhaCol(43, 81);
         printf("    ");
-        linhaCol(44, 78);
+        linhaCol(44, 82);
         printf("  ");
-        linhaCol(43, 92);
+        linhaCol(43, 96);
         printf("%c%c%c%c", CANTO_INF_ESQUERDO, LINHA_HORIZONTAL, LINHA_HORIZONTAL, CANTO_INF_DIREITO);
-        linhaCol(44, 93);
+        linhaCol(44, 97);
         printf("%c%c", TEXTURA_BARALHO, TEXTURA_BARALHO);
         linhaCol(42, 1);
         return 1;
@@ -1214,6 +1214,7 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
     if (jogador == NULL || computador == NULL)
         return 0;
 
+    char save[15];
     int pontos = 0, tecla = 0;
     // criei um switch para chamarmos as funções de acordo com o inteiro dado como parâmetro
     switch (tipoVitoria)
@@ -1229,17 +1230,20 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
         } while (tecla != 13);
         system("cls");
         // chama a função de interface para imprimir a tela de vitoria por pontuação
-        saveScore(pontos, "Jogador", tipoVitoria);
+        nomeDoSave(save);
+        saveScore(pontos, save, tipoVitoria);
         vitoriaPontuacao(pontos);
         break;
     case 1:
         // chama a função de interface para imprimir a tela de vitoria normal, por colecao vazia
-        saveScore(100, "Jogador", tipoVitoria);
+        nomeDoSave(save);
+        saveScore(500, save, tipoVitoria);
         vitoriaNormal();
         break;
     case 2:
         // chama a função de interface para imprimir a tela de vitoria perfeita
-        saveScore(150, "Jogador", tipoVitoria);
+        nomeDoSave(save);
+        saveScore(999, save, tipoVitoria);
         vitoriaPerfeita();
         break;
     }
@@ -2415,4 +2419,30 @@ int imprimirSair()
     {
         return 0;
     }
+}
+
+void nomeDoSave(char *nome)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+
+    /* Salvar estado atual */
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+
+    system("cls");
+    box(12, 60, 28, 107);
+
+    textColor(LIGHTRED, _BLACK);
+    linhaCol(17, 67);
+    printf("COMO GOSTARIA DE SALVAR SEU JOGO?");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
+    linhaCol(18, 74);
+    gets(nome);
+    fflush(stdin);
+    linhaCol(23, 71);
+    textColor(YELLOW, _BLACK);
+    printf("JOGO SALVO COMO: %s", nome);
+    SetConsoleTextAttribute(hConsole, saved_attributes);
 }

@@ -122,8 +122,13 @@ void imprimirScore(Score score, int lin)
     linhaCol(15 + lin, 55);
     printf("%s", score.nome);
     linhaCol(15 + lin, 83);
-    printf("%d", score.score);
-    linhaCol(15 + lin, 99);
+    if (score.score < 9)
+        printf("00%d", score.score);
+    else if (score.score > 9 && score.score < 100)
+        printf("0%d", score.score);
+    else
+        printf("%d", score.score);
+    linhaCol(15 + lin, 94);
     char *data = (char *)malloc(TAMANHO_DATA * sizeof(char));
     converterTime((time_t)score.data, data);
     printf("%s", data);
