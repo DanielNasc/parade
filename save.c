@@ -7,6 +7,14 @@
 
 void inicializarArquivosVetores()
 {
+    // checa se o arquivo de scores existe, se sim, não faz nada, se não, cria o arquivo
+    FILE *arq = fopen(ARQ_SCORE, "r");
+    if (arq != NULL)
+    {
+        fclose(arq);
+        return;
+    }
+
     // inicializa o vetor de scores
     Score *scores = (Score *)malloc(QTD_LIDERES * sizeof(Score));
 
@@ -16,7 +24,7 @@ void inicializarArquivosVetores()
         scores[i] = criarScore(-1, "NULL", NENHUMA);
     }
 
-    FILE *arq = fopen(ARQ_SCORE, "wb");
+    arq = fopen(ARQ_SCORE, "wb");
 
     if (arq == NULL)
     {
