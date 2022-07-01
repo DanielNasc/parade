@@ -266,7 +266,7 @@ void colocarDuasCartasGaleria(Jogador *jogador)
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
         imprimirMao(jogador->mao);
-        imprimirControles(41, 50);
+        imprimirControles(46, 50);
     }
 }
 
@@ -358,7 +358,7 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
     }
     inserirFim(mesa, cartaEscolhida);
     imprimirMao(jogador->mao);
-    imprimirControles(41, 42);
+    imprimirControles(46, 42);
     imprimirMesa(mesa);
 
     chamarPlacar(computador, jogador, checarVitoriaJogador(jogador));
