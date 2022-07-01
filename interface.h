@@ -12,6 +12,7 @@
 
 #include "pilha.h"
 #include "jogo.h"
+#include "save.h"
 
 // ======================= IMPRESSÃO =======================
 
@@ -92,6 +93,9 @@ void chamarJogo(int);
 void manual(int);
 void telas(int);
 void escolhaTela(int);
+void ranking(Score *);
+
+int imprimirSair();
 int indicadorDeCarta(int);
 int indicador(int);
 int escolhaCarta(ListaCarta *, int);

@@ -7,12 +7,19 @@
 #define SAVE_H
 #include "jogo.h"
 
-typedef struct score Score;
-
 #define ARQ_SCORE "score.bin"
 #define QTD_LIDERES 15
 #define TAMANHO_NOME 10
 #define TAMANHO_DATA 20
+
+typedef struct score
+{
+    int score;
+    int id;
+    int data; // data em que o score foi salvo
+    char nome[TAMANHO_NOME];
+    TipoVitoria vitoria;
+} Score;
 
 void inicializarArquivosVetores();
 Score criarScore(int, char *, TipoVitoria);
@@ -21,5 +28,7 @@ Score *allScores();
 void saveScore(int, char *, TipoVitoria);
 
 void scoreTest();
+void converterTime(time_t, char *);
+void imprimirScore(Score, int);
 
 #endif // SAVE_H

@@ -143,7 +143,7 @@ void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
 
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
-        linhaCol(72, 23);
+        linhaCol(77, 23);
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
         imprimirBoxMesa();
@@ -155,7 +155,7 @@ void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
     imprimirBaralho(baralho);
     imprimirMao(jogador->mao);
 
-    imprimirControles(41, 50);
+    imprimirControles(46, 42);
     imprimirMesa(mesa);
 }
 
@@ -174,7 +174,7 @@ void jogadaComputador(Computador *computador, Baralho *baralho, ListaCarta *mesa
     int quantidadeAnterior = quantidadeCartasLista(mesa), pensando = (rand() % 3000) + 500;
     Carta *cartaEscolhida = removerTopo(baralho);
     Sleep(pensando);
-    imprimirCartaEscolhida(cartaEscolhida, 26);
+    imprimirCartaEscolhida(cartaEscolhida, 32);
     removerQualquerCartaValida(mesa, computador->galeria, cartaEscolhida);
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
@@ -332,6 +332,10 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
     if (checarSeJogadorTemUmaCartaDeCadaCor(jogador->galeria))
     {
         derrota();
+        Sleep(2000);
+        system("cls");
+        menu(0);
+        chamarJogo(escolhaMenu(0));
         return true;
     }
 
@@ -354,7 +358,7 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
     }
     inserirFim(mesa, cartaEscolhida);
     imprimirMao(jogador->mao);
-    imprimirControles(41, 50);
+    imprimirControles(41, 42);
     imprimirMesa(mesa);
 
     chamarPlacar(computador, jogador, checarVitoriaJogador(jogador));
@@ -403,7 +407,7 @@ void partida()
     imprimirBaralho(baralho);
     imprimirMesa(mesa);
     imprimirMaoJogador(jogador);
-    imprimirControles(41, 50);
+    imprimirControles(46, 42);
     imprimirJogador();
     imprimirComputer();
     imprimirNaipesColecao();

@@ -3,15 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "save.h"
-
-typedef struct score
-{
-    int score;
-    int id;
-    int data; // data em que o score foi salvo
-    char nome[TAMANHO_NOME];
-    TipoVitoria vitoria;
-} Score;
+#include "interface.h"
 
 void inicializarArquivosVetores()
 {
@@ -110,6 +102,18 @@ void saveScore(int pontos, char *nome, TipoVitoria vitoria)
         fwrite(scores, sizeof(Score), QTD_LIDERES, arq);
         fclose(arq);
     }
+}
+
+void imprimirScore(Score score, int lin)
+{
+    linhaCol(15 + lin, 55);
+    printf("%s", score.nome);
+    linhaCol(15 + lin, 83);
+    printf("%d", score.score);
+    linhaCol(15 + lin, 99);
+    char *data = (char *)malloc(TAMANHO_DATA * sizeof(char));
+    converterTime((time_t)score.data, data);
+    printf("%s", data);
 }
 
 void scoreTest()
