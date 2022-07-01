@@ -222,7 +222,7 @@ int escolhaCarta(ListaCarta *mao, int indice)
             {
                 system("cls");
                 menu(0);
-                chamarJogo(escolhaMenu(0));
+                chamarJogo(escolhaMenu());
                 exit(1);
             }
         }
@@ -1061,7 +1061,7 @@ int indicador(int indice)
 }
 
 // comentada
-int escolhaMenu(int indice)
+int escolhaMenu()
 {
     /* Função de chamada de funções
     Função usada no menu para chamar as funções do jogo, instruções ou finalizar o programa dependendo da
@@ -1076,7 +1076,7 @@ int escolhaMenu(int indice)
     saved_attributes = consoleInfo.wAttributes;
 
     // Criei um inteiro para receber a tecla digitada e chamei a função "indicador" para imprimir na tela o indicador rsrs.
-    int tecla;
+    int tecla, indice = 0;
     textColor(MAGENTA, _BLACK);
     indicador(indice);
 
@@ -1150,7 +1150,7 @@ void chamarJogo(int indice)
         // chama a função menu, para imprimir o menu do jogo
         menu(0);
         // uso da recursividade!
-        chamarJogo(escolhaMenu(0));
+        chamarJogo(escolhaMenu());
         break;
     case 2:
         // limpa a tela e imprime as instruções
@@ -1250,7 +1250,7 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
     Sleep(2500);
     system("cls");
     menu(0);
-    chamarJogo(escolhaMenu(0));
+    chamarJogo(escolhaMenu());
     return 1;
 }
 
@@ -2112,7 +2112,7 @@ void escolhaTela(int indice)
     } while (tecla != ESC);
     system("cls");
     menu(0);
-    chamarJogo(escolhaMenu(0));
+    chamarJogo(escolhaMenu());
 }
 
 void aviso()
@@ -2439,7 +2439,7 @@ void nomeDoSave(char *nome)
     printf("COMO GOSTARIA DE SALVAR SEU JOGO?");
     SetConsoleTextAttribute(hConsole, saved_attributes);
     linhaCol(18, 74);
-    gets(nome);
+    fgets(nome, TAMANHO_NOME, stdin);
     fflush(stdin);
     linhaCol(23, 71);
     textColor(YELLOW, _BLACK);

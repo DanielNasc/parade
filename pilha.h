@@ -20,4 +20,6 @@ uint8_t tamanhoBaralho(Baralho *);
 
 Carta *removerTopo(Baralho *);
 
+void liberarBaralho(Baralho *);
+
 #endif // PILHA_H

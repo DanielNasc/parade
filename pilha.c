@@ -255,3 +255,18 @@ bool baralhoVazio(Baralho *baralho)
 
     return baralho->quantidade == 0;
 }
+
+void liberarBaralho(Baralho *baralho)
+{
+    if (baralho == NULL)
+        return;
+
+    Carta *carta = baralho->topo;
+    while (carta != NULL)
+    {
+        Carta *aux = carta;
+        carta = carta->prox;
+        free(aux);
+    }
+    free(baralho);
+}

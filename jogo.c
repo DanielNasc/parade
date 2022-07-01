@@ -266,7 +266,7 @@ void colocarDuasCartasGaleria(Jogador *jogador)
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
         imprimirMao(jogador->mao);
-        imprimirControles(46, 50);
+        imprimirControles(46, 42);
     }
 }
 
