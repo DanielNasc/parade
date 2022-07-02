@@ -134,10 +134,19 @@ Computador *criarComputador()
  * Após isso, analisa-se a mesa e remove todas as cartas válidas e as insere na galeria do jogador
  * Por fim, coloca-se a carta que o jogador tirou na mesa e o mesmo retira outra do topo do baralho.
  */
-void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
+int jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
 {
+    if (jogador == NULL || mesa == NULL || baralho == NULL)
+        return 0;
+
     int quantidadeAnterior = quantidadeCartasLista(mesa);
-    Carta *cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 4));
+
+    int indiceEscolhido = escolhaCarta(jogador->mao, 4);
+
+    if (indiceEscolhido == SAIR_PARTIDA)
+        return SAIR_PARTIDA;
+
+    Carta *cartaEscolhida = removerIndice(jogador->mao, indiceEscolhido);
     imprimirCartaEscolhida(cartaEscolhida, 0);
     removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
 
@@ -157,6 +166,8 @@ void jogadaPlayer(Jogador *jogador, ListaCarta *mesa, Baralho *baralho)
 
     imprimirControles(46, 42);
     imprimirMesa(mesa);
+
+    return 1;
 }
 
 /*
@@ -254,13 +265,21 @@ TipoVitoria checarVitoriaJogador(Jogador *jogador)
  * Parametros: jogador - Jogador que será analisado
  * Descrição
  */
-void colocarDuasCartasGaleria(Jogador *jogador)
+int colocarDuasCartasGaleria(Jogador *jogador)
 {
+    if (jogador == NULL || jogador->mao == NULL)
+        return 0;
+
     Carta *cartaEscolhida;
     imprimirDuasCartas();
     for (int i = 0; i < 2; i++)
     {
-        cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 3 - i));
+        int indice = escolhaCarta(jogador->mao, 3 - i);
+
+        if (indice == SAIR_PARTIDA)
+            return SAIR_PARTIDA;
+
+        cartaEscolhida = removerIndice(jogador->mao, indice);
         inserirNaGaleria(jogador->galeria, cartaEscolhida);
         linhaCol(72, 23);
         Sleep(1000);
@@ -331,9 +350,6 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
     {
         derrota();
         Sleep(2000);
-        system("cls");
-        menu(0);
-        chamarJogo(escolhaMenu(0));
         return true;
     }
 
@@ -344,7 +360,13 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
 
     imprimirUltimaCarta();
     int quantidadeAnterior = quantidadeCartasLista(mesa);
-    Carta *cartaEscolhida = removerIndice(jogador->mao, escolhaCarta(jogador->mao, 4));
+
+    int indice = escolhaCarta(jogador->mao, 4);
+
+    if (indice == SAIR_PARTIDA)
+        return true;
+
+    Carta *cartaEscolhida = removerIndice(jogador->mao, indice);
     removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
 
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
@@ -384,6 +406,13 @@ void chamarGaleriaComputador(Computador *computador)
     imprimirGaleriaComputador(computador->galeria);
 }
 
+void liberarjogador(Jogador *jogador)
+{
+    liberarLista(jogador->mao);
+    liberarGaleria(jogador->galeria);
+    free(jogador);
+}
+
 void partida()
 {
 
@@ -414,7 +443,9 @@ void partida()
     while (1)
     {
         corDaVez(1);
-        jogadaPlayer(jogador, mesa, baralho);
+
+        if (jogadaPlayer(jogador, mesa, baralho) == SAIR_PARTIDA)
+            break;
 
         if (fimDeJogo(jogador, computador, baralho, mesa))
             break;
@@ -424,4 +455,8 @@ void partida()
         if (fimDeJogo(jogador, computador, baralho, mesa))
             break;
     }
+
+    liberarBaralho(baralho);
+    liberarLista(mesa);
+    liberarjogador(jogador);
 }

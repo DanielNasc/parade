@@ -14,6 +14,8 @@
 #include "jogo.h"
 #include "save.h"
 
+#define SAIR_PROMPT 555
+
 // ======================= IMPRESSÃO =======================
 
 // Nome da cor da letra
@@ -72,11 +74,12 @@ void imprimirDuasCartas();
 void imprimirGanhoDePontos(int, int);
 void imprimirBoxMesa();
 void imprimirGaleriaContagemDePontos(char *, int, Galeria *);
-void clearStdin();
-void inicializarAtributosPadrao();
 
 // FUNÇÕES BASE ==================================
-WORD pegarAtributos();
+void mudarTamanhoJanela(int, int);
+void mudarFonte();
+void clearStdin();
+void inicializarAtributosPadrao();
 void resetarAtributos();
 void linhaCol(int, int);
 void box(int, int, int, int);
@@ -93,9 +96,9 @@ void aviso();
 void menu(int);
 void carregando();
 void chamarJogo(int);
-void manual(int);
+void manual();
 void telas(int);
-void escolhaTela(int);
+void escolhaTela();
 void ranking(Score *);
 
 int imprimirSair();
