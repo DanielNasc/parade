@@ -3,7 +3,7 @@
 #include <conio.h>
 #include <locale.h>
 
-#include "carta.h"
+#include "carta.h" // carta.h é o arquivo que contém as funções que manipulam as cartas
 #include "jogo.h"
 #include "lista.h"
 #include "pilha.h"
@@ -12,15 +12,13 @@
 
 int main()
 {
-    // testeW = pegarAtributos();
-
     keybd_event(VK_MENU, 0x36, 0, 0);
     keybd_event(VK_RETURN, 0x1C, 0, 0);
     keybd_event(VK_RETURN, 0x1C, KEYEVENTF_KEYUP, 0);
     keybd_event(VK_MENU, 0x38, KEYEVENTF_KEYUP, 0);
 
-    inicializarArquivosVetores();
     inicializarAtributosPadrao();
+    inicializarArquivosVetores();
     system("cls");
     aviso();
     menu(500);

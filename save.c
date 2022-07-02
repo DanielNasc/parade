@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "save.h"
 #include "interface.h"
 
@@ -75,12 +76,27 @@ void converterTime(time_t time, char *data)
 
 void inserirOrdenado(Score *scores, Score score)
 {
+    // o vetor deverá ser ordenado de forma crescente
+
+    /*
+        checa se o score pode ser inserido no vetor
+        ele nao pode ser maior que o ultimo score do vetor
+    */
+
+    if (
+        scores[QTD_LIDERES - 1].score != -1            // se o ultimo score nao for vazio
+        && score.score > scores[QTD_LIDERES - 1].score // se o score for maior que o ultimo score
+    )
+    {
+        return;
+    }
+
     // procurar o lugar onde o score deve ser inserido
     int indice = 0;
 
     for (; indice < QTD_LIDERES; indice++)
     {
-        if (scores[indice].score < score.score)
+        if (scores[indice].score > score.score)
         {
             break;
         }
@@ -122,12 +138,14 @@ void imprimirScore(Score score, int lin)
     linhaCol(15 + lin, 55);
     printf("%s", score.nome);
     linhaCol(15 + lin, 83);
-    if (score.score < 9)
-        printf("00%d", score.score);
-    else if (score.score > 9 && score.score < 100)
-        printf("0%d", score.score);
-    else
+
+    if (score.score < 0 || abs(score.score) > 99)
         printf("%d", score.score);
+    else if (score.score < 9)
+        printf("00%d", score.score);
+    else
+        printf("0%d", score.score);
+
     linhaCol(15 + lin, 94);
     char *data = (char *)malloc(TAMANHO_DATA * sizeof(char));
     converterTime((time_t)score.data, data);
@@ -160,7 +178,9 @@ void scoreTest()
 
     for (int i = 0; i < QTD_LIDERES + 1; i++)
     {
-        saveScore(pontos[i], "IDK", rand() % 3);
+        int vitoria = rand() % 3;
+        saveScore(
+            vitoria == 0 ? pontos[i] : (vitoria == 1 ? -50 : -99), "IDK", vitoria);
     }
 
     printf("\n");
