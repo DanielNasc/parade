@@ -5,6 +5,7 @@
 
 #ifndef SAVE_H
 #define SAVE_H
+
 #include <stdbool.h>
 #include "jogo.h"
 
@@ -12,6 +13,7 @@
 #define QTD_LIDERES 15
 #define TAMANHO_NOME 11 // 10 caracteres + '\0'
 #define TAMANHO_DATA 20
+#define ARQ_FULLSCREEN_OPTION "fullscreen.txt"
 
 typedef struct score
 {
@@ -23,15 +25,22 @@ typedef struct score
 } Score;
 
 void inicializarArquivosVetores();
+void inicializarArquivoFullscreen();
+
+bool pegarFullscreen();
+void mudarOpcaoFullscreen();
+
 Score criarScore(int, char *, TipoVitoria);
 Score *allScores();
 
 void saveScore(int, char *, TipoVitoria);
 
-void scoreTest();
 void converterTime(time_t, char *);
 void imprimirScore(Score, int);
 
 bool checarSeScoreEValido(Score);
+
+void scoreTest();
+void fullscreenTest();
 
 #endif // SAVE_H

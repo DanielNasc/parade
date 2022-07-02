@@ -76,16 +76,18 @@ void imprimirBoxMesa();
 void imprimirGaleriaContagemDePontos(char *, int, Galeria *);
 
 // FUNÇÕES BASE ==================================
+void fullscreen();
 void mudarTamanhoJanela(int, int);
 void mudarFonte();
 void clearStdin();
-void inicializarAtributosPadrao();
-void resetarAtributos();
 void linhaCol(int, int);
 void box(int, int, int, int);
 void corTexto(int, int);
 void clearStdin();
 int question();
+
+void inicializarAtributosPadrao();
+void resetarAtributos();
 
 // FUNÇÕES MUDANÇA DE COR ==================================
 void corDaVez(int);
