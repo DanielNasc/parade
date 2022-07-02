@@ -391,7 +391,6 @@ void imprimirGaleria(Galeria *galeria)
     if (galeria == NULL)
         return;
 
-    WORD saved_attributes = pegarAtributos();
     int lin = 0, col = 0;
     // delay de meio segundo
     Sleep(500);
@@ -417,7 +416,7 @@ void imprimirGaleria(Galeria *galeria)
                 printf("0%d", aux->numero);
             else
                 printf("%d", aux->numero);
-            resetarAtributos(saved_attributes);
+            resetarAtributos();
             // auxiliar aponta para a próxima carta da lista
             aux = aux->prox;
             // incrementa 8 no inteiro das colunas
@@ -468,7 +467,6 @@ int quantidadeCartasColecaoPorIndice(Galeria *galeria, int indice)
 
 void imprimirContagemPontos(Galeria *galeria)
 {
-    WORD saved_attributes = pegarAtributos();
 
     int lin = 0, col = 0;
     // delay de meio segundo
@@ -479,10 +477,10 @@ void imprimirContagemPontos(Galeria *galeria)
 
     // box exterior da plaquinha com o nome "GALERIA"
     box(1, 26, 3, 48);
-    textColor(BLACK, _WHITE);
+    corTexto(BLACK, _WHITE);
     linhaCol(2, 26);
     printf("   CALCULANDO PONTOS   ");
-    resetarAtributos(saved_attributes);
+    resetarAtributos();
 
     linhaCol(79, 69);
     printf("[ENTER] - Continuar");
@@ -497,19 +495,18 @@ void imprimirContagemPontos(Galeria *galeria)
         printf("%c %c", naipe, 16);
         lin += 11;
     }
-    resetarAtributos(saved_attributes);
+    resetarAtributos();
     lin = 0;
 
-    imprimirGaleriaContagemDePontos("JOGADOR", 7, galeria, saved_attributes);
+    imprimirGaleriaContagemDePontos("JOGADOR", 7, galeria);
 
     linhaCol(1, 1);
 }
 
 void imprimirGaleriaComputador(Galeria *galeria)
 {
-    WORD saved_attributes = pegarAtributos();
 
-    imprimirGaleriaContagemDePontos("COMPUTADOR", 12, galeria, saved_attributes);
+    imprimirGaleriaContagemDePontos("COMPUTADOR", 12, galeria);
     // delay de 1 segundo
     linhaCol(1, 1);
 }
