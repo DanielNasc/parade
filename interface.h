@@ -72,6 +72,7 @@ void imprimirDuasCartas();
 void imprimirGanhoDePontos(int, int);
 void imprimirBoxMesa();
 void imprimirGaleriaContagemDePontos(char *, int, Galeria *, WORD);
+void clearStdin();
 
 // FUNÇÕES BASE ==================================
 WORD pegarAtributos();
@@ -79,6 +80,7 @@ void resetarAtributos(WORD);
 void linhaCol(int, int);
 void box(int, int, int, int);
 void textColor(int, int);
+void clearStdin();
 int question();
 
 // FUNÇÕES MUDANÇA DE COR ==================================
@@ -103,7 +105,7 @@ int escolhaMenu();
 
 // FIM DE JOGO ================================
 int chamarPlacar(Computador *, Jogador *, int);
-void nomeDoSave();
+void nomeDoSave(char *);
 void vitoriaPontuacao(int);
 void vitoriaNormal();
 void vitoriaPerfeita();
