@@ -71,15 +71,16 @@ void imprimirUltimaCarta();
 void imprimirDuasCartas();
 void imprimirGanhoDePontos(int, int);
 void imprimirBoxMesa();
-void imprimirGaleriaContagemDePontos(char *, int, Galeria *, WORD);
+void imprimirGaleriaContagemDePontos(char *, int, Galeria *);
 void clearStdin();
+void inicializarAtributosPadrao();
 
 // FUNÇÕES BASE ==================================
 WORD pegarAtributos();
-void resetarAtributos(WORD);
+void resetarAtributos();
 void linhaCol(int, int);
 void box(int, int, int, int);
-void textColor(int, int);
+void corTexto(int, int);
 void clearStdin();
 int question();
 

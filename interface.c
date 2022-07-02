@@ -7,24 +7,31 @@
 #include "caracters.h"
 #include "save.h"
 
-WORD pegarAtributos()
+// variavel global para guardar os atributos padrão da tela
+WORD atributosPadrao = 0;
+
+void inicializarAtributosPadrao()
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
 
     /* Salvar estado atual */
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    return consoleInfo.wAttributes;
+    atributosPadrao = consoleInfo.wAttributes;
 }
 
-void resetarAtributos(WORD atributos)
+void resetarAtributos()
 {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), atributos);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), atributosPadrao);
+}
+
+void clearStdin()
+{
+    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 }
 
 // Função que muda a cor do sistema
-void textColor(int letras, int fundo)
+void corTexto(int letras, int fundo)
 {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), letras + fundo);
 }
@@ -92,14 +99,7 @@ void simSelecionado()
 // Função que imprime a caixa de texto perguntando se o jogador que encerrar o jogo
 int question()
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    clearStdin(); // Limpa o buffer de entrada
 
     int tecla;
     int sim_nao = 1;
@@ -109,9 +109,9 @@ int question()
 
     // // linguagem(1);
     linhaCol(27, 76);
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf("Deseja sair?");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     simSelecionado();
 
     // linguagem(0);
@@ -122,7 +122,6 @@ int question()
     while (1)
     {
         tecla = getch();
-        fflush(stdin);
         if (tecla == ESC)
         { // ESC
             sim_nao = 0;
@@ -146,7 +145,7 @@ int question()
             linhaCol(29, 74);
             printf("  sim");
             linhaCol(29, 82);
-            printf("%c NAO", 175);
+            printf("%c NAO", SETAS_DUPLAS);
             linhaCol(42, 1);
             // linguagem(0);
             sim_nao = 0;
@@ -162,14 +161,6 @@ void imprimirMao(ListaCarta *mao)
     /* Função de Interface
     Imprime a mão do jogador
     */
-
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     // aux aponta para a última carta da lista
     Carta *aux = ultimaCarta(mao);
@@ -198,7 +189,7 @@ void imprimirMao(ListaCarta *mao)
             printf("0%d", aux->numero);
         else
             printf("%d", aux->numero);
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         // coluna incrementa em 15
         col += 15;
         // aux aponta para a carta anterior
@@ -209,7 +200,7 @@ void imprimirMao(ListaCarta *mao)
 // comentada
 int escolhaCarta(ListaCarta *mao, int indice)
 {
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    clearStdin(); // Limpa o buffer de entrada
     /* Função que retorna o índice da carta escolhida da mão. */
     if (mao == NULL)
         return 0;
@@ -261,22 +252,22 @@ int corDaCarta(char naipe)
     switch (naipe)
     {
     case 'A':
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         break;
     case 'B':
-        textColor(BLUE, _BLACK);
+        corTexto(BLUE, _BLACK);
         break;
     case 'C':
-        textColor(LIGHTMAGENTA, _BLACK);
+        corTexto(LIGHTMAGENTA, _BLACK);
         break;
     case 'D':
-        textColor(BROWN, _BLACK);
+        corTexto(BROWN, _BLACK);
         break;
     case 'E':
-        textColor(LIGHTCYAN, _BLACK);
+        corTexto(LIGHTCYAN, _BLACK);
         break;
     case 'F':
-        textColor(GREEN, _BLACK);
+        corTexto(GREEN, _BLACK);
         break;
     }
 }
@@ -399,13 +390,6 @@ void imprimirBaralho(Baralho *baralho)
     /* Função de Interface
     Imprime o baralho conforme a quantidade de cartas nele.
     */
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     int qtdCartas = tamanhoBaralho(baralho);
     box(30, 132, 32, 135);
@@ -488,7 +472,7 @@ void imprimirBaralho(Baralho *baralho)
 
     // box exterior das cartas do baralho
     box(25 - i, 120, 32 - i, 129);
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     // art da parte de trás da carta
     linhaCol(26 - i, 121);
     printf("%c %c %c %c", TEXTURA_BARALHO, TEXTURA_BARALHO, TEXTURA_BARALHO, TEXTURA_BARALHO);
@@ -503,7 +487,7 @@ void imprimirBaralho(Baralho *baralho)
     linhaCol(31 - i, 121);
     printf(" %c %c %c %c", TEXTURA_BARALHO, TEXTURA_BARALHO, TEXTURA_BARALHO, TEXTURA_BARALHO);
 
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 }
 
 // comentada
@@ -517,20 +501,13 @@ void imprimirMesa(ListaCarta *mesa)
     /*Função de Interface
     Imprime a Mesa do jogo.
     */
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     // box exterior da plaquinha com o nome "MESA"
     box(2, 26, 4, 37);
-    textColor(BLACK, _WHITE);
+    corTexto(BLACK, _WHITE);
     linhaCol(3, 26);
     printf("    MESA    ");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 
     // box(34, 25, 47, 138);
     //  aux aponta para a última carta da lista da mesa
@@ -574,7 +551,7 @@ void imprimirMesa(ListaCarta *mesa)
             printf("0%d", aux->numero);
         else
             printf("%d", aux->numero);
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         // o auxiliar aponta para a carta anterior
         aux = aux->prox;
         // inteiro das colunas decrementa em 10
@@ -588,20 +565,13 @@ void imprimirNaipesColecao()
     /* Função de Interface
     Imprime uma caixa com o naipe das cartas na parte da galeria.
     */
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     // box exterior da plaquinha com o nome "GALERIA"
     box(47, 26, 49, 38);
-    textColor(BLACK, _WHITE);
+    corTexto(BLACK, _WHITE);
     linhaCol(48, 26);
     printf("   GALERIA   ");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 
     int lin = 0;
 
@@ -614,10 +584,11 @@ void imprimirNaipesColecao()
         box(51 + lin, 23, 53 + lin, 28);
         linhaCol(52 + lin, 25);
         printf("%c %c", naipe, SETA_DIREITA);
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         lin += 4;
     }
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+
+    resetarAtributos();
 }
 
 void imprimirControles(int x, int y)
@@ -646,16 +617,8 @@ void imprimirJogador()
     linhaCol(34, 25);
     printf("%c", LINHA_VERTICAL_CENTRO_DIREITA);
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
-    // Combinei as funções "linhaCol+printf+textColor" para imprimir um coelhinho
-    textColor(LIGHTRED, _BLACK);
+    // Combinei as funções "linhaCol+printf+corTexto" para imprimir um coelhinho
+    corTexto(LIGHTRED, _BLACK);
     linhaCol(35, 123);
     printf("/|      __");
     linhaCol(36, 122);
@@ -678,12 +641,12 @@ void imprimirJogador()
     printf("/|  -'     l"); //-7
     linhaCol(45, 116);
     printf("/            \\"); //-9
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     box(46, 115, 48, 133);
     // box da plaquinha com o nome "JOGADOR".
     linhaCol(47, 115);
     printf("      JOGADOR      ");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 }
 
 // comentada
@@ -692,23 +655,16 @@ void imprimirComputer()
     /* Função de Interface
     Função que imprime a art usada para representar o computador
     */
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     box(2, 110, 12, 138);
 
-    // Combinei as funções "linhaCol+printf+textColor" para imprimir um sapinho
+    // Combinei as funções "linhaCol+printf+corTexto" para imprimir um sapinho
     linhaCol(2, 110);
     printf("%c", LINHA_VERTICAL_CENTRO_BAIXO);
     linhaCol(12, 138);
     printf("%c", LINHA_VERTICAL_CENTRO_ESQUERDA);
 
-    textColor(LIGHTGREEN, _BLACK);
+    corTexto(LIGHTGREEN, _BLACK);
     linhaCol(4, 122);
     printf("_   _");
     linhaCol(5, 121);
@@ -723,7 +679,7 @@ void imprimirComputer()
     printf(")   /\\ \\._./ /\\   (");
     linhaCol(10, 116);
     printf(")_/ /|\\   /|\\ \\_(");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     // box da plaquinha com o nome "COMPUTADOR".
     box(11, 116, 13, 133);
     linhaCol(12, 116);
@@ -742,14 +698,6 @@ void imprimirCartaEscolhida(Carta *cartaEscolhida, int lin)
         exit(1);
     }
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
     linhaCol(35 - lin, 140);
     printf("| CARTA ESCOLHIDA |");
     corDaCarta(cartaEscolhida->naipe);
@@ -766,7 +714,7 @@ void imprimirCartaEscolhida(Carta *cartaEscolhida, int lin)
         printf("0%d", cartaEscolhida->numero);
     else
         printf("%d", cartaEscolhida->numero);
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     // para não ter que limpar a tela toda, apenas imprime "espaços" no lugar onde anteriormente imprimiu a carta
     linhaCol(42, 1);
     Sleep(1000);
@@ -791,20 +739,13 @@ void menu(int tempo)
     /* Função de Interface
     Função que imprime na tela toda a interface do Menu.
     */
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     system("cls");
 
     // Box interior superiorww
     box(10, 42, 20, 121);
 
-    textColor(LIGHTRED, _BLACK);
+    corTexto(LIGHTRED, _BLACK);
     for (int i = 11; i < 20; i++)
     {
         for (int j = 43; j < 121; j++)
@@ -813,9 +754,9 @@ void menu(int tempo)
             printf("%c", 219);
         }
     }
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 
-    textColor(YELLOW, BLACK);
+    corTexto(YELLOW, BLACK);
     // Ascii art
     linhaCol(5, 45);
     printf("/^--^\\");
@@ -1027,7 +968,7 @@ void menu(int tempo)
     linhaCol(12, 103);
     printf("%c", TEXTURA);
     linhaCol(42, 1);
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 
     // Opções
     linhaCol(27, 77);
@@ -1038,7 +979,7 @@ void menu(int tempo)
     printf("Manual do Jogo");
 
     // box(2, 25, 42, 138);
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     linhaCol(42, 35);
     printf("[ESC] - Sair?");
     linhaCol(43, 35);
@@ -1047,7 +988,7 @@ void menu(int tempo)
     printf("[ALT + ENTER]");
     linhaCol(43, 113);
     printf("Janela/Tela cheia");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(42, 1);
 }
 
@@ -1059,19 +1000,12 @@ int indicador(int indice)
         0 -> Novo Jogo
         1 -> Instruções
     */
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     if (indice < 0 || indice > 3)
         return 0;
 
     // Se o índice for 0, o indicador é imprimido nas coordenadas dadas na função "linhaCol". O mesmo para índice = 1;
-    textColor(LIGHTRED, _BLACK);
+    corTexto(LIGHTRED, _BLACK);
     switch (indice)
     {
     case 0:
@@ -1101,7 +1035,7 @@ int indicador(int indice)
         printf("%c", 16);
         linhaCol(42, 1);
     }
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 }
 
 // comentada
@@ -1111,18 +1045,11 @@ int escolhaMenu()
     Função usada no menu para chamar as funções do jogo, instruções ou finalizar o programa dependendo da
     opcão escolhida pelo jogador.
     */
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
     // Criei um inteiro para receber a tecla digitada e chamei a função "indicador" para imprimir na tela o indicador rsrs.
     int tecla, indice = 0;
-    textColor(MAGENTA, _BLACK);
+    corTexto(MAGENTA, _BLACK);
     indicador(indice);
 
     // Loop que finaliza quando o jogador digita a tecla "Enter (13)".
@@ -1137,7 +1064,7 @@ int escolhaMenu()
         // Se a tecla precionada for o "Esc (27)", chama a função "question" que imprime na tela uma caixa de texto perguntando se o jogador quer sair do jogo.
         if (tecla == 27)
         {
-            SetConsoleTextAttribute(hConsole, saved_attributes);
+            resetarAtributos();
             if (question() == 0)
                 // Se der false -> imprime o menu novamente, agora sem temporizador.
                 menu(0);
@@ -1159,7 +1086,7 @@ int escolhaMenu()
         indicador(indice);
     } while (tecla != ENTER);
     // retorna o indice e volta à cor padrão
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     return indice;
 }
 
@@ -1305,13 +1232,6 @@ void vitoriaPontuacao(int pontuacao)
     /* Função de Interface:
     Essa é a função que imprime a tela de PONTUACAO, quando o jogador termina o jogo sem coletar
     todos os tipos de naipes possíveis em sua coleção. */
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     // chama a função para limpar a tela do terminal;
     system("cls");
@@ -1322,27 +1242,27 @@ void vitoriaPontuacao(int pontuacao)
     linhaCol, que leva o cursor para as coordenadas dadas como parâmetros da função, com a função printf.
     Apesar de parecer confuso, é bem simples de entender se você observar com calma. */
 
-    textColor(BROWN, _BLACK);
+    corTexto(BROWN, _BLACK);
     linhaCol(10, 74);
     printf("___");
-    textColor(GREEN, _BLACK);
+    corTexto(GREEN, _BLACK);
     linhaCol(11, 66);
     printf("`-._\\ ");
-    textColor(BROWN, _BLACK);
+    corTexto(BROWN, _BLACK);
     printf("/     `~~'--.,_");
-    textColor(GREEN, _BLACK);
+    corTexto(GREEN, _BLACK);
     linhaCol(12, 64);
     printf("------>");
-    textColor(BROWN, _BLACK);
+    corTexto(BROWN, _BLACK);
     printf("|              `~~'--.,_");
-    textColor(GREEN, _BLACK);
+    corTexto(GREEN, _BLACK);
     linhaCol(13, 65);
     printf("_.-'/ ");
-    textColor(BROWN, _BLACK);
+    corTexto(BROWN, _BLACK);
     printf("'.____,,,,----'''~~```'");
 
     // os próximos passos são semelhantes às outras funçõe sde imprimir a tela final
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(18, 69);
     printf("| RECEBA SUA CENOURA |");
 
@@ -1351,15 +1271,15 @@ void vitoriaPontuacao(int pontuacao)
     printf("Nada Mal! Voc%c conseguiu finalizar o jogo sem", E_COM_TIL);
     linhaCol(23, 65);
     printf("coletar todos os");
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf(" NAIPES");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     printf(" com uma");
     linhaCol(24, 71);
     printf(" pontua%c%co de: ", CEDILHA, A_COM_TIL);
-    textColor(CYAN, _BLACK);
+    corTexto(CYAN, _BLACK);
     printf("%d", pontuacao);
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(25, 68);
     printf("Aproveite sua vitamina A!");
     linhaCol(31, 74);
@@ -1393,20 +1313,12 @@ void vitoriaPerfeita()
     Essa é a função que imprime a tela de VITÓRIA PERFEITA, quando o jogador termina o jogo, no caso
     zera o baralho, sem nenhuma carta em sua coleção e com no mínimo dois zeros em sua mão. */
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
     // chama a função para limpar a tela do terminal;
     system("cls");
     // a função box cria uma caixa com as coordenadas da seguinte forma (1º linha, 1º coluna, 2º linha, 2º coluna);
     box(2, 25, 42, 138); // box exterior;
     // define a cor do texto como MARROM/AMARELA e a cor de fundo PRETA;
-    textColor(BROWN, _BLACK);
+    corTexto(BROWN, _BLACK);
     /* Aqui eu organizei uma arte em ascii de dois trófeus, simbolizando a vitória perfeita. Eu combinei a função
     linhaCol, que leva o cursor para as coordenadas dadas como parâmetros da função, com a função printf.
     Apesar de parecer confuso, é bem simples de entender se você observar com calma. */
@@ -1452,7 +1364,7 @@ void vitoriaPerfeita()
     linhaCol(16, 86);
     printf("#########");
     // retornei para a cor do texto BRANCA e o fundo PRETO;
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     // imprimi o texto na coordenada (18,51) usando a função linhaCol;
     linhaCol(18, 71);
     printf("| PERFECT VICTORY |");
@@ -1470,11 +1382,11 @@ void vitoriaPerfeita()
     linhaCol(23, 56);
     printf("com ao menos 2 zeros e nenhuma carta na");
     // defini a cor de texto como VERMELHA e a de fundo, PRETA
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     // mais uma impressão
     printf(" GALERIA");
     // retornei à cor de texto BRANCA e fundo PRETO
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     printf(".");
     linhaCol(24, 68);
     printf("Devia tentar a loteria!");
@@ -1513,20 +1425,12 @@ void vitoriaNormal()
     Essa é a função que imprime a tela de VITÓRIA, quando o jogador termina o jogo, no caso
     zera o baralho, sem nenhuma carta em sua coleção. */
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
     // chama a função para limpar a tela do terminal;
     system("cls");
     // a função box cria uma caixa com as coordenadas da seguinte forma (1º linha, 1º coluna, 2º linha, 2º coluna);
     box(2, 25, 42, 138); // box exterior;
     // define a cor do texto como MARROM/AMARELA e a cor de fundo PRETA;
-    textColor(BROWN, _BLACK);
+    corTexto(BROWN, _BLACK);
     /* Aqui eu organizei uma arte em ascii de um trófeu, simbolizando a vitória. Eu combinei a função
     linhaCol, que leva o cursor para as coordenadas dadas como parâmetros da função, com a função printf.
     Apesar de parecer confuso, é bem simples de entender se você observar com calma. */
@@ -1551,7 +1455,7 @@ void vitoriaNormal()
     linhaCol(16, 75);
     printf("#########");
     // retornei para a cor do texto BRANCA e o fundo PRETO;
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     // imprimi o texto na coordenada (18,54) usando a função linhaCol;
     linhaCol(18, 74);
     printf("| VICTORY |");
@@ -1568,11 +1472,11 @@ void vitoriaNormal()
     linhaCol(23, 68);
     printf("nenhuma carta na");
     // defini a cor de texto como VERMELHA e a de fundo, PRETA
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     // mais uma impressão
     printf(" Galeria");
     // retornei à cor de texto BRANCA e fundo PRETO
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     // mais combinações linhaCol+printf
     printf(".");
     linhaCol(24, 72);
@@ -1612,25 +1516,17 @@ void derrota()
     Essa é a função que imprime a tela de DERROTA, quando o jogador não consegue terminar o jogo
     pois coletou todos os naipes em sua coleção. */
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
     // chama a função para limpar a tela do terminal;
     system("cls");
     // a função box cria uma caixa com as coordenadas da seguinte forma (1º linha, 1º coluna, 2º linha, 2º coluna);
     box(2, 25, 42, 138); // box exterior
 
     // defini a cor de texto como VERMELHA e a de fundo, PRETA
-    textColor(RED, _BLACK);
-    /*Aqui usei a combinação das funções linhaCol+textColor+printf para conseguir imprimir na tela uma "Ascii Art" de
+    corTexto(RED, _BLACK);
+    /*Aqui usei a combinação das funções linhaCol+corTexto+printf para conseguir imprimir na tela uma "Ascii Art" de
     um palhaço.
         *A função linCol leva o cursor para a coordenada dada como parâmetros da função;
-        *A função textColor modifica a cor de texto e de fundo da seguinte forma (Cor_do_texto, Cor_de_fundo). Utilizei
+        *A função corTexto modifica a cor de texto e de fundo da seguinte forma (Cor_do_texto, Cor_de_fundo). Utilizei
         um enum para nomear as cores disponíveis.*/
     linhaCol(10, 36);
     printf("0_");
@@ -1646,86 +1542,86 @@ void derrota()
     printf("/ /(___________)_ \\");
     linhaCol(16, 32);
     printf("|/ ");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("//.-.   .-.\\");
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf(" \\ \\");
     linhaCol(17, 32);
     printf("0 ");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("// :@ ");
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf("___");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf(" @: \\");
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf(" \\/");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     linhaCol(18, 34);
     printf("( o ^");
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf("(___)");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("^ o )");
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf(" 0");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     linhaCol(19, 35);
     printf("\\ \\_______/ /");
     linhaCol(20, 31);
     printf("/\\   '._______.'");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("--.");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     linhaCol(21, 31);
     printf("\\ /|  ");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("|");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("<_____>");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("    |");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     linhaCol(22, 32);
     printf("\\ \\__");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("|");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("<_____>____/|__");
     linhaCol(23, 33);
     printf("\\____<_____>_______/");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     linhaCol(24, 37);
     printf("|");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("<_____>");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("    |");
     linhaCol(25, 37);
     printf("|");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("<_____>");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("    |");
     linhaCol(26, 37);
     printf(":");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("<_____>");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("____:");
     linhaCol(27, 36);
     printf("/");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf(" <_____>");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("   /|");
     linhaCol(28, 35);
     printf("/");
-    textColor(WHITE, _BLACK);
+    corTexto(WHITE, _BLACK);
     printf("  <_____>");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     printf("  / |");
-    textColor(BLUE, _BLACK);
+    corTexto(BLUE, _BLACK);
     linhaCol(29, 34);
     printf("/___________/  |");
     linhaCol(30, 34);
@@ -1742,7 +1638,7 @@ void derrota()
     printf("|___________|/");
 
     // retornei à cor de texto BRANCA e fundo PRETO
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     // imprimi o texto na coordenada (18,60) usando a função linhaCol;
     linhaCol(18, 80);
     printf("| RECEBA SEU NULL |");
@@ -1759,9 +1655,9 @@ void derrota()
     printf(" DERROTA! Voce nao conseguiu finalizar o jogo");
     linhaCol(23, 74);
     printf(" pois coletou todos os");
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf(" NAIPES");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     printf("!");
     linhaCol(25, 74);
     printf("A sorte nao esteve a seu favor!");
@@ -1805,55 +1701,47 @@ void corDaVez(int vezJogador)
     Como parâmetros da função, coloquei apenas dois inteiros [0 ou 1]. Um para o jogador e outro
     para o computador. */
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
     if (vezJogador)
     {
         // define o texto na cor PRETA e o fundo na cor VERMELHA!
-        textColor(BLACK, _RED);
+        corTexto(BLACK, _RED);
         // a funcao linhaCol leva o cursor para as coordenadas (15,96) e imprime na tela o printf
         linhaCol(12, 116);
         printf("    COMPUTADOR    ");
         // essa função retorna ao estado salvo anteriormente, que seria o texto na cor BRANCA e o fundo PRETO
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         // aqui coloquei o curso nessa coordenada apenas por perfeição estética
         linhaCol(42, 1);
 
         // define o texto na cor PRETA e o fundo na cor VERDE!
-        textColor(BLACK, _GREEN);
+        corTexto(BLACK, _GREEN);
         // a funcao linhaCol leva o cursor para as coordenadas (42,95) e imprime na tela o printf
         linhaCol(47, 115);
         printf("      JOGADOR      ");
         // essa função retorna ao estado salvo anteriormente, que seria o texto na cor BRANCA e o fundo PRETO
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         // aqui coloquei o curso nessa coordenada apenas por perfeição estética
         linhaCol(42, 1);
     }
     else
     {
         // define o texto na cor PRETA e o fundo na cor VERDE!
-        textColor(BLACK, _GREEN);
+        corTexto(BLACK, _GREEN);
         // a funcao linhaCol leva o cursor para as coordenadas (15,96) e imprime na tela o printf
         linhaCol(12, 116);
         printf("    COMPUTADOR    ");
         // essa função retorna ao estado salvo anteriormente, que seria o texto na cor BRANCA e o fundo PRETO
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         // aqui coloquei o curso nessa coordenada apenas por perfeição estética
         linhaCol(42, 1);
 
         // define o texto na cor PRETA e o fundo na cor VERMELHA!
-        textColor(BLACK, _RED);
+        corTexto(BLACK, _RED);
         // a funcao linhaCol leva o cursor para as coordenadas (42,95) e imprime na tela o printf
         linhaCol(47, 115);
         printf("      JOGADOR      ");
         // essa função retorna ao estado salvo anteriormente, que seria o texto na cor BRANCA e o fundo PRETO
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         // aqui coloquei o curso nessa coordenada apenas por perfeição estética
         linhaCol(42, 1);
     }
@@ -1862,21 +1750,13 @@ void corDaVez(int vezJogador)
 void manual(int tela)
 {
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
     // Box exterior
     box(2, 25, 41, 138);
 
     int tecla;
 
     // primeiro gatinho
-    textColor(YELLOW, _BLACK);
+    corTexto(YELLOW, _BLACK);
     linhaCol(10, 32);
     printf("^~^  ,");
     linhaCol(11, 31);
@@ -1897,7 +1777,7 @@ void manual(int tela)
     printf("\(__)|"); //+1
 
     // M
-    textColor(LIGHTRED, _BLACK);
+    corTexto(LIGHTRED, _BLACK);
     linhaCol(6, 64);
     printf("%c%c   %c%c", TEXTURA, TEXTURA, TEXTURA, TEXTURA);
     linhaCol(7, 64);
@@ -1957,12 +1837,12 @@ void manual(int tela)
     linhaCol(9, 97);
     printf("%c%c%c%c", TEXTURA, TEXTURA, TEXTURA, TEXTURA);
 
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 
     box(15, 32, 30, 132); // box interior
     linhaCol(34, 63);
     printf("[ %c | %c ] - Alternar  [ESC] - Retornar", SETA_ESQUERDA, SETA_DIREITA);
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 
     telas(0);
     escolhaTela(0);
@@ -1971,28 +1851,20 @@ void manual(int tela)
 void telas(int tela)
 {
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
     switch (tela)
     {
     case 0:
-        textColor(BLACK, _BLACK);
+        corTexto(BLACK, _BLACK);
         box(16, 33, 29, 131);
         linhaCol(20, 73);
-        textColor(LIGHTRED, _BLACK);
+        corTexto(LIGHTRED, _BLACK);
         printf("OBJETIVO DO JOGO");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         linhaCol(23, 34);
         printf("O objetivo em Parade %c ficar com ", E_COM_ACENTO);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("MENOS");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(" pontos no final do jogo. Ele termina em duas situa%c%ces:", CEDILHA, O_COM_TIL);
         linhaCol(24, 42);
         printf("quando voc%c possuir cartas das 6 cores que existem no jogo ou quando", E_COM_TIL);
@@ -2000,19 +1872,19 @@ void telas(int tela)
         printf("o baralho terminar!");
         linhaCol(31, 79);
         printf("[");
-        textColor(CYAN, _BLACK);
+        corTexto(CYAN, _BLACK);
         printf("01");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf("/04]");
         linhaCol(42, 1);
         break;
     case 1:
-        textColor(BLACK, _BLACK);
+        corTexto(BLACK, _BLACK);
         box(16, 33, 29, 131);
         linhaCol(18, 78);
-        textColor(LIGHTRED, _BLACK);
+        corTexto(LIGHTRED, _BLACK);
         printf("RODADAS");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         linhaCol(20, 40);
         printf("Em sua vez, o jogador escolhe uma das cartas de sua m%co, que %c colocada no final da", A_COM_TIL, E_COM_ACENTO);
         linhaCol(21, 37);
@@ -2021,23 +1893,23 @@ void telas(int tela)
         printf("retiradas da mesa e colocadas em sua cole%c%co/galeria:", CEDILHA, A_COM_TIL);
         linhaCol(23, 38);
         printf("Primeiro as cartas de n%cmero ", U_COM_ACENTO);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("MENOR");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(" ou ");
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("IGUAL ");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf("a que voc%c jogou e depois as da ", E_COM_TIL);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("MESMA COR");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(",");
         linhaCol(24, 39);
         printf(" que n%co estejam ", A_COM_TIL);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("PROTEGIDAS");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(". O n%cmero da carta jogada protege a mesma quantidade de", U_COM_ACENTO);
         linhaCol(25, 41);
         printf("cartas do final da fila para o in%ccio. Ou seja, se voc%c jogou um 4, as primeiras", I_COM_ACENTO, E_COM_TIL);
@@ -2047,26 +1919,26 @@ void telas(int tela)
         printf("Finalmente, o jogador compra uma carta do baralho, finalizando seu turno.");
         linhaCol(31, 79);
         printf("[");
-        textColor(CYAN, _BLACK);
+        corTexto(CYAN, _BLACK);
         printf("02");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf("/04]");
         linhaCol(42, 1);
         break;
     case 2:
-        textColor(BLACK, _BLACK);
+        corTexto(BLACK, _BLACK);
         box(16, 33, 29, 131);
         linhaCol(19, 68);
-        textColor(LIGHTRED, _BLACK);
+        corTexto(LIGHTRED, _BLACK);
         printf("FINAL DE JOGO E PONTUA%cAO", CEDILHA_MAIUSCULA);
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         linhaCol(21, 42);
         printf("Quando o baralho terminar, voc%c joga um %cltimo turno, para que fique com quatro", E_COM_TIL, U_COM_ACENTO);
         linhaCol(22, 42);
         printf(" cartas na m%co. Depois disso, deve escolher ", A_COM_TIL);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("DUAS");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(" cartas para serem colocadas na");
         linhaCol(23, 40);
         printf("cole%c%co/galeria. Caso voc%c n%co tenha ganho o jogo, %c feita a contagem de pontos.",
@@ -2076,54 +1948,54 @@ void telas(int tela)
                A_COM_TIL, E_COM_TIL);
         linhaCol(25, 50);
         printf("tiver mais cartas de uma determinada cor, cada uma valer%c ", A_COM_ACENTO);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("1 ponto.");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         linhaCol(26, 56);
         printf(" Caso contr%crio, cada uma valer%c o pr%cprio n%cmero.",
                A_COM_ACENTO, A_COM_ACENTO, O_COM_ACENTO, U_COM_ACENTO);
         linhaCol(31, 79);
         printf("[");
-        textColor(CYAN, _BLACK);
+        corTexto(CYAN, _BLACK);
         printf("03");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf("/04]");
         linhaCol(42, 1);
         break;
     case 3:
-        textColor(BLACK, _BLACK);
+        corTexto(BLACK, _BLACK);
         box(16, 33, 29, 131);
         linhaCol(18, 72);
-        textColor(LIGHTRED, _BLACK);
+        corTexto(LIGHTRED, _BLACK);
         printf("POSSIVEIS FINAIS");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         linhaCol(20, 45);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("DERROTA:");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(" Coletar no m%cnimo uma carta de cada naipe na cole%c%co/galeria.", I_COM_ACENTO, CEDILHA, A_COM_TIL);
         linhaCol(22, 45);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("PONTUA%cAO:", CEDILHA_MAIUSCULA);
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(" Zerar o baralho sem ter obtido a DERROTA.");
         linhaCol(24, 45);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("VITORIA:");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(" Zerar o baralho sem coletar nenhuma carta na cole%c%co/galeria.", CEDILHA, A_COM_TIL);
         linhaCol(26, 45);
-        textColor(RED, _BLACK);
+        corTexto(RED, _BLACK);
         printf("VITORIA PERFEITA:");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf(" Zerar o baralho sem coletar nenhuma carta e possuir");
         linhaCol(27, 65);
         printf("ao menos duas cartas de n%cmero 0 em sua MAO.", U_COM_ACENTO);
         linhaCol(31, 79);
         printf("[");
-        textColor(CYAN, _BLACK);
+        corTexto(CYAN, _BLACK);
         printf("04");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         printf("/04]");
         linhaCol(42, 1);
         break;
@@ -2162,13 +2034,6 @@ void escolhaTela(int indice)
 
 void aviso()
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
     system("cls");
@@ -2176,7 +2041,7 @@ void aviso()
     box(12, 60, 28, 107); // box externa
 
     // ascii art
-    textColor(YELLOW, _BLACK);
+    corTexto(YELLOW, _BLACK);
     linhaCol(10, 93);
     printf("|\\__/,|   (`\\");
     linhaCol(11, 91);
@@ -2186,18 +2051,18 @@ void aviso()
     linhaCol(12, 94);
     printf("(((");
 
-    textColor(LIGHTRED, _BLACK);
+    corTexto(LIGHTRED, _BLACK);
     linhaCol(14, 81);
     printf("AVISO!");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(16, 67);
     printf("Antes de iniciar o jogo, verifique");
     linhaCol(17, 69);
     printf("a resolu%c%co do seu terminal.", CEDILHA, A_COM_TIL);
     linhaCol(19, 68);
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     printf("LARGURA MINIMA RECOMENDADA: 160");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(21, 65);
     printf("Caso as suas configura%c%ces de largura", CEDILHA, O_COM_TIL);
     linhaCol(22, 67);
@@ -2205,9 +2070,9 @@ void aviso()
     linhaCol(23, 70);
     printf("pode n%co rodar perfeitamente.", A_COM_TIL);
     linhaCol(24, 74);
-    textColor(YELLOW, _BLACK);
+    corTexto(YELLOW, _BLACK);
     printf("Obrigada e bom jogo!");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(26, 75);
     printf("[ENTER] - Continuar");
 
@@ -2222,38 +2087,24 @@ void aviso()
 
 void imprimirUltimaCarta()
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
 
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     linhaCol(29, 140);
     printf("| JOGUE NA MESA SUA |");
     linhaCol(30, 142);
     printf("| ULTIMA CARTA! |");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 }
 
 void imprimirDuasCartas()
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
 
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     linhaCol(29, 140);
     printf("| SELECIONE DUAS CARTAS |");
     linhaCol(30, 142);
     printf(" | PARA A GALERIA! |");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 }
 
 void imprimirGanhoDePontos(int i, int pontos)
@@ -2263,7 +2114,7 @@ void imprimirGanhoDePontos(int i, int pontos)
     {
         linhaCol(76, 113);
         printf("TOTAL: ");
-        textColor(YELLOW, _BLACK);
+        corTexto(YELLOW, _BLACK);
         printf("%d", pontos);
         return;
     }
@@ -2274,23 +2125,23 @@ void imprimirGanhoDePontos(int i, int pontos)
 
 void imprimirBoxMesa()
 {
-    WORD saved_attributes = pegarAtributos();
-    textColor(BLACK, _BLACK);
+
+    corTexto(BLACK, _BLACK);
     box(3, 26, 33, 109);
-    resetarAtributos(saved_attributes);
+    resetarAtributos();
 }
 
-void imprimirGaleriaContagemDePontos(char *nome, int inicio, Galeria *galeria, WORD saved_attributes)
+void imprimirGaleriaContagemDePontos(char *nome, int inicio, Galeria *galeria)
 {
     int lin = 0, col = 0;
     for (int naipe = 0; naipe < QTD_NAIPES; naipe++)
     {
         // auxiliar recebe a primeira carta da lista do naipe
         Carta *aux = primeiraCartaColecaoI(galeria, naipe);
-        textColor(LIGHTMAGENTA, _BLACK);
+        corTexto(LIGHTMAGENTA, _BLACK);
         linhaCol((inicio - 1) + lin, 32 + col);
         printf("%s", nome);
-        resetarAtributos(saved_attributes);
+        resetarAtributos();
         while (aux)
         {
             // muda a cor do sistema para a cor da carta
@@ -2306,7 +2157,7 @@ void imprimirGaleriaContagemDePontos(char *nome, int inicio, Galeria *galeria, W
                 printf("0%d", aux->numero);
             else
                 printf("%d", aux->numero);
-            resetarAtributos(saved_attributes);
+            resetarAtributos();
             // auxiliar aponta para a próxima carta da lista
             aux = aux->prox;
             // incrementa 8 no inteiro das colunas
@@ -2321,18 +2172,11 @@ void imprimirGaleriaContagemDePontos(char *nome, int inicio, Galeria *galeria, W
 
 void ranking(Score *scores)
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
     int tecla;
 
-    textColor(YELLOW, _BLACK);
+    corTexto(YELLOW, _BLACK);
 
     // Letra R
     linhaCol(4, 55);
@@ -2404,18 +2248,18 @@ void ranking(Score *scores)
     linhaCol(7, 104);
     printf("%c%c%c%c", TEXTURA, TEXTURA, TEXTURA, TEXTURA);
 
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 
     box(9, 45, 63, 118);
 
-    textColor(LIGHTRED, _BLACK);
+    corTexto(LIGHTRED, _BLACK);
     linhaCol(12, 55);
     printf("NOME DO JOGADOR");
     linhaCol(12, 82);
     printf("SCORE");
     linhaCol(12, 97);
     printf("DATA/HORARIO");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
 
     linhaCol(64, 74);
     printf("[ESC] - RETORNAR");
@@ -2429,15 +2273,15 @@ void ranking(Score *scores)
         }
         box(14 + lin, 49, 16 + lin, 114);
         if (scores[i].vitoria == 0)
-            textColor(WHITE, _BLACK);
+            corTexto(WHITE, _BLACK);
         else if (scores[i].vitoria == 1)
-            textColor(LIGHTMAGENTA, _BLACK);
+            corTexto(LIGHTMAGENTA, _BLACK);
         else if (scores[i].vitoria == 2)
-            textColor(YELLOW, _BLACK);
+            corTexto(YELLOW, _BLACK);
         linhaCol(15 + lin, 51);
         printf("%d:", i + 1);
         imprimirScore(scores[i], lin);
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
         lin += 3;
     }
     linhaCol(1, 1);
@@ -2450,21 +2294,14 @@ void ranking(Score *scores)
 
 int imprimirSair()
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
     int tecla;
 
-    textColor(RED, _BLACK);
+    corTexto(RED, _BLACK);
     linhaCol(29, 142);
     printf("| QUER MESMO SAIR? |");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(31, 143);
     printf("   [ESC] - SAIR");
     linhaCol(32, 140);
@@ -2492,13 +2329,6 @@ int imprimirSair()
 
 void nomeDoSave(char *nome)
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    /* Salvar estado atual */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
 
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
     system("cls");
@@ -2506,10 +2336,10 @@ void nomeDoSave(char *nome)
 
     int tecla;
 
-    textColor(LIGHTRED, _BLACK);
+    corTexto(LIGHTRED, _BLACK);
     linhaCol(17, 67);
     printf("COMO GOSTARIA DE SALVAR SEU JOGO?");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(18, 80);
 
     // ouvir o input do usuario
@@ -2558,9 +2388,9 @@ void nomeDoSave(char *nome)
     nome[i] = '\0';
 
     linhaCol(20, 79);
-    textColor(LIGHTRED, _BLACK);
+    corTexto(LIGHTRED, _BLACK);
     printf("CONFIRMAR?");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+    resetarAtributos();
     linhaCol(21, 71);
     printf("[ENTER] - Sim");
     linhaCol(21, 86);
@@ -2579,13 +2409,8 @@ void nomeDoSave(char *nome)
     {
         fflush(stdin);
         linhaCol(23, 70);
-        textColor(YELLOW, _BLACK);
+        corTexto(YELLOW, _BLACK);
         printf("JOGO SALVO COMO: %s", nome);
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        resetarAtributos();
     }
-}
-
-void clearStdin()
-{
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 }

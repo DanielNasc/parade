@@ -283,8 +283,6 @@ void colocarDuasCartasGaleria(Jogador *jogador)
  */
 int compararPontuacoes(Jogador *jogador, Computador *computador)
 {
-    WORD saved_attributes = pegarAtributos();
-
     if (jogador == NULL || computador == NULL)
         return 0;
 
@@ -294,7 +292,7 @@ int compararPontuacoes(Jogador *jogador, Computador *computador)
     chamarGaleriaComputador(computador);
 
     // Percorre todas as coleções.
-    textColor(YELLOW, _BLACK);
+    corTexto(YELLOW, _BLACK);
     for (int i = 0; i < QTD_NAIPES; i++)
     {
         int quantidadeJogador = quantidadeCartasColecaoPorIndice(jogador->galeria, i);
@@ -308,9 +306,9 @@ int compararPontuacoes(Jogador *jogador, Computador *computador)
         pontuacaoAnterior = pontuacaoJogador;
     }
 
-    resetarAtributos(saved_attributes);
+    resetarAtributos();
     imprimirGanhoDePontos(6, pontuacaoJogador);
-    resetarAtributos(saved_attributes);
+    resetarAtributos();
     return pontuacaoJogador;
 }
 
