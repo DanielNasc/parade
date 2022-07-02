@@ -38,6 +38,7 @@ typedef enum teclas
 {
     ESC = 27,
     ENTER = 13,
+    SPACE = 32,
 
     ARROW_ESQUERDA = 75,
     ARROW_DIREITA = 77,

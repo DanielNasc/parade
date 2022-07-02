@@ -41,6 +41,37 @@ void linhaCol(int linha, int coluna)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), (COORD){coluna - 1, linha - 1});
 }
 
+void mudarTamanhoJanela(int largura, int altura)
+{
+    COORD coord;
+    coord.X = largura;
+    coord.Y = altura;
+
+    SMALL_RECT Rect;
+    Rect.Top = 0;
+    Rect.Left = 0;
+    Rect.Bottom = altura - 1;
+    Rect.Right = largura - 1;
+
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleScreenBufferSize(hConsole, coord);
+    SetConsoleWindowInfo(hConsole, TRUE, &Rect);
+}
+
+void mudarFonte()
+{
+    // colocar consolas com fonte de tamanho 16
+    CONSOLE_FONT_INFOEX cfi;
+    cfi.cbSize = sizeof(cfi);
+    cfi.nFont = 0;
+    cfi.dwFontSize.X = 0;
+    cfi.dwFontSize.Y = 16;
+    cfi.FontFamily = FF_DONTCARE;
+    cfi.FontWeight = FW_NORMAL;
+    wcscpy(cfi.FaceName, L"Consolas");
+    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+}
+
 // Função que imprime uma caixa
 void box(int linha_1, int coluna_1, int linha_2, int coluna_2)
 {
@@ -216,25 +247,23 @@ int escolhaCarta(ListaCarta *mao, int indice)
             tecla = getch();
             fflush(stdin);
         } while (tecla != ENTER && tecla != ESC && tecla != ARROW_ESQUERDA && tecla != ARROW_DIREITA); // alternar
+
         if (tecla == ESC)
         {
             if (imprimirSair() == 1)
                 continue;
             else
             {
-                system("cls");
-                menu(0);
-                chamarJogo(escolhaMenu());
-                exit(1);
+                return SAIR_PARTIDA;
             }
         }
         // se a tecla digitada for -> e o indice for menor do que o indice anterior, ele incrementa
-        if (tecla == ARROW_DIREITA && indice < indiceAnterior)
+        else if (tecla == ARROW_DIREITA && indice < indiceAnterior)
         {
             indice++;
         }
         // se a tecla digitada for <- e o indice for maior do que 0, ele decrementa
-        if (tecla == ARROW_ESQUERDA && indice > 0)
+        else if (tecla == ARROW_ESQUERDA && indice > 0)
         {
             indice--;
         }
@@ -1072,23 +1101,23 @@ int escolhaMenu()
         } while (tecla != ESC && tecla != ENTER && tecla != ARROW_CIMA && tecla != ARROW_BAIXO); // alterna o indicador
 
         // Se a tecla precionada for o "Esc (27)", chama a função "question" que imprime na tela uma caixa de texto perguntando se o jogador quer sair do jogo.
-        if (tecla == 27)
+        if (tecla == ESC)
         {
             resetarAtributos();
             if (question() == 0)
                 // Se der false -> imprime o menu novamente, agora sem temporizador.
-                menu(0);
+                return SAIR_PROMPT;
             else
                 // Se der true -> o programa finaliza
-                return -1;
+                exit(0);
         }
         // Se a tecla pressionada for a seta para baixo e o inteiro indice for 0, ele incrementa.
-        if (tecla == ARROW_BAIXO && indice < 2)
+        else if (tecla == ARROW_BAIXO && indice < 2)
         {
             indice++;
         }
         // Se a tecla pressionada for a seta para cima e o indice for 1, ele decrementa.
-        if (tecla == ARROW_CIMA && indice > 0)
+        else if (tecla == ARROW_CIMA && indice > 0)
         {
             indice--;
         }
@@ -1110,6 +1139,9 @@ void chamarJogo(int indice)
         1 -> significa que o jogador escolheu a segunda opção do meunu para
         ver as instruções. */
 
+    if (indice == SAIR_PROMPT)
+        return;
+
     // criei um switch para chara as funções de acordo com o inteiro passado como parâmetro
     switch (indice)
     {
@@ -1129,15 +1161,11 @@ void chamarJogo(int indice)
         // limpa a tela
         system("cls");
         ranking(allScores());
-        // chama a função menu, para imprimir o menu do jogo
-        menu(0);
-        // uso da recursividade!
-        chamarJogo(escolhaMenu());
         break;
     case 2:
         // limpa a tela e imprime as instruções
         system("cls");
-        manual(0);
+        manual();
         break;
     }
 }
@@ -1203,7 +1231,10 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
     {
     case 0:
         // chama a função para colocar as últimas duas cartas da mão do jogador em sua coleção
-        colocarDuasCartasGaleria(jogador);
+
+        if (colocarDuasCartasGaleria(jogador) == SAIR_PARTIDA)
+            return SAIR_PARTIDA;
+
         pontos = compararPontuacoes(jogador, computador);
         linhaCol(1, 1);
         do
@@ -1230,9 +1261,6 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
         break;
     }
     Sleep(2500);
-    system("cls");
-    menu(0);
-    chamarJogo(escolhaMenu());
     return 1;
 }
 
@@ -1757,7 +1785,7 @@ void corDaVez(int vezJogador)
     }
 }
 
-void manual(int tela)
+void manual()
 {
 
     // Box exterior
@@ -1855,7 +1883,7 @@ void manual(int tela)
     resetarAtributos();
 
     telas(0);
-    escolhaTela(0);
+    escolhaTela();
 }
 
 void telas(int tela)
@@ -2013,10 +2041,10 @@ void telas(int tela)
 }
 
 // comentada
-void escolhaTela(int indice)
+void escolhaTela()
 {
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
-    int tecla;
+    int tecla, indice = 0;
     // loop até o jogador apertar a tecla Esc
     do
     { // ESC
@@ -2037,9 +2065,6 @@ void escolhaTela(int indice)
         // imprime o indicador novamente
         telas(indice);
     } while (tecla != ESC);
-    system("cls");
-    menu(0);
-    chamarJogo(escolhaMenu(0));
 }
 
 void aviso()
@@ -2319,8 +2344,9 @@ int imprimirSair()
     do
     {
         tecla = getch();
-    } while (tecla != 32 && tecla != 27);
-    if (tecla == 32)
+    } while (tecla != SPACE && tecla != ESC);
+
+    if (tecla == SPACE)
     {
         linhaCol(29, 142);
         printf("                     ");
