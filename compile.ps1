@@ -18,7 +18,7 @@ for ($i = 0; $i -lt $files.Count; $i++) {
     $fileWithoutExtension = $filesWithoutExtension[$i]
 
     Write-Output "Compilando $file"
-    gcc -c $file -o ($fileWithoutExtension + ".o")
+    gcc -c $file -lm -o ($fileWithoutExtension + ".o")
 }
 
 # Linka todos os arquivos .o em um único arquivo .o
@@ -28,7 +28,7 @@ $compiledFiles = (
     ForEach-Object { $_.Name }     
 )
 
-gcc -o parade.exe $compiledFiles
+gcc -o parade.exe $compiledFiles -lm
 
 # Remove todos os arquivos .o
 

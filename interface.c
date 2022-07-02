@@ -1,4 +1,3 @@
-
 #include "carta.h"
 #include "jogo.h"
 #include "lista.h"
@@ -405,7 +404,10 @@ void imprimirBaralho(Baralho *baralho)
         for (int j = 0; j < 4; j++)
         {
             linhaCol(32 - j, 120);
-            printf("%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+            printf("%c%c%c%c%c%c%c%c%c%c",
+                   CANTO_INF_ESQUERDO,
+                   LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL,
+                   CANTO_INF_DIREITO);
         }
     }
     // 2º Impressão possível: se a quantidade do baralho for maior do que 25 e menor ou igual a 40
@@ -417,7 +419,9 @@ void imprimirBaralho(Baralho *baralho)
         for (int j = 0; j < 3; j++)
         {
             linhaCol(33 - j, 120);
-            printf("%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+            printf("%c%c%c%c%c%c%c%c%c%c", CANTO_INF_ESQUERDO,
+                   LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL,
+                   CANTO_INF_DIREITO);
         }
     }
     // 3º Impressão possível: se a quantidade do baralho for maior do que 15 e menor ou igual a 25
@@ -431,7 +435,10 @@ void imprimirBaralho(Baralho *baralho)
         for (int j = 0; j < 2; j++)
         {
             linhaCol(32 - j, 120);
-            printf("%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+            printf("%c%c%c%c%c%c%c%c%c%c",
+                   CANTO_INF_ESQUERDO,
+                   LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL,
+                   CANTO_INF_DIREITO);
         }
     }
     // 4º Impressão possível: se a quantidade do baralho for maior do que 1 e menor ou igual a 15
@@ -447,7 +454,10 @@ void imprimirBaralho(Baralho *baralho)
         for (int j = 0; j < 1; j++)
         {
             linhaCol(32 - j, 120);
-            printf("%c%c%c%c%c%c%c%c%c%c", 200, 205, 205, 205, 205, 205, 205, 205, 205, 188);
+            printf("%c%c%c%c%c%c%c%c%c%c",
+                   CANTO_INF_ESQUERDO,
+                   LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL,
+                   CANTO_INF_DIREITO);
         }
     }
     // 5º Impressão possível: se tiver apenas uma carta no baralho
@@ -1010,7 +1020,7 @@ int indicador(int indice)
     {
     case 0:
         linhaCol(27, 75);
-        printf("%c", 16);
+        printf("%c", SETA_DIREITA);
         linhaCol(30, 75);
         printf("  ");
         linhaCol(33, 75);
@@ -1021,7 +1031,7 @@ int indicador(int indice)
         linhaCol(27, 75);
         printf("  ");
         linhaCol(30, 75);
-        printf("%c", 16);
+        printf("%c", SETA_DIREITA);
         linhaCol(33, 75);
         printf("  ");
         linhaCol(42, 1);
@@ -1032,7 +1042,7 @@ int indicador(int indice)
         linhaCol(30, 75);
         printf("  ");
         linhaCol(33, 75);
-        printf("%c", 16);
+        printf("%c", SETA_DIREITA);
         linhaCol(42, 1);
     }
     resetarAtributos();
