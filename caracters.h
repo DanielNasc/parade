@@ -43,4 +43,6 @@ typedef enum teclas
     ARROW_DIREITA = 77,
     ARROW_CIMA = 72,
     ARROW_BAIXO = 80,
+
+    BACKSPACE = 8,
 } TECLAS;
