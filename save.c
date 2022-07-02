@@ -6,6 +6,53 @@
 #include "save.h"
 #include "interface.h"
 
+void inicializarArquivoFullscreen()
+{
+    // checa se o arquivo fullscreen.bin existe
+    // se sim, não faz nada
+
+    FILE *arq = fopen(ARQ_FULLSCREEN_OPTION, "r");
+    if (arq != NULL)
+    {
+        fclose(arq);
+        return;
+    }
+
+    // se não existir, cria o arquivo
+    arq = fopen(ARQ_FULLSCREEN_OPTION, "w");
+
+    // a opção sera iniciada como true
+    fprintf(arq, "true");
+    fclose(arq);
+}
+
+bool pegarFullscreen()
+{
+    // checa se o arquivo fullscreen.bin existe
+    FILE *arq = fopen(ARQ_FULLSCREEN_OPTION, "r");
+    if (arq == NULL)
+    {
+        return false;
+    }
+
+    // se existir, lê o valor do arquivo
+    char fullscreen[10];
+    fscanf(arq, "%s", fullscreen);
+    fclose(arq);
+    return strcmp(fullscreen, "true") == 0;
+}
+
+void mudarOpcaoFullscreen()
+{
+    char fullscreen[10];
+
+    strcpy(fullscreen, pegarFullscreen() ? "false" : "true");
+
+    FILE *arq = fopen(ARQ_FULLSCREEN_OPTION, "w");
+    fprintf(arq, fullscreen);
+    fclose(arq);
+}
+
 void inicializarArquivosVetores()
 {
     // checa se o arquivo de scores existe, se sim, não faz nada, se não, cria o arquivo
@@ -203,4 +250,19 @@ void scoreTest()
     free(scores);
 
     printf("\n");
+}
+
+void fullscreenTest()
+{
+    inicializarArquivoFullscreen();
+
+    bool fullscreen = pegarFullscreen();
+
+    printf("Fullscreen: %d\n", fullscreen);
+
+    mudarOpcaoFullscreen(!fullscreen);
+
+    fullscreen = pegarFullscreen();
+
+    printf("Fullscreen: %d\n", fullscreen);
 }
