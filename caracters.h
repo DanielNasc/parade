@@ -31,7 +31,9 @@ typedef enum caracteres
     CEDILHA = 135,
     CEDILHA_MAIUSCULA = 128,
 
-    SETAS_DUPLAS = 175
+    SETAS_DUPLAS = 175,
+
+    CORACAO = 3,
 } Caracteres;
 
 typedef enum teclas
@@ -39,11 +41,12 @@ typedef enum teclas
     ESC = 27,
     ENTER = 13,
     SPACE = 32,
+    BACKSPACE = 8,
+    ALT = 18,
 
     ARROW_ESQUERDA = 75,
     ARROW_DIREITA = 77,
     ARROW_CIMA = 72,
     ARROW_BAIXO = 80,
 
-    BACKSPACE = 8,
 } TECLAS;
