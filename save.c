@@ -5,6 +5,7 @@
 #include <math.h>
 #include "save.h"
 #include "interface.h"
+#include "caracters.h"
 
 void inicializarArquivoFullscreen()
 {
@@ -53,38 +54,6 @@ void mudarOpcaoFullscreen()
     fclose(arq);
 }
 
-void inicializarArquivosVetores()
-{
-    // checa se o arquivo de scores existe, se sim, não faz nada, se não, cria o arquivo
-    FILE *arq = fopen(ARQ_SCORE, "r");
-    if (arq != NULL)
-    {
-        fclose(arq);
-        return;
-    }
-
-    // inicializa o vetor de scores
-    Score *scores = (Score *)malloc(QTD_LIDERES * sizeof(Score));
-
-    // inicializa o vetor de scores com -1 (vazio)
-    for (int i = 0; i < QTD_LIDERES; i++)
-    {
-        scores[i] = criarScore(-1, "NULL", NENHUMA);
-    }
-
-    arq = fopen(ARQ_SCORE, "wb");
-
-    if (arq == NULL)
-    {
-        exit(1);
-    }
-
-    fwrite(scores, sizeof(Score), QTD_LIDERES, arq);
-    fclose(arq);
-
-    free(scores);
-}
-
 Score criarScore(int pontos, char *nome, TipoVitoria vitoria)
 {
     Score score;
@@ -95,6 +64,31 @@ Score criarScore(int pontos, char *nome, TipoVitoria vitoria)
     strcpy(score.nome, nome);
 
     return score;
+}
+
+void inicializarArquivosVetores()
+{
+    // checa se o arquivo de scores existe, se sim, não faz nada, se não, cria o arquivo
+    FILE *arq = fopen(ARQ_SCORE, "rb");
+    if (arq != NULL)
+    {
+        fclose(arq);
+        return;
+    }
+
+    // se não existir, cria o arquivo
+    fclose(arq);
+
+    arq = fopen(ARQ_SCORE, "wb");
+
+    // inicializa o arquivo com um vetor de scores vazio
+    Score *scores = (Score *)malloc(sizeof(Score) * QTD_LIDERES);
+
+    for (int i = 0; i < QTD_LIDERES; i++)
+        scores[i] = criarScore(999999, "VAZIO", NENHUMA);
+
+    fwrite(scores, sizeof(Score), QTD_LIDERES, arq);
+    fclose(arq);
 }
 
 Score *allScores()
@@ -131,7 +125,7 @@ void inserirOrdenado(Score *scores, Score score)
     */
 
     if (
-        scores[QTD_LIDERES - 1].score != -1            // se o ultimo score nao for vazio
+        scores[QTD_LIDERES - 1].score != SCORE_VAZIO   // se o ultimo score nao for vazio
         && score.score > scores[QTD_LIDERES - 1].score // se o score for maior que o ultimo score
     )
     {
@@ -161,23 +155,32 @@ void inserirOrdenado(Score *scores, Score score)
 
 bool checarSeScoreEValido(Score score)
 {
-    return score.score != -1;
+    return score.score != SCORE_VAZIO;
 }
 
 void saveScore(int pontos, char *nome, TipoVitoria vitoria)
 {
+    printf("Salvando score de %d pontos\n", pontos);
+
     Score score = criarScore(pontos, nome, vitoria);
+
+    printf("pegando scores\n");
     Score *scores = allScores();
 
+    printf("inserindo score\n");
     inserirOrdenado(scores, score);
 
     FILE *arq = fopen(ARQ_SCORE, "wb");
 
     if (arq != NULL)
     {
+        printf("salvando scores\n");
         fwrite(scores, sizeof(Score), QTD_LIDERES, arq);
+        printf("salvou scores\n");
         fclose(arq);
     }
+
+    printf("==================================================\n");
 }
 
 void imprimirScore(Score score, int lin)
@@ -186,12 +189,16 @@ void imprimirScore(Score score, int lin)
     printf("%s", score.nome);
     linhaCol(15 + lin, 83);
 
-    if (score.score < 0 || abs(score.score) > 99)
-        printf("%d", score.score);
-    else if (score.score < 9)
+    if (score.score == PONTOS_VITORIA_PERFEITA)
+        printf("%c%c%c", CORACAO, CORACAO, CORACAO);
+    else if (score.score == PONTOS_VITORIA_NORMAL)
+        printf(" %c%c", CORACAO, CORACAO);
+    else if (score.score <= 9)
         printf("00%d", score.score);
-    else
+    else if (score.score <= 99)
         printf("0%d", score.score);
+    else
+        printf("%d", score.score);
 
     linhaCol(15 + lin, 94);
     char *data = (char *)malloc(TAMANHO_DATA * sizeof(char));
@@ -205,7 +212,7 @@ void scoreTest()
     inicializarArquivosVetores();
 
     printf("Criando scores...\n");
-    int pontos[QTD_LIDERES + 1] = {
+    int pontos[] = {
         21,
         34,
         45,
@@ -225,9 +232,10 @@ void scoreTest()
 
     for (int i = 0; i < QTD_LIDERES + 1; i++)
     {
+        printf("iteracao %d\n", i);
         int vitoria = rand() % 3;
         saveScore(
-            vitoria == 0 ? pontos[i] : (vitoria == 1 ? -50 : -99), "IDK", vitoria);
+            vitoria == 0 ? pontos[i] : (vitoria == 1 ? PONTOS_VITORIA_NORMAL : PONTOS_VITORIA_PERFEITA), "IDK", vitoria);
     }
 
     printf("\n");

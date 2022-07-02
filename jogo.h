@@ -9,6 +9,9 @@ typedef struct jogador Jogador;
 typedef struct computador Computador;
 
 #define SAIR_PARTIDA 999
+#define PONTOS_VITORIA_NORMAL -100
+#define PONTOS_VITORIA_PERFEITA -999
+#define SCORE_VAZIO 9999999
 
 typedef enum tipoVitoria
 {

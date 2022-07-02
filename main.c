@@ -14,14 +14,20 @@ int main()
 {
     // deixar o console com pelo menos 160 colunas
 
-    pegarFullscreen() ? fullscreen() : mudarTamanhoJanela(160, 85);
+    inicializarArquivoFullscreen();
+
+    bool fullscreeOn = pegarFullscreen();
+
+    fullscreeOn ? fullscreen() : mudarTamanhoJanela(160, 85);
 
     mudarFonte();
-
     inicializarAtributosPadrao();
     inicializarArquivosVetores();
     system("cls");
-    aviso();
+
+    if (!fullscreeOn)
+        aviso();
+
     menu(500);
 
     while (1)

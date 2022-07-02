@@ -443,15 +443,14 @@ bool galeriaVazia(Galeria *galeria)
     if (galeria == NULL)
         return true;
 
-    // Percorre todas as coleções da galeria checando se estão vazias.
+    // retornar true se todas as coleções estiverem vazias ou com apenas cartas com número 0
+
     for (int i = 0; i < QTD_NAIPES; i++)
     {
-        // Se a coleção não estiver vazia, retorna false.
-        if (galeria->colecao[i]->lista->quantidade > 0)
+        if (somaValoresColecao(galeria, i) != 0)
             return false;
     }
 
-    // Todas as coleções estão vazias, retorna true.
     return true;
 }
 

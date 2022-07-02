@@ -128,10 +128,10 @@ void box(int linha_1, int coluna_1, int linha_2, int coluna_2)
 
 void simSelecionado()
 {
-    linhaCol(29, 74);
+    linhaCol(29, 76);
     printf("%c SIM", SETAS_DUPLAS);
     linhaCol(29, 84);
-    printf("n%co", A_COM_TIL);
+    printf("  n%co", A_COM_TIL);
 }
 
 // Função que imprime a caixa de texto perguntando se o jogador que encerrar o jogo
@@ -143,17 +143,17 @@ int question()
     int sim_nao = 1;
 
     // Monta a tela
-    box(25, 51, 33, 112); // linha = 8, coluna = 22
+    box(25, 53, 33, 114); // linha = 8, coluna = 22
 
     // // linguagem(1);
-    linhaCol(27, 76);
+    linhaCol(27, 78);
     corTexto(RED, _BLACK);
     printf("Deseja sair?");
     resetarAtributos();
     simSelecionado();
 
     // linguagem(0);
-    imprimirControles(31, 55);
+    imprimirControles(31, 57);
 
     linhaCol(42, 1);
 
@@ -180,9 +180,9 @@ int question()
         else if (tecla == ARROW_DIREITA)
         {
             // linguagem(1);
-            linhaCol(29, 74);
+            linhaCol(29, 76);
             printf("  sim");
-            linhaCol(29, 82);
+            linhaCol(29, 84);
             printf("%c NAO", SETAS_DUPLAS);
             linhaCol(42, 1);
             // linguagem(0);
@@ -556,7 +556,6 @@ void imprimirMesa(ListaCarta *mesa)
     printf("    MESA    ");
     resetarAtributos();
 
-    // box(34, 25, 47, 138);
     //  aux aponta para a última carta da lista da mesa
     Carta *aux = primeiraCarta(mesa);
     int lin = 0, col = 0; // 70
@@ -789,13 +788,13 @@ void menu(int tempo)
 
     system("cls");
 
-    // Box interior superiorww
-    box(10, 42, 20, 121);
+    // Box interior superior
+    box(10, 44, 20, 123);
 
     corTexto(LIGHTRED, _BLACK);
     for (int i = 11; i < 20; i++)
     {
-        for (int j = 43; j < 121; j++)
+        for (int j = 45; j < 123; j++)
         {
             linhaCol(i, j);
             printf("%c", 219);
@@ -805,214 +804,213 @@ void menu(int tempo)
 
     corTexto(YELLOW, BLACK);
     // Ascii art
-    linhaCol(5, 45);
+    linhaCol(5, 47);
     printf("/^--^\\");
-    linhaCol(5, 103);
+    linhaCol(5, 105);
     printf("/^--^\\     /^--^\\");
-    linhaCol(6, 45);
+    linhaCol(6, 47);
     printf("\\____/");
-    linhaCol(6, 103);
+    linhaCol(6, 105);
     printf("\\____/     \\____/");
-    linhaCol(7, 44);
+    linhaCol(7, 46);
     printf("/  /\\  \\");
-    linhaCol(7, 102);
+    linhaCol(7, 104);
     printf("/      \\   /  /\\  \\");
-    linhaCol(8, 43);
+    linhaCol(8, 45);
     printf("|   \\ \\  |");
-    linhaCol(8, 101);
+    linhaCol(8, 103);
     printf("|        | |  / /   |");
-    linhaCol(9, 44);
+    linhaCol(9, 46);
     printf("\\__/ /_/");
-    linhaCol(9, 102);
+    linhaCol(9, 104);
     printf("\\__/\\__/   \\_\\ \\__/");
-    linhaCol(10, 105);
 
     // Letra P
     Sleep(tempo);
-    linhaCol(12, 59); // 12
-    printf("%c%c%c%c", TEXTURA, TEXTURA, TEXTURA, TEXTURA);
-    linhaCol(15, 59);
-    printf("%c%c%c%c", TEXTURA, TEXTURA, TEXTURA, TEXTURA);
-
-    for (int i = 0; i < 7; i++)
-    {
-        linhaCol(12 + i, 58);
-        printf("%c", TEXTURA);
-    }
-
-    for (int i = 0; i < 7; i++)
-    {
-        linhaCol(12 + i, 59);
-        printf("%c", TEXTURA);
-    }
-
     linhaCol(12, 61);
+    printf("%c%c%c%c", TEXTURA, TEXTURA, TEXTURA, TEXTURA);
+    linhaCol(15, 61);
+    printf("%c%c%c%c", TEXTURA, TEXTURA, TEXTURA, TEXTURA);
+
+    for (int i = 0; i < 7; i++)
+    {
+        linhaCol(12 + i, 60);
+        printf("%c", TEXTURA);
+    }
+
+    for (int i = 0; i < 7; i++)
+    {
+        linhaCol(12 + i, 61);
+        printf("%c", TEXTURA);
+    }
+
+    linhaCol(12, 63);
     printf("%c", TEXTURA);
 
     for (int i = 0; i < 2; i++)
     {
-        linhaCol(13 + i, 62);
+        linhaCol(13 + i, 64);
         printf("%c%c", TEXTURA, TEXTURA);
     }
     linhaCol(42, 1);
 
     // Letra A
     Sleep(tempo);
-    linhaCol(12, 68);
+    linhaCol(12, 70);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
-    linhaCol(15, 68);
+    linhaCol(15, 70);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
 
     for (int i = 0; i < 6; i++)
     {
-        linhaCol(13 + i, 67);
+        linhaCol(13 + i, 69);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 7; i++)
     {
-        linhaCol(12 + i, 68);
+        linhaCol(12 + i, 70);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 7; i++)
     {
-        linhaCol(12 + i, 71);
+        linhaCol(12 + i, 73);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 6; i++)
     {
-        linhaCol(13 + i, 72);
+        linhaCol(13 + i, 74);
         printf("%c", TEXTURA);
     }
     linhaCol(42, 1);
 
     // Letra R
     Sleep(tempo);
-    linhaCol(12, 77);
+    linhaCol(12, 79);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
-    linhaCol(15, 77);
+    linhaCol(15, 79);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
 
     for (int i = 0; i < 6; i++)
     {
-        linhaCol(13 + i, 77);
+        linhaCol(13 + i, 79);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 7; i++)
     {
-        linhaCol(12 + i, 76);
+        linhaCol(12 + i, 78);
         printf("%c", TEXTURA);
     }
 
-    linhaCol(16, 79);
+    linhaCol(16, 81);
     printf("%c", TEXTURA);
-    linhaCol(17, 80);
+    linhaCol(17, 82);
     printf("%c", TEXTURA);
 
     for (int i = 0; i < 7; i++)
     {
         if (i != 4 && i != 5 && i != 6)
         {
-            linhaCol(12 + i, 80);
+            linhaCol(12 + i, 82);
             printf("%c", TEXTURA);
         }
     }
 
-    linhaCol(13, 81);
+    linhaCol(13, 83);
     printf("%c", TEXTURA);
-    linhaCol(14, 81);
+    linhaCol(14, 83);
     printf("%c", TEXTURA);
-    linhaCol(18, 80);
+    linhaCol(18, 82);
     printf("%c%c", TEXTURA, TEXTURA);
     linhaCol(42, 1);
 
     // Letra A
     Sleep(tempo);
-    linhaCol(12, 86);
+    linhaCol(12, 88);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
-    linhaCol(15, 86);
+    linhaCol(15, 88);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
 
     for (int i = 0; i < 6; i++)
     {
-        linhaCol(13 + i, 85);
+        linhaCol(13 + i, 87);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 7; i++)
     {
-        linhaCol(12 + i, 86);
+        linhaCol(12 + i, 88);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 7; i++)
     {
-        linhaCol(12 + i, 89);
+        linhaCol(12 + i, 91);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 6; i++)
     {
-        linhaCol(13 + i, 90);
+        linhaCol(13 + i, 92);
         printf("%c", TEXTURA);
     }
     linhaCol(42, 1);
 
     // Letra D
     Sleep(tempo);
-    linhaCol(12, 95);
+    linhaCol(12, 97);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
-    linhaCol(18, 95);
+    linhaCol(18, 97);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
 
-    linhaCol(13, 98);
+    linhaCol(13, 100);
     printf("%c", TEXTURA);
-    linhaCol(14, 98);
+    linhaCol(14, 100);
     printf("%c", TEXTURA);
 
     for (int i = 0; i < 7; i++)
     {
-        linhaCol(12 + i, 94);
+        linhaCol(12 + i, 96);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 7; i++)
     {
-        linhaCol(12 + i, 95);
+        linhaCol(12 + i, 97);
         printf("%c", TEXTURA);
     }
 
     for (int i = 0; i < 3; i++)
     {
-        linhaCol(15 + i, 98);
+        linhaCol(15 + i, 100);
         printf("%c", TEXTURA);
     }
     linhaCol(42, 1);
 
     // Letra E
     Sleep(tempo);
-    linhaCol(12, 103);
+    linhaCol(12, 105);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
-    linhaCol(15, 103);
+    linhaCol(15, 105);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
-    linhaCol(18, 103);
+    linhaCol(18, 105);
     printf("%c%c%c", TEXTURA, TEXTURA, TEXTURA);
 
     for (int i = 0; i < 7; i++)
     {
-        linhaCol(12 + i, 102);
+        linhaCol(12 + i, 104);
         printf("%c", TEXTURA);
     }
     for (int i = 0; i < 6; i++)
     {
-        linhaCol(12 + i, 103);
+        linhaCol(12 + i, 105);
         printf("%c", TEXTURA);
     }
 
-    linhaCol(12, 103);
+    linhaCol(12, 105);
     printf("%c", TEXTURA);
     linhaCol(42, 1);
     resetarAtributos();
@@ -1027,14 +1025,15 @@ void menu(int tempo)
 
     // box(2, 25, 42, 138);
     corTexto(WHITE, _BLACK);
-    linhaCol(42, 35);
+    linhaCol(42, 37);
     printf("[ESC] - Sair?");
-    linhaCol(43, 35);
+    linhaCol(43, 37);
     printf("[ENTER] - Confirmar");
     linhaCol(42, 115);
-    printf("[ALT + ENTER]");
-    linhaCol(43, 113);
-    printf("Janela/Tela cheia");
+    printf("Fullscreen?");
+    linhaCol(43, 120);
+    printf("%c", LINHA_VERTICAL);
+    alternarTelaCheia();
     resetarAtributos();
     linhaCol(42, 1);
 }
@@ -1106,10 +1105,15 @@ int escolhaMenu()
         {
             tecla = getch();
             fflush(stdin);
-        } while (tecla != ESC && tecla != ENTER && tecla != ARROW_CIMA && tecla != ARROW_BAIXO); // alterna o indicador
+        } while (tecla != ESC && tecla != SPACE && tecla != ENTER && tecla != ARROW_CIMA && tecla != ARROW_BAIXO); // alterna o indicador
 
+        if (tecla == SPACE)
+        {
+            mudarOpcaoFullscreen();
+            alternarTelaCheia();
+        }
         // Se a tecla precionada for o "Esc (27)", chama a função "question" que imprime na tela uma caixa de texto perguntando se o jogador quer sair do jogo.
-        if (tecla == ESC)
+        else if (tecla == ESC)
         {
             resetarAtributos();
             if (question() == 0)
@@ -1258,13 +1262,13 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
     case 1:
         // chama a função de interface para imprimir a tela de vitoria normal, por colecao vazia
         nomeDoSave(save);
-        saveScore(500, save, tipoVitoria);
+        saveScore(PONTOS_VITORIA_NORMAL, save, tipoVitoria);
         vitoriaNormal();
         break;
     case 2:
         // chama a função de interface para imprimir a tela de vitoria perfeita
         nomeDoSave(save);
-        saveScore(999, save, tipoVitoria);
+        saveScore(PONTOS_VITORIA_PERFEITA, save, tipoVitoria);
         vitoriaPerfeita();
         break;
     }
@@ -2077,7 +2081,6 @@ void escolhaTela()
 
 void aviso()
 {
-
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
     system("cls");
 
@@ -2348,7 +2351,7 @@ int imprimirSair()
     linhaCol(31, 143);
     printf("   [ESC] - SAIR");
     linhaCol(32, 140);
-    printf("   [ESPACE] - RETOMAR");
+    printf("   [SPACE] - RETOMAR");
     do
     {
         tecla = getch();
@@ -2456,5 +2459,32 @@ void nomeDoSave(char *nome)
         corTexto(YELLOW, _BLACK);
         printf("JOGO SALVO COMO: %s", nome);
         resetarAtributos();
+    }
+}
+
+void alternarTelaCheia()
+{
+    if (pegarFullscreen())
+    {
+        corTexto(WHITE, _BLACK);
+        linhaCol(43, 119);
+        printf("%c", 254);
+        corTexto(LIGHTGREEN, _BLACK);
+        linhaCol(43, 121);
+        printf("%c", 254);
+        resetarAtributos();
+        linhaCol(44, 111);
+        printf("[SPACE] - Desativar");
+    }
+    else
+    {
+        corTexto(LIGHTRED, _BLACK);
+        linhaCol(43, 119);
+        printf("%c", 254);
+        resetarAtributos();
+        linhaCol(43, 121);
+        printf("%c", 254);
+        linhaCol(44, 111);
+        printf("[SPACE] - Ativar   ");
     }
 }
