@@ -2516,7 +2516,8 @@ void nomeDoSave(char *nome)
     // colocar o que ele digitou no nome
     // nao permitir que o usuario digite mais de TAMANHO_NOME caracteres
 
-    for (int i = 0; i < TAMANHO_NOME;)
+    int i;
+    for (i = 0; i < TAMANHO_NOME - 1;)
     {
         tecla = getch();
 
@@ -2545,17 +2546,16 @@ void nomeDoSave(char *nome)
         }
         else
         {
-            if (i < TAMANHO_NOME)
-            {
-                nome[i] = tecla;
-                linhaCol(18, 80 + i);
-                printf("%c", tecla);
-                i++;
-            }
+            nome[i] = tecla;
+            linhaCol(18, 80 + i);
+            printf("%c", tecla);
+            i++;
         }
 
         linhaCol(18, 80 + i);
     }
+
+    nome[i] = '\0';
 
     linhaCol(20, 79);
     textColor(LIGHTRED, _BLACK);
