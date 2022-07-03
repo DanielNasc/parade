@@ -21,6 +21,8 @@ for ($i = 0; $i -lt $files.Count; $i++) {
     gcc -c $file -lm -o ($fileWithoutExtension + ".o")
 }
 
+Write-Output "`n` `n`Linkando arquivos .o `n` `n` "
+
 # Linka todos os arquivos .o em um único arquivo .o
 
 $compiledFiles = (

@@ -282,6 +282,7 @@ bool nomeDoSave(char *nome)
         corTexto(YELLOW, _BLACK);
         printf("JOGO SALVO COMO: %s", nome);
         resetarAtributos();
+        Sleep(2000);
     }
 
     return true;
