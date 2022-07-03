@@ -417,12 +417,6 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
     char save[15];
     int pontos = 0, tecla = 0;
 
-    bool nomeOK;
-    do
-    {
-        nomeOK = nomeDoSave(save);
-    } while (!nomeOK);
-
     // criei um switch para chamarmos as funções de acordo com o inteiro dado como parâmetro
     switch (tipoVitoria)
     {
@@ -440,16 +434,19 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
         } while (tecla != ENTER);
         system("cls");
         // chama a função de interface para imprimir a tela de vitoria por pontuação
+        nomeDoSave(save);
         saveScore(pontos, save, tipoVitoria);
         vitoriaPontuacao(pontos);
         break;
     case 1:
         // chama a função de interface para imprimir a tela de vitoria normal, por colecao vazia
+        nomeDoSave(save);
         saveScore(PONTOS_VITORIA_NORMAL, save, tipoVitoria);
         vitoriaNormal();
         break;
     case 2:
         // chama a função de interface para imprimir a tela de vitoria perfeita
+        nomeDoSave(save);
         saveScore(PONTOS_VITORIA_PERFEITA, save, tipoVitoria);
         vitoriaPerfeita();
         break;
