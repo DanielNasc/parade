@@ -262,7 +262,7 @@ int colocarDuasCartasGaleria(Jogador *jogador)
 
         cartaEscolhida = removerIndice(jogador->mao, indice);
         inserirNaGaleria(jogador->galeria, cartaEscolhida);
-        linhaCol(72, 23);
+        linhaCol(77, 23);
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
         imprimirMao(jogador->mao);
@@ -361,7 +361,7 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
 
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
-        linhaCol(72, 23);
+        linhaCol(77, 23);
         Sleep(1000);
         imprimirGaleria(jogador->galeria);
         imprimirBoxMesa(); // reseta a mesa
@@ -407,7 +407,7 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
     // criei um switch para chamarmos as funções de acordo com o inteiro dado como parâmetro
     switch (tipoVitoria)
     {
-    case 0:
+    case 0:;
         // chama a função para colocar as últimas duas cartas da mão do jogador em sua coleção
 
         int duasCartasColocadas = colocarDuasCartasGaleria(jogador);
@@ -425,18 +425,21 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
         system("cls");
         // chama a função de interface para imprimir a tela de vitoria por pontuação
         nomeDoSave(save);
+
         saveScore(pontos, save, tipoVitoria);
         vitoriaPontuacao(pontos);
         break;
     case 1:
         // chama a função de interface para imprimir a tela de vitoria normal, por colecao vazia
         nomeDoSave(save);
+
         saveScore(PONTOS_VITORIA_NORMAL, save, tipoVitoria);
         vitoriaNormal();
         break;
     case 2:
         // chama a função de interface para imprimir a tela de vitoria perfeita
         nomeDoSave(save);
+
         saveScore(PONTOS_VITORIA_PERFEITA, save, tipoVitoria);
         vitoriaPerfeita();
         break;
