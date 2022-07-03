@@ -196,3 +196,93 @@ void imprimirScore(Score score, int lin)
     converterTime((time_t)score.data, data);
     printf("%s", data);
 }
+
+bool nomeDoSave(char *nome)
+{
+
+    clearStdin();
+    system("cls");
+    box(12, 60, 28, 107);
+
+    int tecla;
+
+    corTexto(LIGHTRED, _BLACK);
+    linhaCol(17, 67);
+    printf("COMO GOSTARIA DE SALVAR SEU JOGO?");
+    resetarAtributos();
+    linhaCol(18, 80);
+
+    // ouvir o input do usuario
+    // colocar o que ele digitou no nome
+    // nao permitir que o usuario digite mais de TAMANHO_NOME caracteres
+
+    int i;
+    for (i = 0; i < TAMANHO_NOME - 1;)
+    {
+        tecla = getch();
+
+        if (tecla == ENTER || tecla == ESC)
+        {
+            break;
+        }
+        else if (tecla == BACKSPACE)
+        {
+            if (i > 0)
+            {
+                i--;
+                nome[i] = '\0';
+                linhaCol(18, 80 + i);
+                printf(" ");
+            }
+        }
+        // se a tecla nao for uma letra, numero ou espaco, ignorar
+        else if (
+            (tecla < 'a' || tecla > 'z') &&
+            (tecla < 'A' || tecla > 'Z') &&
+            (tecla < '0' || tecla > '9') &&
+            tecla != ' ')
+        {
+            continue;
+        }
+        else
+        {
+            nome[i] = tecla;
+            linhaCol(18, 80 + i);
+            printf("%c", tecla);
+            i++;
+        }
+
+        linhaCol(18, 80 + i);
+    }
+
+    nome[i] = '\0';
+
+    linhaCol(20, 79);
+    corTexto(LIGHTRED, _BLACK);
+    printf("CONFIRMAR?");
+    resetarAtributos();
+    linhaCol(21, 71);
+    printf("[ENTER] - Sim");
+    linhaCol(21, 86);
+    printf("[ESC] - Nao");
+
+    do
+    {
+        tecla = getch();
+    } while (tecla != ENTER && tecla != ESC);
+
+    if (tecla == ESC)
+    {
+        system("cls");
+        return false;
+    }
+    else
+    {
+        linhaCol(23, 70);
+        corTexto(YELLOW, _BLACK);
+        printf("JOGO SALVO COMO: %s", nome);
+        resetarAtributos();
+    }
+
+    return true;
+}

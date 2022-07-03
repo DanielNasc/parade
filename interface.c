@@ -1217,66 +1217,6 @@ void carregando()
 }
 
 // comentada
-int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
-{
-    /*Função de chamada de funções:
-    Essa função é basicamente para chamar outras funções, que seriam as
-    funções de interface para telas de fim de jogo.
-    Como parâmetros temos:
-        *o Computador e o Jogador, para conseguirmos chamar a função
-        colocarDuasCartasGaleria e compararPontuacoes.
-        *um inteiro [0,1 ou 2] que passaria para a função o tipo de fim de jogo:
-            0 -> Fim de jogo resultando em uma pontuação.
-            1 -> Vitória por coleção vazia quando o baralho é zerado.
-            2 -> Vitória perfeita quando o baralho é zerado com a coleção vazia
-            e na mão do jogador existem pelo menos duas cartas de valor 0, independente
-            do naipe. */
-
-    // checamos se o jogador e o computador são nulos
-    if (jogador == NULL || computador == NULL)
-        return 0;
-
-    char save[15];
-    int pontos = 0, tecla = 0;
-    // criei um switch para chamarmos as funções de acordo com o inteiro dado como parâmetro
-    switch (tipoVitoria)
-    {
-    case 0:
-        // chama a função para colocar as últimas duas cartas da mão do jogador em sua coleção
-
-        if (colocarDuasCartasGaleria(jogador) == SAIR_PARTIDA)
-            return SAIR_PARTIDA;
-
-        pontos = compararPontuacoes(jogador, computador);
-        linhaCol(1, 1);
-        do
-        {
-            tecla = getch();
-        } while (tecla != 13);
-        system("cls");
-        // chama a função de interface para imprimir a tela de vitoria por pontuação
-        nomeDoSave(save);
-        saveScore(pontos, save, tipoVitoria);
-        vitoriaPontuacao(pontos);
-        break;
-    case 1:
-        // chama a função de interface para imprimir a tela de vitoria normal, por colecao vazia
-        nomeDoSave(save);
-        saveScore(PONTOS_VITORIA_NORMAL, save, tipoVitoria);
-        vitoriaNormal();
-        break;
-    case 2:
-        // chama a função de interface para imprimir a tela de vitoria perfeita
-        nomeDoSave(save);
-        saveScore(PONTOS_VITORIA_PERFEITA, save, tipoVitoria);
-        vitoriaPerfeita();
-        break;
-    }
-    Sleep(2500);
-    return 1;
-}
-
-// comentada
 void vitoriaPontuacao(int pontuacao)
 {
     /* Função de Interface:
@@ -2067,7 +2007,7 @@ void escolhaTela()
         } while (tecla != ESC && tecla != ARROW_ESQUERDA && tecla != ARROW_DIREITA); // alternar
 
         // se a tecla digitada for -> e o indice for menor do que 3, ele incrementa
-        if (tecla == ARROW_DIREITA && indice < 4)
+        if (tecla == ARROW_DIREITA && indice < 3)
             indice++;
 
         // se a tecla digitada for <- e o indice for maior do que 0, ele decrementa
@@ -2371,94 +2311,6 @@ int imprimirSair()
     else
     {
         return 0;
-    }
-}
-
-void nomeDoSave(char *nome)
-{
-
-    clearStdin();
-    system("cls");
-    box(12, 60, 28, 107);
-
-    int tecla;
-
-    corTexto(LIGHTRED, _BLACK);
-    linhaCol(17, 67);
-    printf("COMO GOSTARIA DE SALVAR SEU JOGO?");
-    resetarAtributos();
-    linhaCol(18, 80);
-
-    // ouvir o input do usuario
-    // colocar o que ele digitou no nome
-    // nao permitir que o usuario digite mais de TAMANHO_NOME caracteres
-
-    int i;
-    for (i = 0; i < TAMANHO_NOME - 1;)
-    {
-        tecla = getch();
-
-        if (tecla == ENTER || tecla == ESC)
-        {
-            break;
-        }
-        else if (tecla == BACKSPACE)
-        {
-            if (i > 0)
-            {
-                i--;
-                nome[i] = '\0';
-                linhaCol(18, 80 + i);
-                printf(" ");
-            }
-        }
-        // se a tecla nao for uma letra, numero ou espaco, ignorar
-        else if (
-            (tecla < 'a' || tecla > 'z') &&
-            (tecla < 'A' || tecla > 'Z') &&
-            (tecla < '0' || tecla > '9') &&
-            tecla != ' ')
-        {
-            continue;
-        }
-        else
-        {
-            nome[i] = tecla;
-            linhaCol(18, 80 + i);
-            printf("%c", tecla);
-            i++;
-        }
-
-        linhaCol(18, 80 + i);
-    }
-
-    nome[i] = '\0';
-
-    linhaCol(20, 79);
-    corTexto(LIGHTRED, _BLACK);
-    printf("CONFIRMAR?");
-    resetarAtributos();
-    linhaCol(21, 71);
-    printf("[ENTER] - Sim");
-    linhaCol(21, 86);
-    printf("[ESC] - Nao");
-    do
-    {
-        tecla = getch();
-    } while (tecla != 13 && tecla != 27);
-
-    if (tecla == 27)
-    {
-        system("cls");
-        nomeDoSave(nome);
-    }
-    else
-    {
-        fflush(stdin);
-        linhaCol(23, 70);
-        corTexto(YELLOW, _BLACK);
-        printf("JOGO SALVO COMO: %s", nome);
-        resetarAtributos();
     }
 }
 

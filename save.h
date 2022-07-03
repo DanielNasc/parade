@@ -33,6 +33,7 @@ void mudarOpcaoFullscreen();
 Score criarScore(int, char *, TipoVitoria);
 Score *allScores();
 
+bool nomeDoSave(char *);
 void saveScore(int, char *, TipoVitoria);
 
 void converterTime(time_t, char *);

@@ -110,8 +110,6 @@ int escolhaCarta(ListaCarta *, int);
 int escolhaMenu();
 
 // FIM DE JOGO ================================
-int chamarPlacar(Computador *, Jogador *, int);
-void nomeDoSave(char *);
 void vitoriaPontuacao(int);
 void vitoriaNormal();
 void vitoriaPerfeita();
