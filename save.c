@@ -197,7 +197,7 @@ void imprimirScore(Score score, int lin)
     printf("%s", data);
 }
 
-bool nomeDoSave(char *nome)
+void nomeDoSave(char *nome)
 {
 
     clearStdin();
@@ -221,7 +221,9 @@ bool nomeDoSave(char *nome)
     {
         tecla = getch();
 
-        if (tecla == ENTER || tecla == ESC)
+        if (
+            (tecla == ENTER || tecla == ESC) && i > 0 // se o usuario pressionou enter ou esc e ja tem algo digitado
+        )
         {
             break;
         }
@@ -274,7 +276,7 @@ bool nomeDoSave(char *nome)
     if (tecla == ESC)
     {
         system("cls");
-        return false;
+        nomeDoSave(nome);
     }
     else
     {
@@ -284,6 +286,4 @@ bool nomeDoSave(char *nome)
         resetarAtributos();
         Sleep(2000);
     }
-
-    return true;
 }

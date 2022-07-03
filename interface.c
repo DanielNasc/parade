@@ -455,7 +455,7 @@ void imprimirBaralho(Baralho *baralho)
         printf("          ");
         for (int j = 0; j < 3; j++)
         {
-            linhaCol(33 - j, 120);
+            linhaCol(32 - j, 120);
             printf("%c%c%c%c%c%c%c%c%c%c", CANTO_INF_ESQUERDO,
                    LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL, LINHA_HORIZONTAL,
                    CANTO_INF_DIREITO);
