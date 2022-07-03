@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <time.h>
 #include "pilha.h"
-#include "os.h"
 
 typedef struct baralho
 {
@@ -187,8 +186,7 @@ bool embaralhar(Baralho *baralho)
          * o carta do topo trocaria de lugar com ela mesma.
          */
 
-        int randomNumer = OS_NAME == "Windows" ? rand() : random();
-        int novoIndice = (randomNumer % (QTD_MAX_CARTAS - 1)) + 1;
+        int novoIndice = (rand() % (QTD_MAX_CARTAS - 1)) + 1;
 
         jogarNoMeio(baralho, novoIndice); // Move a carta do topo para o índice sorteado.
     }

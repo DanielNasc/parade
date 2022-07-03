@@ -1033,7 +1033,7 @@ void menu(int tempo)
     printf("Fullscreen?");
     linhaCol(43, 120);
     printf("%c", LINHA_VERTICAL);
-    alternarTelaCheia();
+    alternarOpcaoTelaCheia();
     resetarAtributos();
     linhaCol(42, 1);
 }
@@ -1110,7 +1110,11 @@ int escolhaMenu()
         if (tecla == SPACE)
         {
             mudarOpcaoFullscreen();
-            alternarTelaCheia();
+            alternarOpcaoTelaCheia();
+            linhaCol(41, 106);
+            corTexto(RED, _BLACK);
+            printf("Reinicie para surgir efeito!");
+            resetarAtributos();
         }
         // Se a tecla precionada for o "Esc (27)", chama a função "question" que imprime na tela uma caixa de texto perguntando se o jogador quer sair do jogo.
         else if (tecla == ESC)
@@ -2314,7 +2318,7 @@ int imprimirSair()
     }
 }
 
-void alternarTelaCheia()
+void alternarOpcaoTelaCheia()
 {
     if (pegarFullscreen())
     {

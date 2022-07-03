@@ -77,6 +77,7 @@ void imprimirGaleriaContagemDePontos(char *, int, Galeria *);
 
 // FUNÇÕES BASE ==================================
 void fullscreen();
+void alternarOpcaoTelaCheia();
 void mudarTamanhoJanela(int, int);
 void mudarFonte();
 void clearStdin();
