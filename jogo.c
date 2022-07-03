@@ -417,12 +417,13 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
             return PERDEU;
 
         pontos = compararPontuacoes(jogador, computador);
-        linhaCol(1, 1);
+
         do
         {
             tecla = getch();
         } while (tecla != ENTER);
         system("cls");
+        linhaCol(1, 1);
         // chama a função de interface para imprimir a tela de vitoria por pontuação
         nomeDoSave(save);
 

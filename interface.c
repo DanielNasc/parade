@@ -2102,14 +2102,14 @@ void imprimirGanhoDePontos(int i, int pontos)
     Sleep(1000);
     if (i == 6)
     {
-        linhaCol(76, 113);
+        linhaCol(76, 119);
         printf("TOTAL: ");
         corTexto(YELLOW, _BLACK);
         printf("%d", pontos);
         return;
     }
 
-    linhaCol(11 + i * 12, 117);
+    linhaCol(11 + i * 12, 123);
     printf("+%d", pontos);
 }
 
