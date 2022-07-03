@@ -34,6 +34,7 @@ void chamarContagem(Jogador *);
 void chamarGaleriaComputador(Computador *);
 
 // FIM DE JOGO ================================
+int chamarPlacar(Computador *, Jogador *, int);
 bool fimDeJogo(Jogador *, Computador *, Baralho *, ListaCarta *);
 int compararPontuacoes(Jogador *, Computador *);
 int colocarDuasCartasGaleria(Jogador *);

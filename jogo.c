@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "jogo.h"
 #include "interface.h"
+#include "caracters.h"
 
 typedef struct jogador
 {
@@ -369,6 +370,13 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
     Carta *cartaEscolhida = removerIndice(jogador->mao, indice);
     removerQualquerCartaValida(mesa, jogador->galeria, cartaEscolhida);
 
+    if (checarSeJogadorTemUmaCartaDeCadaCor(jogador->galeria))
+    {
+        derrota();
+        Sleep(2000);
+        return true;
+    }
+
     if (quantidadeAnterior != quantidadeCartasLista(mesa))
     {
         linhaCol(72, 23);
@@ -384,6 +392,70 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
     chamarPlacar(computador, jogador, checarVitoriaJogador(jogador));
 
     return true;
+}
+
+// comentada
+int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
+{
+    /*Função de chamada de funções:
+    Essa função é basicamente para chamar outras funções, que seriam as
+    funções de interface para telas de fim de jogo.
+    Como parâmetros temos:
+        *o Computador e o Jogador, para conseguirmos chamar a função
+        colocarDuasCartasGaleria e compararPontuacoes.
+        *um inteiro [0,1 ou 2] que passaria para a função o tipo de fim de jogo:
+            0 -> Fim de jogo resultando em uma pontuação.
+            1 -> Vitória por coleção vazia quando o baralho é zerado.
+            2 -> Vitória perfeita quando o baralho é zerado com a coleção vazia
+            e na mão do jogador existem pelo menos duas cartas de valor 0, independente
+            do naipe. */
+
+    // checamos se o jogador e o computador são nulos
+    if (jogador == NULL || computador == NULL)
+        return 0;
+
+    char save[15];
+    int pontos = 0, tecla = 0;
+
+    bool nomeOK;
+    do
+    {
+        nomeOK = nomeDoSave(save);
+    } while (!nomeOK);
+
+    // criei um switch para chamarmos as funções de acordo com o inteiro dado como parâmetro
+    switch (tipoVitoria)
+    {
+    case 0:
+        // chama a função para colocar as últimas duas cartas da mão do jogador em sua coleção
+
+        if (colocarDuasCartasGaleria(jogador) == SAIR_PARTIDA)
+            return SAIR_PARTIDA;
+
+        pontos = compararPontuacoes(jogador, computador);
+        linhaCol(1, 1);
+        do
+        {
+            tecla = getch();
+        } while (tecla != ENTER);
+        system("cls");
+        // chama a função de interface para imprimir a tela de vitoria por pontuação
+        saveScore(pontos, save, tipoVitoria);
+        vitoriaPontuacao(pontos);
+        break;
+    case 1:
+        // chama a função de interface para imprimir a tela de vitoria normal, por colecao vazia
+        saveScore(PONTOS_VITORIA_NORMAL, save, tipoVitoria);
+        vitoriaNormal();
+        break;
+    case 2:
+        // chama a função de interface para imprimir a tela de vitoria perfeita
+        saveScore(PONTOS_VITORIA_PERFEITA, save, tipoVitoria);
+        vitoriaPerfeita();
+        break;
+    }
+    Sleep(2500);
+    return 1;
 }
 
 void imprimirMaoJogador(Jogador *jogador)
