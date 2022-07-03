@@ -1092,7 +1092,7 @@ int escolhaMenu()
     opcão escolhida pelo jogador.
     */
 
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    clearStdin();
     // Criei um inteiro para receber a tecla digitada e chamei a função "indicador" para imprimir na tela o indicador rsrs.
     int tecla, indice = 0;
     corTexto(MAGENTA, _BLACK);
@@ -2055,7 +2055,7 @@ void telas(int tela)
 // comentada
 void escolhaTela()
 {
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    clearStdin();
     int tecla, indice = 0;
     // loop até o jogador apertar a tecla Esc
     do
@@ -2081,7 +2081,7 @@ void escolhaTela()
 
 void aviso()
 {
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    clearStdin();
     system("cls");
 
     box(12, 60, 28, 107); // box externa
@@ -2219,7 +2219,7 @@ void imprimirGaleriaContagemDePontos(char *nome, int inicio, Galeria *galeria)
 void ranking(Score *scores)
 {
 
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    clearStdin();
     int tecla;
 
     corTexto(YELLOW, _BLACK);
@@ -2311,7 +2311,7 @@ void ranking(Score *scores)
     printf("[ESC] - RETORNAR");
 
     int lin = 0;
-    for (int i = 0; i < 15; i++)
+    for (int i = 0; i < QTD_LIDERES; i++)
     {
         if (!checarSeScoreEValido(scores[i]))
         {
@@ -2341,7 +2341,7 @@ void ranking(Score *scores)
 int imprimirSair()
 {
 
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    clearStdin();
     int tecla;
 
     corTexto(RED, _BLACK);
@@ -2377,7 +2377,7 @@ int imprimirSair()
 void nomeDoSave(char *nome)
 {
 
-    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    clearStdin();
     system("cls");
     box(12, 60, 28, 107);
 

@@ -85,7 +85,7 @@ void inicializarArquivosVetores()
     Score *scores = (Score *)malloc(sizeof(Score) * QTD_LIDERES);
 
     for (int i = 0; i < QTD_LIDERES; i++)
-        scores[i] = criarScore(999999, "VAZIO", NENHUMA);
+        scores[i] = criarScore(SCORE_VAZIO, "VAZIO", NENHUMA);
 
     fwrite(scores, sizeof(Score), QTD_LIDERES, arq);
     fclose(arq);
@@ -160,27 +160,18 @@ bool checarSeScoreEValido(Score score)
 
 void saveScore(int pontos, char *nome, TipoVitoria vitoria)
 {
-    printf("Salvando score de %d pontos\n", pontos);
-
     Score score = criarScore(pontos, nome, vitoria);
-
-    printf("pegando scores\n");
     Score *scores = allScores();
 
-    printf("inserindo score\n");
     inserirOrdenado(scores, score);
 
     FILE *arq = fopen(ARQ_SCORE, "wb");
 
     if (arq != NULL)
     {
-        printf("salvando scores\n");
         fwrite(scores, sizeof(Score), QTD_LIDERES, arq);
-        printf("salvou scores\n");
         fclose(arq);
     }
-
-    printf("==================================================\n");
 }
 
 void imprimirScore(Score score, int lin)
@@ -204,73 +195,4 @@ void imprimirScore(Score score, int lin)
     char *data = (char *)malloc(TAMANHO_DATA * sizeof(char));
     converterTime((time_t)score.data, data);
     printf("%s", data);
-}
-
-void scoreTest()
-{
-    srand(time(NULL));
-    inicializarArquivosVetores();
-
-    printf("Criando scores...\n");
-    int pontos[] = {
-        21,
-        34,
-        45,
-        56,
-        67,
-        78,
-        89,
-        90,
-        100,
-        35,
-        65,
-        38,
-        65,
-        45,
-        56,
-        765};
-
-    for (int i = 0; i < QTD_LIDERES + 1; i++)
-    {
-        printf("iteracao %d\n", i);
-        int vitoria = rand() % 3;
-        saveScore(
-            vitoria == 0 ? pontos[i] : (vitoria == 1 ? PONTOS_VITORIA_NORMAL : PONTOS_VITORIA_PERFEITA), "IDK", vitoria);
-    }
-
-    printf("\n");
-    printf("Scores:\n");
-    Score *scores = allScores();
-
-    for (int i = 0; i < QTD_LIDERES; i++)
-    {
-        printf("score: %d\n", scores[i].score);
-        printf("nome: %s\n", scores[i].nome);
-        printf("id: %d\n", scores[i].id);
-        printf("data: %d\n", scores[i].data);
-        char data[TAMANHO_DATA];
-        converterTime((time_t)scores[i].data, data);
-        printf("data formatada: %s\n", data);
-        printf("vitoria: %d\n", scores[i].vitoria);
-        printf("========\n");
-    }
-
-    free(scores);
-
-    printf("\n");
-}
-
-void fullscreenTest()
-{
-    inicializarArquivoFullscreen();
-
-    bool fullscreen = pegarFullscreen();
-
-    printf("Fullscreen: %d\n", fullscreen);
-
-    mudarOpcaoFullscreen(!fullscreen);
-
-    fullscreen = pegarFullscreen();
-
-    printf("Fullscreen: %d\n", fullscreen);
 }
