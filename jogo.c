@@ -201,29 +201,6 @@ void jogadaComputador(Computador *computador, Baralho *baralho, ListaCarta *mesa
 // FUNCOES VITORIA OU DERROTA ========================================================
 
 /*
- * Função: checarSeJogadorTemUmaCartaDeCadaCor
- * Parametros: galeria - Galeria que será analisada
- * Descrição: Percorre todas as coleções de cartas da galeria e
- * verifica se o jogador tem pelo menos uma carta de cada cor.
- */
-bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *galeria)
-{
-    // Checa se a galeria é nula.
-    if (galeria == NULL)
-        return false;
-
-    // Percorre todas as coleções de cartas.
-    for (int i = 0; i < QTD_NAIPES; i++)
-    {
-        // Se houver uma coleção vazia, retorna false.
-        if (quantidadeCartasColecaoPorIndice(galeria, i) == 0)
-            return false;
-    }
-
-    return true;
-}
-
-/*
     * Função: checarVitoriaJogador
     * Parametros: jogador - Jogador que será analisado
     * Descrição: Checa se o jogador venceu a partida, verificando se seus dados
@@ -280,6 +257,9 @@ int colocarDuasCartasGaleria(Jogador *jogador)
         if (indice == SAIR_PARTIDA)
             return SAIR_PARTIDA;
 
+        if (checarSeJogadorTemUmaCartaDeCadaCor(jogador->galeria))
+            return PERDEU;
+
         cartaEscolhida = removerIndice(jogador->mao, indice);
         inserirNaGaleria(jogador->galeria, cartaEscolhida);
         linhaCol(72, 23);
@@ -288,6 +268,8 @@ int colocarDuasCartasGaleria(Jogador *jogador)
         imprimirMao(jogador->mao);
         imprimirControles(46, 50);
     }
+
+    return 1;
 }
 
 /*
@@ -389,7 +371,12 @@ bool fimDeJogo(Jogador *jogador, Computador *computador, Baralho *baralho, Lista
     imprimirControles(46, 42);
     imprimirMesa(mesa);
 
-    chamarPlacar(computador, jogador, checarVitoriaJogador(jogador));
+    if (chamarPlacar(computador, jogador, checarVitoriaJogador(jogador)) == PERDEU)
+    {
+        derrota();
+        Sleep(2000);
+        return true;
+    }
 
     return true;
 }
@@ -423,8 +410,11 @@ int chamarPlacar(Computador *computador, Jogador *jogador, int tipoVitoria)
     case 0:
         // chama a função para colocar as últimas duas cartas da mão do jogador em sua coleção
 
-        if (colocarDuasCartasGaleria(jogador) == SAIR_PARTIDA)
+        int duasCartasColocadas = colocarDuasCartasGaleria(jogador);
+        if (duasCartasColocadas == SAIR_PARTIDA)
             return SAIR_PARTIDA;
+        else if (duasCartasColocadas == PERDEU)
+            return PERDEU;
 
         pontos = compararPontuacoes(jogador, computador);
         linhaCol(1, 1);
