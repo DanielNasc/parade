@@ -381,6 +381,29 @@ bool inserirNaGaleria(Galeria *galeria, Carta *novaCarta)
     return inserirColecao(galeria->colecao[novaCarta->naipe - 'A'], novaCarta);
 }
 
+/*
+ * Função: checarSeJogadorTemUmaCartaDeCadaCor
+ * Parametros: galeria - Galeria que será analisada
+ * Descrição: Percorre todas as coleções de cartas da galeria e
+ * verifica se o jogador tem pelo menos uma carta de cada cor.
+ */
+bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *galeria)
+{
+    // Checa se a galeria é nula.
+    if (galeria == NULL)
+        return false;
+
+    // Percorre todas as coleções de cartas.
+    for (int i = 0; i < QTD_NAIPES; i++)
+    {
+        // Se houver uma coleção vazia, retorna false.
+        if (quantidadeCartasColecaoPorIndice(galeria, i) == 0)
+            return false;
+    }
+
+    return true;
+}
+
 // comentada
 void imprimirGaleria(Galeria *galeria)
 {

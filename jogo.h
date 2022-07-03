@@ -12,6 +12,7 @@ typedef struct computador Computador;
 #define PONTOS_VITORIA_NORMAL -100
 #define PONTOS_VITORIA_PERFEITA -999
 #define SCORE_VAZIO 9999999
+#define PERDEU -1
 
 typedef enum tipoVitoria
 {
@@ -35,11 +36,10 @@ void chamarGaleriaComputador(Computador *);
 
 // FIM DE JOGO ================================
 int chamarPlacar(Computador *, Jogador *, int);
-bool fimDeJogo(Jogador *, Computador *, Baralho *, ListaCarta *);
 int compararPontuacoes(Jogador *, Computador *);
 int colocarDuasCartasGaleria(Jogador *);
+bool fimDeJogo(Jogador *, Computador *, Baralho *, ListaCarta *);
 TipoVitoria checarVitoriaJogador(Jogador *);
-bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *);
 
 void imprimirMaoJogador(Jogador *);
 void imprimirGaleriaJogador(Jogador *);

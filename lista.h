@@ -31,7 +31,7 @@ bool inserirColecao(Colecao *, Carta *);
 bool inserirNaGaleria(Galeria *, Carta *);
 
 bool galeriaVazia(Galeria *);
-
+bool checarSeJogadorTemUmaCartaDeCadaCor(Galeria *);
 void imprimirGaleria(Galeria *);
 
 int quantidadeCartasColecao(Colecao *);
