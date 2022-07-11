@@ -1,5 +1,10 @@
 # Projeto da cadeira de Algoritmos e Estruturas de Dados 1
 
+## Equipe:
+
+- [Daniel Nasc](https://github.com/DanielNasc/) | "Backend" - Fluxo do jogo, implementações de TADs, etc;
+- [Luma Araujo](https://github.com/Sahinake/) | "Frontend" - Design, criação da interface inteira, etc;
+
 ## Para fazer:
 
 Segundo Roberto, essas são as funções mínimas do TAD para o projeto funcionar. Todas deverão ser implementadas.
